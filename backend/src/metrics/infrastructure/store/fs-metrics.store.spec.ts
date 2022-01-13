@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-import { StubFileSystemAdapter } from '../../../file-system/stub-file-system.adapter';
+import { StubFileSystemAdapter } from '../../../common/file-system/stub-file-system.adapter';
 
 import { FsMetricsStore } from './fs-metrics.store';
 

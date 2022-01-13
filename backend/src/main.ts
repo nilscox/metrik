@@ -5,9 +5,9 @@ import dotenv from 'dotenv-safe';
 dotenv.config();
 
 import { AppModule } from './app.module';
-import { Config } from './config/config.interface';
-import { ConfigToken } from './config/config.token';
-import { Logger } from './logger/Logger';
+import { Config } from './common/config/config.interface';
+import { ConfigToken } from './common/config/config.token';
+import { Logger } from './common/logger/Logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

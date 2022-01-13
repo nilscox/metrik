@@ -1,13 +1,13 @@
 import { FactoryProvider, Module } from '@nestjs/common';
 
-import { Config } from '../../config/config.interface';
-import { ConfigModule } from '../../config/config.module';
-import { ConfigToken } from '../../config/config.token';
+import { Config } from '../../common/config/config.interface';
+import { ConfigModule } from '../../common/config/config.module';
+import { ConfigToken } from '../../common/config/config.token';
 import {
   FileSystem,
   FileSystemToken,
-} from '../../file-system/file-system.interface';
-import { FileSystemModule } from '../../file-system/file-system.module';
+} from '../../common/file-system/file-system.interface';
+import { FileSystemModule } from '../../common/file-system/file-system.module';
 import { MetricsStore } from '../domain/Metrics';
 
 import { MetricsController } from './metrics.controller';

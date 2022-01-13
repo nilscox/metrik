@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { FileNotFoundError } from '../../../file-system/file-not-found.error';
+import { FileNotFoundError } from '../../../common/file-system/file-not-found.error';
 import {
   FileSystem,
   FileSystemToken,
-} from '../../../file-system/file-system.interface';
+} from '../../../common/file-system/file-system.interface';
 import { MetricsSnapshots, MetricsStore } from '../../domain/Metrics';
 
 import { BaseMetricsStore, MetricsSnapshotsData } from './base-metrics.store';
