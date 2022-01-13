@@ -2,7 +2,7 @@
 export const configVariable = [
   'LISTEN_HOST',
   'LISTEN_PORT',
-  'METRICS_STORE',
+  'STORE',
 ] as const;
 
 export type ConfigVariable = typeof configVariable[number];
