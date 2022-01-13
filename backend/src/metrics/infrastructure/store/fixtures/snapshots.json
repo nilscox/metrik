@@ -1,0 +1,110 @@
+[
+  {
+    "id": "nkdtmf",
+    "date": "2022-01-10T22:00:00",
+    "metrics": [
+      {
+        "key": "linter errors",
+        "value": 4
+      },
+      {
+        "key": "usage of any",
+        "value": 0
+      },
+      {
+        "key": "total ci time",
+        "value": 118
+      }
+    ]
+  },
+  {
+    "id": "2l21pd",
+    "date": "2022-01-10T22:12:00",
+    "metrics": [
+      {
+        "key": "linter errors",
+        "value": 3
+      },
+      {
+        "key": "usage of any",
+        "value": 0
+      },
+      {
+        "key": "total ci time",
+        "value": 115
+      }
+    ]
+  },
+  {
+    "id": "tr94un",
+    "date": "2022-01-10T22:52:00",
+    "metrics": [
+      {
+        "key": "linter errors",
+        "value": 7
+      },
+      {
+        "key": "usage of any",
+        "value": 2
+      },
+      {
+        "key": "total ci time",
+        "value": 122
+      }
+    ]
+  },
+  {
+    "id": "d2igk9",
+    "date": "2022-01-10T23:11:00",
+    "metrics": [
+      {
+        "key": "linter errors",
+        "value": 0
+      },
+      {
+        "key": "usage of any",
+        "value": 1
+      },
+      {
+        "key": "total ci time",
+        "value": 119
+      }
+    ]
+  },
+  {
+    "id": "77frsk",
+    "date": "2022-01-10T23:15:00",
+    "metrics": [
+      {
+        "key": "linter errors",
+        "value": 0
+      },
+      {
+        "key": "usage of any",
+        "value": 1
+      },
+      {
+        "key": "total ci time",
+        "value": 115
+      }
+    ]
+  },
+  {
+    "id": "kmoijg",
+    "date": "2022-01-11T00:05:00",
+    "metrics": [
+      {
+        "key": "linter errors",
+        "value": 3
+      },
+      {
+        "key": "usage of any",
+        "value": 0
+      },
+      {
+        "key": "total ci time",
+        "value": 110
+      }
+    ]
+  }
+]
