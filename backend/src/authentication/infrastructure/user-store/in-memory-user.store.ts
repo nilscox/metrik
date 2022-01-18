@@ -1,44 +1,34 @@
+import { InMemoryStore } from '../../../common/utils/in-memory.store';
 import { User, UserProps } from '../../domain/user';
 import { UserStore } from '../../domain/user.store';
 
-const clone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
-
-export class InMemoryUserStore implements UserStore {
-  users = new Map<string, UserProps>();
-
-  add(user: User) {
-    this.users.set(user.props.id, clone(user.props));
-  }
-
+export class InMemoryUserStore
+  extends InMemoryStore<UserProps>
+  implements UserStore
+{
   async findUserById(id: string): Promise<User | undefined> {
-    if (!this.users.has(id)) {
-      return;
-    }
-
-    return new User(clone(this.users.get(id)));
+    return this.findByPredicate((props) => props.id === id);
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {
-    return this.findUserByPredicate((props) => props.email === email);
+    return this.findByPredicate((props) => props.email === email);
   }
 
   async findUserByToken(token: string): Promise<User | undefined> {
-    return this.findUserByPredicate((props) => props.token === token);
+    return this.findByPredicate((props) => props.token === token);
   }
 
-  private findUserByPredicate(
+  private findByPredicate(
     predicate: (props: UserProps) => boolean,
   ): User | undefined {
-    const props = Array.from(this.users.values()).find(predicate);
+    const props = this.find(predicate);
 
-    if (!props) {
-      return;
+    if (props) {
+      return new User(props);
     }
-
-    return new User(clone(props));
   }
 
   async saveUser(user: User): Promise<void> {
-    this.users.set(user.props.id, clone(user.props));
+    this.add(user.props);
   }
 }

@@ -33,7 +33,7 @@ describe('AuthenticationService', () => {
         hashedPassword: '',
       });
 
-      userStore.add(user);
+      userStore.add(user.props);
 
       const loggedInUser = await service.authenticate(email, password);
 
@@ -54,7 +54,7 @@ describe('AuthenticationService', () => {
     it('discards a user who sent invalid credentials', async () => {
       const user = createUser({ email });
 
-      await userStore.add(user);
+      await userStore.add(user.props);
 
       await expect(service.authenticate(email, 'nope')).rejects.toThrow(
         InvalidCredentialsError,

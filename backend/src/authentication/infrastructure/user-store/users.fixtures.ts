@@ -16,6 +16,9 @@ export const userStoreProvider: FactoryProvider<UserStore> = {
       case 'memory':
         return new InMemoryUserStore();
 
+      case 'fixture':
+        return new FixtureUserStore();
+
       default:
         throw new Error(`invalid USER_STORE value '${store}'`);
     }

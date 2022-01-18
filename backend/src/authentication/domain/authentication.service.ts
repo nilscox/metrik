@@ -1,11 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as uuid from 'uuid';
 
-import { UserStoreToken } from '../infrastructure/user-store/user-store-token';
-
 import { InvalidCredentialsError } from './authentication-errors';
 import { User } from './user';
-import { UserStore } from './user.store';
+import { UserStore, UserStoreToken } from './user.store';
 
 export abstract class IdGenerator {
   abstract generateId(): string;

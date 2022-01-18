@@ -5,8 +5,8 @@ import request, { SuperAgentTest } from 'supertest';
 import { AppModule } from './app.module';
 import { Credentials } from './authentication/domain/credentials';
 import { createUser } from './authentication/domain/user';
+import { UserStoreToken } from './authentication/domain/user.store';
 import { InMemoryUserStore } from './authentication/infrastructure/user-store/in-memory-user.store';
-import { UserStoreToken } from './authentication/infrastructure/user-store/user-store-token';
 import { InMemoryMetricsStore } from './metrics/infrastructure/store/in-memory-metrics.store';
 import { MetricsStoreToken } from './metrics/infrastructure/store/metrics-store-token';
 

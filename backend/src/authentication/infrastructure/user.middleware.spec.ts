@@ -23,7 +23,7 @@ describe('UserMiddleware', () => {
     const token = 'some-token';
     const user = createUser({ token });
 
-    userStore.add(user);
+    userStore.add(user.props);
 
     const headers = { authorization: `Bières ${token}` };
     const req = { headers } as MetriksRequest;

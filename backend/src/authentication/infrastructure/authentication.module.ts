@@ -9,7 +9,7 @@ import {
 } from '../domain/authentication.service';
 
 import { AuthenticationController } from './authentication.controller';
-import { userStoreProvider } from './user-store/metrics-store.provider';
+import { userStoreProvider } from './user-store/user-store.provider';
 
 const cryptoProvider: ValueProvider<Crypto> = {
   provide: Crypto,

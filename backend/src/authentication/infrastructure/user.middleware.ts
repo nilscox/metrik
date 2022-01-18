@@ -6,10 +6,9 @@ import {
 } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 
-import { UserStore } from '../domain/user.store';
+import { UserStore, UserStoreToken } from '../domain/user.store';
 
 import { MetriksRequest } from './metriks-request';
-import { UserStoreToken } from './user-store/user-store-token';
 
 @Injectable()
 export class UserMiddleware implements NestMiddleware {
