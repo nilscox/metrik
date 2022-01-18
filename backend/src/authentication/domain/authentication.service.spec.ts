@@ -1,25 +1,19 @@
 import expect from 'expect';
 
+import { StubCryptoAdapter } from '../../common/crypto/stub-crypto.adapter';
 import { createUser } from '../domain/user';
 import { InMemoryUserStore } from '../infrastructure/user-store/in-memory-user.store';
 
 import { AuthenticationService } from './authentication.service';
 import { InvalidCredentialsError } from './authentication-errors';
-import { CryptoPort } from './crypto.port';
-
-class StubCrypto extends CryptoPort {
-  async compare(data: string): Promise<boolean> {
-    return data === 'password';
-  }
-}
 
 describe('AuthenticationService', () => {
-  let crypto: StubCrypto;
+  let crypto: StubCryptoAdapter;
   let userStore: InMemoryUserStore;
   let service: AuthenticationService;
 
   beforeEach(async () => {
-    crypto = new StubCrypto();
+    crypto = new StubCryptoAdapter();
     userStore = new InMemoryUserStore();
     service = new AuthenticationService(userStore, crypto);
   });

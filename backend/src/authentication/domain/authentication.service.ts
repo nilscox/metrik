@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as uuid from 'uuid';
 
+import { CryptoPort } from '../../common/crypto/crypto.port';
+
 import { InvalidCredentialsError } from './authentication-errors';
-import { CryptoPort } from './crypto.port';
 import { User } from './user';
 import { UserStore, UserStoreToken } from './user.store';
 
