@@ -4,7 +4,6 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   UnauthorizedException,
   UseInterceptors,
@@ -12,19 +11,19 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { AuthenticationService } from '../domain/authentication.service';
+import { InvalidCredentialsError } from '../domain/authentication-errors';
 import { User } from '../domain/user';
-import { UserStore } from '../domain/user.store';
 
 import { AuthenticatedUser } from './authenticated-user';
 import { LoginDto } from './login.dto';
 import { UserDto } from './user.dto';
-import { UserStoreToken } from './user-store/user-store-token';
 
 @Controller('auth')
 @UsePipes(new ValidationPipe({ transform: true }))
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthenticationController {
-  constructor(@Inject(UserStoreToken) private readonly userStore: UserStore) {}
+  constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -33,20 +32,22 @@ export class AuthenticationController {
     @AuthenticatedUser() authUser?: User,
   ): Promise<UserDto> {
     if (authUser) {
-      throw new UnauthorizedException('already authenticated');
+      throw new UnauthorizedException('you are already authenticated');
     }
 
-    const user = await this.userStore.findUserByEmail(dto.email);
+    try {
+      const user = await this.authenticationService.authenticate(
+        dto.email,
+        dto.password,
+      );
 
-    if (!user) {
-      // todo: which error to throw?
-      throw new UnauthorizedException('invalid credentials');
+      return new UserDto(user.props);
+    } catch (error) {
+      if (error instanceof InvalidCredentialsError) {
+        throw new UnauthorizedException(error.message);
+      }
+
+      throw error;
     }
-
-    await user.authenticate(dto.password);
-
-    await this.userStore.saveUser(user);
-
-    return new UserDto(user.props);
   }
 }

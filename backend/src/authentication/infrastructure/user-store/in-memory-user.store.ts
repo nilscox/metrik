@@ -7,7 +7,7 @@ export class InMemoryUserStore implements UserStore {
   users = new Map<string, UserProps>();
 
   add(user: User) {
-    this.users.set(user.props.id, user.props);
+    this.users.set(user.props.id, clone(user.props));
   }
 
   async findUserById(id: string): Promise<User | undefined> {

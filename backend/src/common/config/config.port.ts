@@ -7,6 +7,6 @@ export const configVariable = [
 
 export type ConfigVariable = typeof configVariable[number];
 
-export interface Config {
-  get(key: ConfigVariable): string;
+export abstract class ConfigPort {
+  abstract get(key: ConfigVariable): string;
 }

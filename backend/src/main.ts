@@ -5,14 +5,13 @@ import dotenv from 'dotenv-safe';
 dotenv.config();
 
 import { AppModule } from './app.module';
-import { Config } from './common/config/config.interface';
-import { ConfigToken } from './common/config/config.token';
+import { ConfigPort } from './common/config/config.port';
 import { Logger } from './common/logger/Logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = app.get<Config>(ConfigToken);
+  const config = app.get(ConfigPort);
   const logger = app.get<Logger>(Logger);
 
   app.useLogger(logger);

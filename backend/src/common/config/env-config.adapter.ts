@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { Config, ConfigVariable } from './config.interface';
+import { ConfigPort, ConfigVariable } from './config.port';
 
 @Injectable()
-export class EnvConfigAdapter implements Config {
+export class EnvConfigAdapter implements ConfigPort {
   get(key: ConfigVariable): string {
     return process.env[key];
   }

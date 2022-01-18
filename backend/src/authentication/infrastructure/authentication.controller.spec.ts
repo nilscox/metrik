@@ -1,75 +1,80 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import expect from 'expect';
+import { fn, Mock } from 'jest-mock';
 
+import { ConfigPort } from '../../common/config/config.port';
+import { StubConfigAdapter } from '../../common/config/stub-config.adapter';
+import { AuthenticationService } from '../domain/authentication.service';
+import { InvalidCredentialsError } from '../domain/authentication-errors';
 import { Credentials } from '../domain/credentials';
 import { createUser } from '../domain/user';
 
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationModule } from './authentication.module';
-import { InMemoryUserStore } from './user-store/in-memory-user.store';
-import { UserStoreToken } from './user-store/user-store-token';
+
+type MockFn<T extends (...args: unknown[]) => unknown> = Mock<
+  ReturnType<T>,
+  Parameters<T>
+>;
+
+class MockAuthenticationService extends AuthenticationService {
+  override authenticate: MockFn<AuthenticationService['authenticate']> = fn();
+}
 
 describe('AuthenticationController', () => {
   let controller: AuthenticationController;
-  let userStore: InMemoryUserStore;
+  let authenticationService: MockAuthenticationService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AuthenticationModule],
     })
-      .overrideProvider(UserStoreToken)
-      .useClass(InMemoryUserStore)
+      .overrideProvider(ConfigPort)
+      .useValue(new StubConfigAdapter({ STORE: 'memory' }))
+      .overrideProvider(AuthenticationService)
+      .useClass(MockAuthenticationService)
       .compile();
 
     controller = module.get(AuthenticationController);
-    userStore = module.get(UserStoreToken);
+    authenticationService = module.get(AuthenticationService);
   });
 
   describe('login', () => {
     const credentials: Credentials = {
-      email: 'user@email.tld',
+      email: 'user@domain.tld',
       password: 'password',
     };
 
-    // prettier-ignore
-    // cSpell:disable-next-line
-    const hashedPassword = '$2b$10$UBasAHZfjDYLOZnt5qikDe/8rcV2douMhpvFrfweKickmZR6GGgwi';
+    it('authenticates an existing user', async () => {
+      const user = createUser({ token: 'token' });
 
-    it('creates a session as an existing user', async () => {
-      const user = createUser({
-        email: credentials.email,
-        hashedPassword,
-      });
-
-      userStore.add(user);
+      authenticationService.authenticate.mockResolvedValueOnce(user);
 
       const loggedInUser = await controller.login(credentials);
 
       expect(loggedInUser).toEqual({
         id: user.props.id,
         email: credentials.email,
-        token: expect.any(String),
+        token: 'token',
       });
-
-      expect(await userStore.findUserById(user.props.id)).toHaveProperty(
-        'props.token',
-        expect.any(String),
-      );
     });
 
-    it('discards a user who sent credentials that do not match any existing user', async () => {
+    it('handles the InvalidCredentials domain error', async () => {
+      authenticationService.authenticate.mockRejectedValueOnce(
+        new InvalidCredentialsError(),
+      );
+
       await expect(controller.login(credentials)).rejects.toThrow(
-        'invalid credentials',
+        UnauthorizedException,
       );
     });
 
     it('prevents a user who is already logged in to log in again', async () => {
       const user = createUser();
 
-      userStore.add(user);
-
       await expect(controller.login(credentials, user)).rejects.toThrow(
-        'already authenticated',
+        'you are already authenticated',
       );
     });
   });

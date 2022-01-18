@@ -1,7 +1,6 @@
 import { FactoryProvider } from '@nestjs/common';
 
-import { Config } from '../../../common/config/config.interface';
-import { ConfigToken } from '../../../common/config/config.token';
+import { ConfigPort } from '../../../common/config/config.port';
 import {
   FileSystem,
   FileSystemToken,
@@ -15,8 +14,8 @@ import { MetricsStoreToken } from './metrics-store-token';
 
 export const metricsStoreProvider: FactoryProvider<MetricsStore> = {
   provide: MetricsStoreToken,
-  inject: [ConfigToken, FileSystemToken],
-  useFactory: (config: Config, fs: FileSystem) => {
+  inject: [ConfigPort, FileSystemToken],
+  useFactory: (config: ConfigPort, fs: FileSystem) => {
     const store = config.get('STORE');
 
     switch (store) {
