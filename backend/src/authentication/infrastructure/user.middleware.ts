@@ -20,7 +20,7 @@ export class UserMiddleware implements NestMiddleware {
     next: NextFunction,
   ): Promise<void> {
     const authorizationHeader = req.headers.authorization;
-    const match = /^Bières (.+)/.exec(authorizationHeader);
+    const match = /^Beer (.+)/.exec(authorizationHeader);
 
     if (authorizationHeader && !match) {
       throw new UnauthorizedException('invalid authorization header');

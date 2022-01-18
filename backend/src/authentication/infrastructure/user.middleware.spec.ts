@@ -25,7 +25,7 @@ describe('UserMiddleware', () => {
 
     userStore.add(user.props);
 
-    const headers = { authorization: `Bières ${token}` };
+    const headers = { authorization: `Beer ${token}` };
     const req = { headers } as MetriksRequest;
     const res = {} as Response;
 
@@ -52,7 +52,7 @@ describe('UserMiddleware', () => {
   it("throws when the authorization header does not match any user's token", async () => {
     const userMiddleware = new UserMiddleware(new InMemoryUserStore());
 
-    const headers = { authorization: 'Bières some-token' };
+    const headers = { authorization: 'Beer some-token' };
     const req = { headers } as MetriksRequest;
     const res = {} as Response;
 

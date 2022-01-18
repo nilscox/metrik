@@ -1,7 +1,11 @@
 import { clone } from './clone';
 
 export class InMemoryStore<T extends { id: string }> {
-  private items = new Map<string, T>();
+  items: Map<string, T>;
+
+  constructor(items: T[] = []) {
+    this.items = new Map(items.map((item) => [item.id, item]));
+  }
 
   add(item: T) {
     this.items.set(item.id, clone(item));

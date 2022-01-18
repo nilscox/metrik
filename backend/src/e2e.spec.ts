@@ -51,7 +51,9 @@ describe('e2e', () => {
     // cSpell:disable-next-line
     const hashedPassword = '$2b$10$QB2yC/AtXUMZA3mxOahcjuETGF6rOkpJXnKQY3LIlPJHmhOWai5aO';
 
-    userStore.add(createUser({ email: credentials.email, hashedPassword }));
+    userStore.add(
+      createUser({ email: credentials.email, hashedPassword }).props,
+    );
 
     const loginResponse = await agent
       .post('/auth/login')
@@ -62,7 +64,7 @@ describe('e2e', () => {
 
     await agent
       .get('/metrics/last')
-      .set('Authorization', `Bières ${token}`)
+      .set('Authorization', `Beer ${token}`)
       .expect(200);
   });
 });

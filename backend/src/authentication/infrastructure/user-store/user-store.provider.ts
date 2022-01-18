@@ -3,6 +3,7 @@ import { FactoryProvider } from '@nestjs/common';
 import { ConfigPort } from '../../../common/config/config.port';
 import { UserStore, UserStoreToken } from '../../domain/user.store';
 
+import { FixtureUserStore } from './fixture-user.store';
 import { InMemoryUserStore } from './in-memory-user.store';
 
 export const userStoreProvider: FactoryProvider<UserStore> = {
@@ -16,7 +17,7 @@ export const userStoreProvider: FactoryProvider<UserStore> = {
         return new InMemoryUserStore();
 
       case 'fixture':
-        return new FixtureUserStore(user);
+        return new FixtureUserStore();
 
       default:
         throw new Error(`invalid USER_STORE value '${store}'`);
