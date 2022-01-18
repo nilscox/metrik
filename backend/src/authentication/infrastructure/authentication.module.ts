@@ -3,16 +3,14 @@ import bcrypt from 'bcrypt';
 
 import { ConfigModule } from '../../common/config/config.module';
 import { LoggerModule } from '../../common/logger/logger.module';
-import {
-  AuthenticationService,
-  Crypto,
-} from '../domain/authentication.service';
+import { AuthenticationService } from '../domain/authentication.service';
+import { CryptoPort } from '../domain/crypto.port';
 
 import { AuthenticationController } from './authentication.controller';
 import { userStoreProvider } from './user-store/user-store.provider';
 
-const cryptoProvider: ValueProvider<Crypto> = {
-  provide: Crypto,
+const cryptoProvider: ValueProvider<CryptoPort> = {
+  provide: CryptoPort,
   useValue: bcrypt,
 };
 

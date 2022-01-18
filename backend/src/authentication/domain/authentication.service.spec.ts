@@ -3,10 +3,11 @@ import expect from 'expect';
 import { createUser } from '../domain/user';
 import { InMemoryUserStore } from '../infrastructure/user-store/in-memory-user.store';
 
-import { AuthenticationService, Crypto } from './authentication.service';
+import { AuthenticationService } from './authentication.service';
 import { InvalidCredentialsError } from './authentication-errors';
+import { CryptoPort } from './crypto.port';
 
-class StubCrypto extends Crypto {
+class StubCrypto extends CryptoPort {
   async compare(data: string): Promise<boolean> {
     return data === 'password';
   }

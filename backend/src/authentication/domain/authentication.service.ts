@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as uuid from 'uuid';
 
 import { InvalidCredentialsError } from './authentication-errors';
+import { CryptoPort } from './crypto.port';
 import { User } from './user';
 import { UserStore, UserStoreToken } from './user.store';
 
@@ -9,15 +10,11 @@ export abstract class IdGenerator {
   abstract generateId(): string;
 }
 
-export abstract class Crypto {
-  abstract compare(data: string, encrypted: string): Promise<boolean>;
-}
-
 @Injectable()
 export class AuthenticationService {
   constructor(
     @Inject(UserStoreToken) private readonly userStore: UserStore,
-    private readonly crypto: Crypto,
+    private readonly crypto: CryptoPort,
   ) {}
 
   async authenticate(email: string, password: string): Promise<User> {
