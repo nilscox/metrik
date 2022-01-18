@@ -1,6 +1,7 @@
 import expect from 'expect';
 
 import { StubCryptoAdapter } from '../../common/crypto/stub-crypto.adapter';
+import { StubGeneratorAdapter } from '../../common/generator/stub-generator.adapter';
 import { createUser } from '../domain/user';
 import { InMemoryUserStore } from '../infrastructure/user-store/in-memory-user.store';
 
@@ -10,12 +11,14 @@ import { InvalidCredentialsError } from './authentication-errors';
 describe('AuthenticationService', () => {
   let crypto: StubCryptoAdapter;
   let userStore: InMemoryUserStore;
+  let generator: StubGeneratorAdapter;
   let service: AuthenticationService;
 
   beforeEach(async () => {
     crypto = new StubCryptoAdapter();
     userStore = new InMemoryUserStore();
-    service = new AuthenticationService(userStore, crypto);
+    generator = new StubGeneratorAdapter();
+    service = new AuthenticationService(userStore, crypto, generator);
   });
 
   describe('authenticate', () => {
@@ -23,12 +26,9 @@ describe('AuthenticationService', () => {
     const password = 'password';
 
     it('creates a session as an existing user', async () => {
-      const user = createUser({
-        email: email,
-        hashedPassword: '',
-      });
+      const user = createUser({ email: email });
 
-      userStore.add(user.props);
+      await userStore.saveUser(user);
 
       const loggedInUser = await service.authenticate(email, password);
 
@@ -36,7 +36,7 @@ describe('AuthenticationService', () => {
 
       expect(await userStore.findUserById(user.props.id)).toHaveProperty(
         'props.token',
-        expect.any(String),
+        'generated-token',
       );
     });
 
@@ -49,7 +49,7 @@ describe('AuthenticationService', () => {
     it('discards a user who sent invalid credentials', async () => {
       const user = createUser({ email });
 
-      await userStore.add(user.props);
+      await userStore.saveUser(user);
 
       await expect(service.authenticate(email, 'nope')).rejects.toThrow(
         InvalidCredentialsError,

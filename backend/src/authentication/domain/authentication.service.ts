@@ -1,21 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as uuid from 'uuid';
 
 import { CryptoPort } from '../../common/crypto/crypto.port';
+import { GeneratorPort } from '../../common/generator/generator.port';
 
 import { InvalidCredentialsError } from './authentication-errors';
 import { User } from './user';
 import { UserStore, UserStoreToken } from './user.store';
-
-export abstract class IdGenerator {
-  abstract generateId(): string;
-}
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     @Inject(UserStoreToken) private readonly userStore: UserStore,
     private readonly crypto: CryptoPort,
+    private readonly generator: GeneratorPort,
   ) {}
 
   async authenticate(email: string, password: string): Promise<User> {
@@ -34,7 +31,7 @@ export class AuthenticationService {
       throw new InvalidCredentialsError();
     }
 
-    user.props.token = uuid.v4();
+    user.props.token = await this.generator.generateAuthenticationToken();
 
     await this.userStore.saveUser(user);
 
