@@ -1,7 +1,7 @@
 import { FileNotFoundError } from './file-not-found.error';
-import { FileSystem } from './file-system.interface';
+import { FileSystemPort } from './file-system.interface';
 
-export class StubFileSystemAdapter implements FileSystem {
+export class StubFileSystemAdapter implements FileSystemPort {
   public files = new Map<string, unknown>();
 
   async readJsonFile<T>(path: string): Promise<T> {

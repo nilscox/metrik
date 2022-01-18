@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 
 import { FileNotFoundError } from './file-not-found.error';
-import { FileSystem } from './file-system.interface';
+import { FileSystemPort } from './file-system.interface';
 
-export class FileSystemAdapter implements FileSystem {
+export class FileSystemAdapter implements FileSystemPort {
   async readJsonFile<T>(path: string): Promise<T> {
     try {
       return JSON.parse(String(await fs.readFile(path)));
@@ -16,7 +16,7 @@ export class FileSystemAdapter implements FileSystem {
     }
   }
 
-  async writeFile(path: string, content: string): Promise<void> {
+  async writeFile<T>(path: string, content: T): Promise<void> {
     await fs.writeFile(path, JSON.stringify(content));
   }
 }
