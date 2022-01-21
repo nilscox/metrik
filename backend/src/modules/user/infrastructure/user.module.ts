@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 
 import { ConfigModule } from '~/common/config';
+import { DatabaseModule } from '~/common/database/database.module';
 
 import { userStoreProvider } from './user-store/user-store.provider';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, DatabaseModule],
   providers: [userStoreProvider],
   exports: [userStoreProvider],
 })

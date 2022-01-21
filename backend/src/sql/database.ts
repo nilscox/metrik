@@ -1,4 +1,4 @@
-import { ColumnType, Kysely, SqliteDialect } from 'kysely';
+import { ColumnType, Kysely } from 'kysely';
 
 export interface UserTable {
   id: string;
@@ -13,13 +13,9 @@ export interface ProjectTable {
   default_branch: string;
 }
 
-export interface Database {
+export interface DatabaseDefinition {
   user: UserTable;
   project: ProjectTable;
 }
 
-export default new Kysely<Database>({
-  dialect: new SqliteDialect({
-    databasePath: 'db.sqlite',
-  }),
-});
+export type Database = Kysely<DatabaseDefinition>;

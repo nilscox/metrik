@@ -1,18 +1,43 @@
+import { Test } from '@nestjs/testing';
 import expect from 'expect';
 
-import db from '~/sql/database';
+import { DatabaseToken } from '~/common/database/database.provider';
+import { DatabaseService } from '~/common/database/database.service';
+import { Logger } from '~/common/logger';
+import { DevNullLogger } from '~/common/logger/dev-null-logger';
+import { Database } from '~/sql/database';
 
 import { createUser, User } from '../../domain/user';
+import { UserModule } from '../user.module';
 
 import { SqlUserStore } from './sql-user.store';
 
 describe('SqlUserStore', () => {
+  let database: DatabaseService;
+  let db: Database;
   let store: SqlUserStore;
 
-  beforeEach(async () => {
-    store = new SqlUserStore();
+  before(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [UserModule],
+    })
+      .overrideProvider(Logger)
+      .useClass(DevNullLogger)
+      .compile();
 
-    await db.deleteFrom('user').execute();
+    database = moduleRef.get(DatabaseService);
+    db = moduleRef.get<Database>(DatabaseToken);
+    store = new SqlUserStore(db);
+
+    await database.runMigrations();
+  });
+
+  after(async () => {
+    await database.closeConnection();
+  });
+
+  beforeEach(async () => {
+    await database.clear();
   });
 
   const insert = async (user: User) => {

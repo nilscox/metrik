@@ -1,11 +1,13 @@
-import db from '~/sql/database';
+import { Database } from '~/sql/database';
 
 import { User } from '../../domain/user';
 import { UserStore } from '../../domain/user.store';
 
 export class SqlUserStore implements UserStore {
+  constructor(private db: Database) {}
+
   async findUserByEmail(email: string): Promise<User> {
-    const row = await db
+    const row = await this.db
       .selectFrom('user')
       .selectAll()
       .where('email', '=', email)
@@ -20,7 +22,7 @@ export class SqlUserStore implements UserStore {
   }
 
   async findUserByToken(token: string): Promise<User> {
-    const row = await db
+    const row = await this.db
       .selectFrom('user')
       .selectAll()
       .where('token', '=', token)
@@ -36,16 +38,16 @@ export class SqlUserStore implements UserStore {
 
   async saveUser(user: User): Promise<void> {
     if (await this.exists(user.id)) {
-      await db.updateTable('user').set(user.getProps()).execute();
+      await this.db.updateTable('user').set(user.getProps()).execute();
     } else {
-      await db.insertInto('user').values(user.getProps()).execute();
+      await this.db.insertInto('user').values(user.getProps()).execute();
     }
   }
 
   private async exists(userId: string): Promise<boolean> {
-    const { count } = db.fn;
+    const { count } = this.db.fn;
 
-    const result = await db
+    const result = await this.db
       .selectFrom('user')
       .select(count('id').as('count'))
       .where('id', '=', userId)

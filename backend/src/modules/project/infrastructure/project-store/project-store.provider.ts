@@ -1,6 +1,8 @@
 import { FactoryProvider } from '@nestjs/common';
 
 import { ConfigPort } from '~/common/config';
+import { DatabaseToken } from '~/common/database/database.provider';
+import { Database } from '~/sql/database';
 
 import { ProjectStore, ProjectStoreToken } from '../../domain/project.store';
 
@@ -10,8 +12,8 @@ import { SqlProjectStore } from './sql-project.store';
 
 export const projectStoreProvider: FactoryProvider<ProjectStore> = {
   provide: ProjectStoreToken,
-  inject: [ConfigPort],
-  useFactory: (config: ConfigPort) => {
+  inject: [ConfigPort, DatabaseToken],
+  useFactory: (config: ConfigPort, db: Database) => {
     const store = config.get('STORE');
 
     switch (store) {
@@ -22,7 +24,7 @@ export const projectStoreProvider: FactoryProvider<ProjectStore> = {
         return new FixtureProjectStore();
 
       case 'sql':
-        return new SqlProjectStore();
+        return new SqlProjectStore(db);
 
       default:
         throw new Error(`invalid STORE value '${store}'`);

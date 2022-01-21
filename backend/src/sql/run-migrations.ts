@@ -1,32 +1,19 @@
-import path from 'path';
+import { NestFactory } from '@nestjs/core';
+import dotenv from 'dotenv';
 
-import { FileMigrationProvider, Migrator } from 'kysely';
+import 'module-alias/register';
 
-import db from './database';
+dotenv.config();
 
-async function migrateToLatest() {
-  const migrator = new Migrator({
-    db,
-    provider: new FileMigrationProvider(path.join(__dirname, 'migrations')),
-  });
+import { DatabaseModule } from '~/common/database/database.module';
+import { DatabaseService } from '~/common/database/database.service';
 
-  const { error, results } = await migrator.migrateToLatest();
+async function runMigrations() {
+  const app = await NestFactory.createApplicationContext(DatabaseModule);
+  const database = app.get(DatabaseService);
 
-  results?.forEach((it) => {
-    if (it.status === 'Success') {
-      console.log(`migration "${it.migrationName}" was executed successfully`);
-    } else if (it.status === 'Error') {
-      console.error(`failed to execute migration "${it.migrationName}"`);
-    }
-  });
-
-  if (error) {
-    console.error('failed to migrate');
-    console.error(error);
-    process.exit(1);
-  }
-
-  await db.destroy();
+  await database.runMigrations();
+  await database.closeConnection();
 }
 
-migrateToLatest();
+runMigrations();
