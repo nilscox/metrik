@@ -4,15 +4,15 @@ import { ConfigPort, ConfigVariable } from './config.port';
 
 @Injectable()
 export class StubConfigAdapter implements ConfigPort {
-  constructor(
-    private readonly config: Partial<Record<ConfigVariable, string>> = {},
-  ) {}
+  constructor(private readonly config: Partial<Record<ConfigVariable, string>> = {}) {}
 
   get(key: ConfigVariable): string {
-    if (!this.config[key]) {
-      throw new Error(`no config set for configuration variable "${key}"`);
+    const value = this.config[key];
+
+    if (!value) {
+      throw new Error(`no value is set for configuration variable "${key}"`);
     }
 
-    return this.config[key];
+    return value;
   }
 }

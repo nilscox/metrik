@@ -1,6 +1,4 @@
 import { Mock } from 'jest-mock';
 
-export type MockFn<T extends (...args: unknown[]) => unknown> = Mock<
-  ReturnType<T>,
-  Parameters<T>
->;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type MockFn<T extends (...args: any[]) => any> = Mock<ReturnType<T>, Parameters<T>>;

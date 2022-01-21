@@ -8,8 +8,8 @@ export class FileSystemAdapter implements FileSystemPort {
     try {
       return JSON.parse(String(await fs.readFile(path)));
     } catch (error) {
-      if (error.message.includes('ENOENT')) {
-        throw new FileNotFoundError(error);
+      if (error instanceof Error && error.message.includes('ENOENT')) {
+        throw new FileNotFoundError(error.message);
       }
 
       throw error;

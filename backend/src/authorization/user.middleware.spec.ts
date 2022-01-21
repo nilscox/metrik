@@ -23,7 +23,7 @@ describe('UserMiddleware', () => {
     const token = 'some-token';
     const user = createUser({ token });
 
-    userStore.add(user.props);
+    userStore.saveUser(user);
 
     const headers = { authorization: `Beer ${token}` };
     const req = { headers } as MetriksRequest;
@@ -56,9 +56,7 @@ describe('UserMiddleware', () => {
     const req = { headers } as MetriksRequest;
     const res = {} as Response;
 
-    await expect(() => userMiddleware.use(req, res, next)).rejects.toThrow(
-      'invalid token',
-    );
+    await expect(() => userMiddleware.use(req, res, next)).rejects.toThrow('invalid token');
 
     expect(req.user).toBeUndefined();
   });

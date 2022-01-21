@@ -7,10 +7,10 @@ export class UserDto {
     Object.assign(this, user.getProps());
   }
 
-  id: string;
-  email: string;
-  token: string;
+  id!: string;
+  email!: string;
+  token!: string;
 
   @Exclude()
-  hashedPassword: string;
+  hashedPassword!: string;
 }

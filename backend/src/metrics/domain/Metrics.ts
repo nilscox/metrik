@@ -4,15 +4,11 @@ export class Metric {
 
 export interface MetricsStore {
   getSnapshots(): Promise<MetricsSnapshots>;
-  saveSnapshots(snapshots: MetricsSnapshots);
+  saveSnapshots(snapshots: MetricsSnapshots): Promise<void>;
 }
 
 export class MetricsSnapshot {
-  constructor(
-    readonly id: string,
-    readonly date: Date,
-    readonly metrics: Metric[],
-  ) {}
+  constructor(readonly id: string, readonly date: Date, readonly metrics: Metric[]) {}
 }
 
 const randomId = () => Math.random().toString(36).slice(-6);

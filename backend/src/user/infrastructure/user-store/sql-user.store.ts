@@ -48,7 +48,7 @@ export class SqlUserStore implements UserStore {
       .selectFrom('user')
       .select(count('id').as('count'))
       .where('id', '=', userId)
-      .executeTakeFirst();
+      .executeTakeFirstOrThrow();
 
     return result.count === 1;
   }

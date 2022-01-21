@@ -19,7 +19,7 @@ import { MetricsStoreToken } from './store/metrics-store-token';
 @UsePipes(new ValidationPipe({ transform: true }))
 export class MetricsController {
   @Inject(MetricsStoreToken)
-  private readonly metricsStore: MetricsStore;
+  private readonly metricsStore!: MetricsStore;
 
   @Post('create-snapshot')
   @UseGuards(IsAuthenticatedGuard)

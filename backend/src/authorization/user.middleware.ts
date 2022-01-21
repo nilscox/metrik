@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  NestMiddleware,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Inject, Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 
 import { UserStore, UserStoreToken } from '../authentication/domain/user.store';
@@ -13,13 +8,9 @@ import { MetriksRequest } from '../common/utils/metriks-request';
 export class UserMiddleware implements NestMiddleware {
   constructor(@Inject(UserStoreToken) private readonly userStore: UserStore) {}
 
-  async use(
-    req: MetriksRequest,
-    _res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  async use(req: MetriksRequest, _res: Response, next: NextFunction): Promise<void> {
     const authorizationHeader = req.headers.authorization;
-    const match = /^Beer (.+)/.exec(authorizationHeader);
+    const match = /^Beer (.+)/.exec(authorizationHeader ?? '');
 
     if (authorizationHeader && !match) {
       throw new UnauthorizedException('invalid authorization header');

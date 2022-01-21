@@ -74,17 +74,14 @@ describe('ProjectController', () => {
       .send(dto)
       .expect(201);
 
-    expect(projectService.createNewProject).toHaveBeenCalledWith(
-      dto.name,
-      dto.defaultBranch,
-    );
+    expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, dto.defaultBranch);
 
     expect(createdProject).toEqual(project.getProps());
   });
 
   it('creates a new project with a default branch', async () => {
     const user = createUser({ token: 'token' });
-    const dto: CreateProjectDto = {
+    const dto: Partial<CreateProjectDto> = {
       name: 'My project with a default branch',
     };
 
@@ -92,9 +89,6 @@ describe('ProjectController', () => {
 
     await agent.post('/project').use(as(user)).send(dto).expect(201);
 
-    expect(projectService.createNewProject).toHaveBeenCalledWith(
-      dto.name,
-      'master',
-    );
+    expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, 'master');
   });
 });
