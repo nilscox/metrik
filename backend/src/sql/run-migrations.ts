@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv-safe';
 
 import 'module-alias/register';
 

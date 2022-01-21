@@ -1,5 +1,6 @@
 import expect from 'expect';
 import { Response } from 'express';
+import { fn } from 'jest-mock';
 
 import { createUser, InMemoryUserStore } from '~/modules/user';
 import { MetriksRequest } from '~/utils/metriks-request';
@@ -7,12 +8,10 @@ import { MetriksRequest } from '~/utils/metriks-request';
 import { UserMiddleware } from './user.middleware';
 
 describe('UserMiddleware', () => {
-  // todo: mock
-  let nextCalled = false;
-  const next = () => (nextCalled = true);
+  const next = fn();
 
   beforeEach(() => {
-    nextCalled = false;
+    next.mockClear();
   });
 
   it('sets the user according to the authorization header', async () => {
@@ -32,7 +31,7 @@ describe('UserMiddleware', () => {
 
     expect(req.user).toEqual(user);
 
-    expect(nextCalled).toEqual(true);
+    expect(next).toHaveBeenCalled();
   });
 
   it('only calls next when the authorization header is not set', async () => {
@@ -45,7 +44,7 @@ describe('UserMiddleware', () => {
 
     expect(req.user).toBeUndefined();
 
-    expect(nextCalled).toEqual(true);
+    expect(next).toHaveBeenCalled();
   });
 
   it("throws when the authorization header does not match any user's token", async () => {
