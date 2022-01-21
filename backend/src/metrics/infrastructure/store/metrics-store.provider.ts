@@ -1,7 +1,7 @@
 import { FactoryProvider } from '@nestjs/common';
 
 import { ConfigPort } from '../../../common/config/config.port';
-import { FileSystemPort } from '../../../common/file-system/file-system.interface';
+import { FileSystemPort } from '../../../common/file-system/file-system.port';
 import { MetricsStore } from '../../domain/Metrics';
 
 import { FixtureMetricsStore } from './fixture-metrics.store';
@@ -20,6 +20,7 @@ export const metricsStoreProvider: FactoryProvider<MetricsStore> = {
         return new FixtureMetricsStore();
 
       case 'memory':
+      case 'sql':
         return new InMemoryMetricsStore();
 
       case 'filesystem':

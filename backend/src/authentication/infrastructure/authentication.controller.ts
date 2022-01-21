@@ -41,7 +41,7 @@ export class AuthenticationController {
         dto.password,
       );
 
-      return new UserDto(user.props);
+      return new UserDto(user);
     } catch (error) {
       if (error instanceof InvalidCredentialsError) {
         throw new UnauthorizedException(error.message);

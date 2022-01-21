@@ -5,6 +5,7 @@ import { UserStore, UserStoreToken } from '../../domain/user.store';
 
 import { FixtureUserStore } from './fixture-user.store';
 import { InMemoryUserStore } from './in-memory-user.store';
+import { SqlUserStore } from './sql-user.store';
 
 export const userStoreProvider: FactoryProvider<UserStore> = {
   provide: UserStoreToken,
@@ -18,6 +19,9 @@ export const userStoreProvider: FactoryProvider<UserStore> = {
 
       case 'fixture':
         return new FixtureUserStore();
+
+      case 'sql':
+        return new SqlUserStore();
 
       default:
         throw new Error(`invalid USER_STORE value '${store}'`);

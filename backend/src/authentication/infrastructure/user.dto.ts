@@ -1,20 +1,16 @@
-import { Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 
-import { UserProps } from '../domain/user';
+import { User } from '../domain/user';
 
 export class UserDto {
-  constructor(props: UserProps) {
-    this.id = props.id;
-    this.email = props.email;
-    this.token = props.token;
+  constructor(user: User) {
+    Object.assign(this, user.getProps());
   }
 
-  @Expose()
   id: string;
-
-  @Expose()
   email: string;
-
-  @Expose()
   token: string;
+
+  @Exclude()
+  hashedPassword: string;
 }

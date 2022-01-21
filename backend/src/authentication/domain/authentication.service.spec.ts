@@ -32,9 +32,9 @@ describe('AuthenticationService', () => {
 
       const loggedInUser = await service.authenticate(email, password);
 
-      expect(loggedInUser.props.id).toEqual(user.props.id);
+      expect(loggedInUser.equals(user)).toBe(true);
 
-      expect(await userStore.findUserById(user.props.id)).toHaveProperty(
+      expect(await userStore.findUserById(user.id)).toHaveProperty(
         'props.token',
         'generated-token',
       );

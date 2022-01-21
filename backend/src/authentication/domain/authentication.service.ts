@@ -22,16 +22,13 @@ export class AuthenticationService {
       throw new InvalidCredentialsError();
     }
 
-    const result = await this.crypto.compare(
-      password,
-      user.props.hashedPassword,
-    );
+    const result = await user.checkPassword(password, this.crypto);
 
     if (!result) {
       throw new InvalidCredentialsError();
     }
 
-    user.props.token = await this.generator.generateAuthenticationToken();
+    await user.generateToken(this.generator);
 
     await this.userStore.saveUser(user);
 

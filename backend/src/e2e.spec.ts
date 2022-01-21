@@ -1,44 +1,41 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import dotenv from 'dotenv-safe';
 import request, { SuperAgentTest } from 'supertest';
 
 import { AppModule } from './app.module';
 import { Credentials } from './authentication/domain/credentials';
 import { createUser } from './authentication/domain/user';
-import { UserStoreToken } from './authentication/domain/user.store';
-import { InMemoryUserStore } from './authentication/infrastructure/user-store/in-memory-user.store';
-import { InMemoryMetricsStore } from './metrics/infrastructure/store/in-memory-metrics.store';
-import { MetricsStoreToken } from './metrics/infrastructure/store/metrics-store-token';
+import { UserStore, UserStoreToken } from './authentication/domain/user.store';
+import db from './sql/database';
+
+dotenv.config({ path: '.env.test' });
 
 describe('e2e', () => {
-  let userStore: InMemoryUserStore;
-  let metricsStore: InMemoryMetricsStore;
-
+  let userStore: UserStore;
   let app: INestApplication;
 
   let agent: SuperAgentTest;
 
   beforeEach(async () => {
-    userStore = new InMemoryUserStore();
-    metricsStore = new InMemoryMetricsStore();
-
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
-    })
-      .overrideProvider(UserStoreToken)
-      .useValue(userStore)
-      .overrideProvider(MetricsStoreToken)
-      .useValue(metricsStore)
-      .compile();
+    }).compile();
 
     app = moduleRef.createNestApplication();
     await app.init();
 
+    userStore = app.get<UserStore>(UserStoreToken);
+
     agent = request.agent(app.getHttpServer());
   });
 
+  beforeEach(async () => {
+    await db.deleteFrom('user').execute();
+  });
+
   afterEach(async () => {
-    await app.close();
+    await app?.close();
   });
 
   it("logs in and fetches the user's last metrics", async () => {
@@ -50,10 +47,9 @@ describe('e2e', () => {
     // prettier-ignore
     // cSpell:disable-next-line
     const hashedPassword = '$2b$10$QB2yC/AtXUMZA3mxOahcjuETGF6rOkpJXnKQY3LIlPJHmhOWai5aO';
+    const user = createUser({ email: credentials.email, hashedPassword });
 
-    userStore.add(
-      createUser({ email: credentials.email, hashedPassword }).props,
-    );
+    await userStore.saveUser(user);
 
     const loginResponse = await agent
       .post('/auth/login')

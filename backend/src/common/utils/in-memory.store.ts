@@ -11,8 +11,8 @@ export class InMemoryStore<T extends { id: string }> {
     this.items.set(item.id, clone(item));
   }
 
-  get(key: string) {
-    return clone(this.items.get(key));
+  get(id: string) {
+    return clone(this.items.get(id));
   }
 
   all() {

@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 
 import { FileNotFoundError } from './file-not-found.error';
-import { FileSystemPort } from './file-system.interface';
+import { FileSystemPort } from './file-system.port';
 
 export class FileSystemAdapter implements FileSystemPort {
   async readJsonFile<T>(path: string): Promise<T> {

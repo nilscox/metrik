@@ -1,5 +1,5 @@
 import { FileNotFoundError } from './file-not-found.error';
-import { FileSystemPort } from './file-system.interface';
+import { FileSystemPort } from './file-system.port';
 
 export class StubFileSystemAdapter implements FileSystemPort {
   public files = new Map<string, unknown>();

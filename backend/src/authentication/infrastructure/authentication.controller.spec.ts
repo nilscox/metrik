@@ -1,5 +1,6 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { instanceToPlain } from 'class-transformer';
 import expect from 'expect';
 import { fn, Mock } from 'jest-mock';
 
@@ -52,9 +53,10 @@ describe('AuthenticationController', () => {
       authenticationService.authenticate.mockResolvedValueOnce(user);
 
       const loggedInUser = await controller.login(credentials);
+      const outputDto = instanceToPlain(loggedInUser);
 
-      expect(loggedInUser).toEqual({
-        id: user.props.id,
+      expect(outputDto).toEqual({
+        id: user.id,
         email: credentials.email,
         token: 'token',
       });
