@@ -7,8 +7,8 @@ import 'module-alias/register';
 dotenv.config();
 
 import { AppModule } from './app.module';
-import { ConfigPort } from './common/config/config.port';
-import { Logger } from './common/logger/Logger';
+import { ConfigPort } from './common/config';
+import { Logger } from './common/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

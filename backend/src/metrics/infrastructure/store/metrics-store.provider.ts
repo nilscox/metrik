@@ -1,7 +1,7 @@
 import { FactoryProvider } from '@nestjs/common';
 
-import { ConfigPort } from '~/common/config/config.port';
-import { FileSystemPort } from '~/common/file-system/file-system.port';
+import { ConfigPort } from '~/common/config';
+import { FileSystemPort } from '~/common/file-system';
 
 import { MetricsStore } from '../../domain/Metrics';
 

@@ -1,9 +1,8 @@
 import expect from 'expect';
 import { Response } from 'express';
 
-import { MetriksRequest } from '~/common/utils/metriks-request';
-import { createUser } from '~/user/domain/user';
-import { InMemoryUserStore } from '~/user/infrastructure/user-store/in-memory-user.store';
+import { createUser, InMemoryUserStore } from '~/user';
+import { MetriksRequest } from '~/utils/metriks-request';
 
 import { UserMiddleware } from './user.middleware';
 

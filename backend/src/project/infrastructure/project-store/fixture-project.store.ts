@@ -1,4 +1,4 @@
-import projects from '../../../fixtures/projects.json';
+import projects from '~/fixtures/projects.json';
 
 import { InMemoryProjectStore } from './in-memory-project.store';
 

@@ -1,9 +1,8 @@
 import expect from 'expect';
 
-import { StubCryptoAdapter } from '~/common/crypto/stub-crypto.adapter';
-import { StubGeneratorAdapter } from '~/common/generator/stub-generator.adapter';
-import { createUser } from '~/user/domain/user';
-import { InMemoryUserStore } from '~/user/infrastructure/user-store/in-memory-user.store';
+import { StubCryptoAdapter } from '~/common/crypto';
+import { StubGeneratorAdapter } from '~/common/generator';
+import { createUser, InMemoryUserStore } from '~/user';
 
 import { AuthenticationService } from './authentication.service';
 import { InvalidCredentialsError } from './authentication-errors';

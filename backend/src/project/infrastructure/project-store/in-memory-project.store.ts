@@ -1,4 +1,4 @@
-import { InMemoryStore } from '~/common/utils/in-memory.store';
+import { InMemoryStore } from '~/utils/in-memory.store';
 
 import { Project, ProjectProps } from '../../domain/project';
 import { ProjectStore } from '../../domain/project.store';

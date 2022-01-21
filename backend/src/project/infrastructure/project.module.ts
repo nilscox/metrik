@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule } from '~/common/config/config.module';
-import { GeneratorModule } from '~/common/generator/generator.module';
-import { LoggerModule } from '~/common/logger/logger.module';
+import { ConfigModule } from '~/common/config';
+import { GeneratorModule } from '~/common/generator';
+import { LoggerModule } from '~/common/logger';
 
 import { ProjectService } from '../domain/project.service';
 

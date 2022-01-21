@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { User } from '~/user/domain/user';
+import { User } from '~/user';
 
 import { AuthenticationService } from '../domain/authentication.service';
 import { InvalidCredentialsError } from '../domain/authentication-errors';

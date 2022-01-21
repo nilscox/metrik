@@ -4,10 +4,18 @@
     "project": "tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint/eslint-plugin", "simple-import-sort"],
-  "extends": ["plugin:@typescript-eslint/recommended"],
+  "plugins": ["import", "@typescript-eslint/eslint-plugin", "simple-import-sort"],
+  "extends": ["plugin:import/recommended", "plugin:@typescript-eslint/recommended"],
   "env": {
     "node": true
+  },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [["~", "./src"]],
+        "extensions": [".json", ".js", ".ts"]
+      }
+    }
   },
   "rules": {
     "simple-import-sort/imports": [

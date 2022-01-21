@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { FileNotFoundError } from '~/common/file-system/file-not-found.error';
-import { FileSystemPort } from '~/common/file-system/file-system.port';
+import { FileNotFoundError, FileSystemPort } from '~/common/file-system';
 
 import { MetricsSnapshots, MetricsStore } from '../../domain/Metrics';
 

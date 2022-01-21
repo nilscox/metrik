@@ -4,14 +4,11 @@ import expect from 'expect';
 import { fn } from 'jest-mock';
 import request, { SuperAgentTest } from 'supertest';
 
-import { AuthorizationModule } from '~/authorization/authorization.module';
-import { ConfigPort } from '~/common/config/config.port';
-import { StubConfigAdapter } from '~/common/config/stub-config.adapter';
-import { as } from '~/common/utils/as-user';
-import { MockFn } from '~/common/utils/mock-fn';
-import { createUser } from '~/user/domain/user';
-import { UserStoreToken } from '~/user/domain/user.store';
-import { InMemoryUserStore } from '~/user/infrastructure/user-store/in-memory-user.store';
+import { AuthorizationModule } from '~/authorization';
+import { ConfigPort, StubConfigAdapter } from '~/common/config';
+import { createUser, InMemoryUserStore, UserStoreToken } from '~/user';
+import { as } from '~/utils/as-user';
+import { MockFn } from '~/utils/mock-fn';
 
 import { createProject } from '../domain/project';
 import { ProjectService } from '../domain/project.service';

@@ -1,4 +1,4 @@
-import { InMemoryStore } from '~/common/utils/in-memory.store';
+import { InMemoryStore } from '~/utils/in-memory.store';
 
 import { User, UserProps } from '../../domain/user';
 import { UserStore } from '../../domain/user.store';

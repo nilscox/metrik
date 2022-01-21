@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule } from '~/common/config/config.module';
-import { FileSystemModule } from '~/common/file-system/file-system.module';
+import { ConfigModule } from '~/common/config';
+import { FileSystemModule } from '~/common/file-system';
 
 import { MetricsController } from './metrics.controller';
 import { metricsStoreProvider } from './store/metrics-store.provider';

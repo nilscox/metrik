@@ -1,5 +1,5 @@
-import { CryptoPort } from '~/common/crypto/crypto.port';
-import { GeneratorPort } from '~/common/generator/generator.port';
+import { CryptoPort } from '~/common/crypto';
+import { GeneratorPort } from '~/common/generator';
 import { Entity } from '~/ddd/entity';
 
 export type UserProps = {

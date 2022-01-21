@@ -1,6 +1,6 @@
 import { FactoryProvider } from '@nestjs/common';
 
-import { ConfigPort } from '~/common/config/config.port';
+import { ConfigPort } from '~/common/config';
 
 import { ProjectStore, ProjectStoreToken } from '../../domain/project.store';
 

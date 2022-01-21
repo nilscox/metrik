@@ -1,4 +1,5 @@
-import db from '../../../sql/database';
+import db from '~/sql/database';
+
 import { Project } from '../../domain/project';
 import { ProjectStore } from '../../domain/project.store';
 

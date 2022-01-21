@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { GeneratorPort } from '~/common/generator/generator.port';
+import { GeneratorPort } from '~/common/generator';
 
 import { Project } from './project';
 import { ProjectStore, ProjectStoreToken } from './project.store';
