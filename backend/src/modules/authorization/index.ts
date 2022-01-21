@@ -1,3 +1,3 @@
 export { AuthorizationModule } from './authorization.module';
 
-export { IsAuthenticatedGuard } from './is-authenticated.guard';
+export { IsAuthenticated } from './is-authenticated.guard';

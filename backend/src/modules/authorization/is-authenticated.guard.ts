@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MetriksRequest } from '~/utils/metriks-request';
 
 @Injectable()
-export class IsAuthenticatedGuard implements CanActivate {
+export class IsAuthenticated implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const req: MetriksRequest = context.switchToHttp().getRequest();
 

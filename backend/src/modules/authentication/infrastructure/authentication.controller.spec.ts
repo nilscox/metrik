@@ -89,7 +89,7 @@ describe('AuthenticationController', () => {
       });
     });
 
-    it('prevents a user who is already logged in to log in again', async () => {
+    it('prevents an authenticated user to log in again', async () => {
       const user = createUser({ token: 'token' });
 
       await userStore.saveUser(user);

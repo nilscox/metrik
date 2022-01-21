@@ -89,4 +89,8 @@ describe('ProjectController', () => {
 
     expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, 'master');
   });
+
+  it('prevents to create a project without being authenticated', async () => {
+    await agent.post('/project').expect(403);
+  });
 });
