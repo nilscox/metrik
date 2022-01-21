@@ -9,9 +9,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { IsAuthenticatedGuard } from '../../authorization/is-authenticated.guard';
 import { MetricsStore } from '../domain/Metrics';
 
-import { AuthenticationGuard } from './authentication-guard';
 import { CreateSnapshotDto } from './create-snapshot-dto';
 import { MetricsStoreToken } from './store/metrics-store-token';
 
@@ -22,7 +22,7 @@ export class MetricsController {
   private readonly metricsStore: MetricsStore;
 
   @Post('create-snapshot')
-  @UseGuards(AuthenticationGuard)
+  @UseGuards(IsAuthenticatedGuard)
   async createSnapshot(@Body() dto: CreateSnapshotDto) {
     const snapshots = await this.metricsStore.getSnapshots();
 
@@ -34,7 +34,7 @@ export class MetricsController {
   }
 
   @Get('all')
-  @UseGuards(AuthenticationGuard)
+  @UseGuards(IsAuthenticatedGuard)
   async getAllMetrics() {
     const snapshots = await this.metricsStore.getSnapshots();
 
@@ -42,7 +42,7 @@ export class MetricsController {
   }
 
   @Get('last')
-  @UseGuards(AuthenticationGuard)
+  @UseGuards(IsAuthenticatedGuard)
   async getLastMetrics() {
     const snapshots = await this.metricsStore.getSnapshots();
 

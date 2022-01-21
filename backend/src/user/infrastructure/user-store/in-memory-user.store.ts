@@ -1,11 +1,8 @@
+import { User, UserProps } from '../../../authentication/domain/user';
+import { UserStore } from '../../../authentication/domain/user.store';
 import { InMemoryStore } from '../../../common/utils/in-memory.store';
-import { User, UserProps } from '../../domain/user';
-import { UserStore } from '../../domain/user.store';
 
-export class InMemoryUserStore
-  extends InMemoryStore<UserProps>
-  implements UserStore
-{
+export class InMemoryUserStore extends InMemoryStore<UserProps> implements UserStore {
   async findUserById(id: string): Promise<User | undefined> {
     return this.findByPredicate((props) => props.id === id);
   }
@@ -18,9 +15,7 @@ export class InMemoryUserStore
     return this.findByPredicate((props) => props.token === token);
   }
 
-  private findByPredicate(
-    predicate: (props: UserProps) => boolean,
-  ): User | undefined {
+  private findByPredicate(predicate: (props: UserProps) => boolean): User | undefined {
     const props = this.find(predicate);
 
     if (props) {
@@ -29,6 +24,6 @@ export class InMemoryUserStore
   }
 
   async saveUser(user: User): Promise<void> {
-    this.add(user.props);
+    this.add(user.getProps());
   }
 }

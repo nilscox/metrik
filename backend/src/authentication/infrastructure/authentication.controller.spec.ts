@@ -1,35 +1,37 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { instanceToPlain } from 'class-transformer';
 import expect from 'expect';
-import { fn, Mock } from 'jest-mock';
+import { fn } from 'jest-mock';
+import request, { SuperAgentTest } from 'supertest';
 
+import { AuthorizationModule } from '../../authorization/authorization.module';
 import { ConfigPort } from '../../common/config/config.port';
 import { StubConfigAdapter } from '../../common/config/stub-config.adapter';
+import { as } from '../../common/utils/as-user';
+import { MockFn } from '../../common/utils/mock-fn';
+import { InMemoryUserStore } from '../../user/infrastructure/user-store/in-memory-user.store';
 import { AuthenticationService } from '../domain/authentication.service';
 import { InvalidCredentialsError } from '../domain/authentication-errors';
 import { Credentials } from '../domain/credentials';
 import { createUser } from '../domain/user';
+import { UserStoreToken } from '../domain/user.store';
 
-import { AuthenticationController } from './authentication.controller';
 import { AuthenticationModule } from './authentication.module';
-
-type MockFn<T extends (...args: unknown[]) => unknown> = Mock<
-  ReturnType<T>,
-  Parameters<T>
->;
 
 class MockAuthenticationService extends AuthenticationService {
   override authenticate: MockFn<AuthenticationService['authenticate']> = fn();
 }
 
 describe('AuthenticationController', () => {
-  let controller: AuthenticationController;
+  let userStore: InMemoryUserStore;
   let authenticationService: MockAuthenticationService;
+  let app: INestApplication;
+
+  let agent: SuperAgentTest;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AuthenticationModule],
+      imports: [AuthorizationModule, AuthenticationModule],
     })
       .overrideProvider(ConfigPort)
       .useValue(new StubConfigAdapter({ STORE: 'memory' }))
@@ -37,8 +39,18 @@ describe('AuthenticationController', () => {
       .useClass(MockAuthenticationService)
       .compile();
 
-    controller = module.get(AuthenticationController);
-    authenticationService = module.get(AuthenticationService);
+    app = module.createNestApplication();
+    await app.init();
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  beforeEach(() => {
+    userStore = app.get(UserStoreToken);
+    authenticationService = app.get(AuthenticationService);
+    agent = request.agent(app.getHttpServer());
   });
 
   describe('login', () => {
@@ -52,10 +64,17 @@ describe('AuthenticationController', () => {
 
       authenticationService.authenticate.mockResolvedValueOnce(user);
 
-      const loggedInUser = await controller.login(credentials);
-      const outputDto = instanceToPlain(loggedInUser);
+      const { body } = await agent
+        .post('/auth/login')
+        .send(credentials)
+        .expect(HttpStatus.OK);
 
-      expect(outputDto).toEqual({
+      expect(authenticationService.authenticate).toHaveBeenCalledWith(
+        credentials.email,
+        credentials.password,
+      );
+
+      expect(body).toEqual({
         id: user.id,
         email: credentials.email,
         token: 'token',
@@ -67,17 +86,30 @@ describe('AuthenticationController', () => {
         new InvalidCredentialsError(),
       );
 
-      await expect(controller.login(credentials)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      const { body } = await agent
+        .post('/auth/login')
+        .send(credentials)
+        .expect(HttpStatus.UNAUTHORIZED);
+
+      await expect(body).toMatchObject({
+        message: 'invalid email password combinaison',
+      });
     });
 
     it('prevents a user who is already logged in to log in again', async () => {
-      const user = createUser();
+      const user = createUser({ token: 'token' });
 
-      await expect(controller.login(credentials, user)).rejects.toThrow(
-        'you are already authenticated',
-      );
+      await userStore.saveUser(user);
+
+      const { body } = await agent
+        .post('/auth/login')
+        .use(as(user))
+        .send(credentials)
+        .expect(HttpStatus.UNAUTHORIZED);
+
+      await expect(body).toMatchObject({
+        message: 'you are already authenticated',
+      });
     });
   });
 });

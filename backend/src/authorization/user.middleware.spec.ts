@@ -1,11 +1,11 @@
 import expect from 'expect';
 import { Response } from 'express';
 
-import { createUser } from '../domain/user';
+import { createUser } from '../authentication/domain/user';
+import { MetriksRequest } from '../common/utils/metriks-request';
+import { InMemoryUserStore } from '../user/infrastructure/user-store/in-memory-user.store';
 
-import { MetriksRequest } from './metriks-request';
 import { UserMiddleware } from './user.middleware';
-import { InMemoryUserStore } from './user-store/in-memory-user.store';
 
 describe('UserMiddleware', () => {
   // todo: mock

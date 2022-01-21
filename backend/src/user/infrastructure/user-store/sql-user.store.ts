@@ -1,6 +1,6 @@
+import { User } from '../../../authentication/domain/user';
+import { UserStore } from '../../../authentication/domain/user.store';
 import db from '../../../sql/database';
-import { User } from '../../domain/user';
-import { UserStore } from '../../domain/user.store';
 
 export class SqlUserStore implements UserStore {
   async findUserByEmail(email: string): Promise<User> {

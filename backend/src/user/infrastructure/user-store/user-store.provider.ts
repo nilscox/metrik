@@ -1,7 +1,10 @@
 import { FactoryProvider } from '@nestjs/common';
 
+import {
+  UserStore,
+  UserStoreToken,
+} from '../../../authentication/domain/user.store';
 import { ConfigPort } from '../../../common/config/config.port';
-import { UserStore, UserStoreToken } from '../../domain/user.store';
 
 import { FixtureUserStore } from './fixture-user.store';
 import { InMemoryUserStore } from './in-memory-user.store';
@@ -24,7 +27,7 @@ export const userStoreProvider: FactoryProvider<UserStore> = {
         return new SqlUserStore();
 
       default:
-        throw new Error(`invalid USER_STORE value '${store}'`);
+        throw new Error(`invalid STORE value '${store}'`);
     }
   },
 };

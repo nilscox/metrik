@@ -1,7 +1,7 @@
 import expect from 'expect';
 
+import { createUser, User } from '../../../authentication/domain/user';
 import db from '../../../sql/database';
-import { createUser, User } from '../../domain/user';
 
 import { SqlUserStore } from './sql-user.store';
 

@@ -2,8 +2,8 @@ import expect from 'expect';
 
 import { StubCryptoAdapter } from '../../common/crypto/stub-crypto.adapter';
 import { StubGeneratorAdapter } from '../../common/generator/stub-generator.adapter';
+import { InMemoryUserStore } from '../../user/infrastructure/user-store/in-memory-user.store';
 import { createUser } from '../domain/user';
-import { InMemoryUserStore } from '../infrastructure/user-store/in-memory-user.store';
 
 import { AuthenticationService } from './authentication.service';
 import { InvalidCredentialsError } from './authentication-errors';
