@@ -1,5 +1,9 @@
 {
   "extension": "ts",
   "spec": ["src/**/*.spec.ts"],
-  "require": ["ts-node/register/transpile-only", "source-map-support/register"]
+  "require": [
+    "ts-node/register/transpile-only",
+    "source-map-support/register",
+    "module-alias/register"
+  ]
 }

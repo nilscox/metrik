@@ -1,6 +1,7 @@
 import expect from 'expect';
 
-import { StubGeneratorAdapter } from '../../common/generator/stub-generator.adapter';
+import { StubGeneratorAdapter } from '~/common/generator/stub-generator.adapter';
+
 import { InMemoryProjectStore } from '../infrastructure/project-store/in-memory-project.store';
 
 import { ProjectService } from './project.service';

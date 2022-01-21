@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule } from '../../common/config/config.module';
+import { ConfigModule } from '~/common/config/config.module';
 
 import { userStoreProvider } from './user-store/user-store.provider';
 

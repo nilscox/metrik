@@ -4,17 +4,18 @@ import expect from 'expect';
 import { fn } from 'jest-mock';
 import request, { SuperAgentTest } from 'supertest';
 
-import { AuthorizationModule } from '../../authorization/authorization.module';
-import { ConfigPort } from '../../common/config/config.port';
-import { StubConfigAdapter } from '../../common/config/stub-config.adapter';
-import { as } from '../../common/utils/as-user';
-import { MockFn } from '../../common/utils/mock-fn';
-import { InMemoryUserStore } from '../../user/infrastructure/user-store/in-memory-user.store';
+import { AuthorizationModule } from '~/authorization/authorization.module';
+import { ConfigPort } from '~/common/config/config.port';
+import { StubConfigAdapter } from '~/common/config/stub-config.adapter';
+import { as } from '~/common/utils/as-user';
+import { MockFn } from '~/common/utils/mock-fn';
+import { createUser } from '~/user/domain/user';
+import { UserStoreToken } from '~/user/domain/user.store';
+import { InMemoryUserStore } from '~/user/infrastructure/user-store/in-memory-user.store';
+
 import { AuthenticationService } from '../domain/authentication.service';
 import { InvalidCredentialsError } from '../domain/authentication-errors';
 import { Credentials } from '../domain/credentials';
-import { createUser } from '../domain/user';
-import { UserStoreToken } from '../domain/user.store';
 
 import { AuthenticationModule } from './authentication.module';
 
@@ -64,10 +65,7 @@ describe('AuthenticationController', () => {
 
       authenticationService.authenticate.mockResolvedValueOnce(user);
 
-      const { body } = await agent
-        .post('/auth/login')
-        .send(credentials)
-        .expect(HttpStatus.OK);
+      const { body } = await agent.post('/auth/login').send(credentials).expect(HttpStatus.OK);
 
       expect(authenticationService.authenticate).toHaveBeenCalledWith(
         credentials.email,
@@ -82,9 +80,7 @@ describe('AuthenticationController', () => {
     });
 
     it('handles the InvalidCredentials domain error', async () => {
-      authenticationService.authenticate.mockRejectedValueOnce(
-        new InvalidCredentialsError(),
-      );
+      authenticationService.authenticate.mockRejectedValueOnce(new InvalidCredentialsError());
 
       const { body } = await agent
         .post('/auth/login')

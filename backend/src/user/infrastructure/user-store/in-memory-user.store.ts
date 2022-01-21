@@ -1,6 +1,7 @@
-import { User, UserProps } from '../../../authentication/domain/user';
-import { UserStore } from '../../../authentication/domain/user.store';
-import { InMemoryStore } from '../../../common/utils/in-memory.store';
+import { InMemoryStore } from '~/common/utils/in-memory.store';
+
+import { User, UserProps } from '../../domain/user';
+import { UserStore } from '../../domain/user.store';
 
 export class InMemoryUserStore extends InMemoryStore<UserProps> implements UserStore {
   async findUserById(id: string): Promise<User | undefined> {

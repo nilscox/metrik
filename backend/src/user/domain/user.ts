@@ -1,6 +1,6 @@
-import { CryptoPort } from '../../common/crypto/crypto.port';
-import { GeneratorPort } from '../../common/generator/generator.port';
-import { Entity } from '../../ddd/entity';
+import { CryptoPort } from '~/common/crypto/crypto.port';
+import { GeneratorPort } from '~/common/generator/generator.port';
+import { Entity } from '~/ddd/entity';
 
 export type UserProps = {
   id: string;
@@ -22,10 +22,7 @@ export class User extends Entity {
     return this.props;
   }
 
-  async checkPassword(
-    typedPassword: string,
-    crypto: CryptoPort,
-  ): Promise<boolean> {
+  async checkPassword(typedPassword: string, crypto: CryptoPort): Promise<boolean> {
     return crypto.compare(typedPassword, this.props.hashedPassword);
   }
 

@@ -1,9 +1,9 @@
 import expect from 'expect';
 
-import { StubCryptoAdapter } from '../../common/crypto/stub-crypto.adapter';
-import { StubGeneratorAdapter } from '../../common/generator/stub-generator.adapter';
-import { InMemoryUserStore } from '../../user/infrastructure/user-store/in-memory-user.store';
-import { createUser } from '../domain/user';
+import { StubCryptoAdapter } from '~/common/crypto/stub-crypto.adapter';
+import { StubGeneratorAdapter } from '~/common/generator/stub-generator.adapter';
+import { createUser } from '~/user/domain/user';
+import { InMemoryUserStore } from '~/user/infrastructure/user-store/in-memory-user.store';
 
 import { AuthenticationService } from './authentication.service';
 import { InvalidCredentialsError } from './authentication-errors';
@@ -41,9 +41,7 @@ describe('AuthenticationService', () => {
     });
 
     it('discards a user who sent credentials that do not match any existing user', async () => {
-      await expect(service.authenticate(email, password)).rejects.toThrow(
-        InvalidCredentialsError,
-      );
+      await expect(service.authenticate(email, password)).rejects.toThrow(InvalidCredentialsError);
     });
 
     it('discards a user who sent invalid credentials', async () => {
@@ -51,9 +49,7 @@ describe('AuthenticationService', () => {
 
       await userStore.saveUser(user);
 
-      await expect(service.authenticate(email, 'nope')).rejects.toThrow(
-        InvalidCredentialsError,
-      );
+      await expect(service.authenticate(email, 'nope')).rejects.toThrow(InvalidCredentialsError);
     });
   });
 });

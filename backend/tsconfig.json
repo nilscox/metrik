@@ -10,6 +10,11 @@
     "outDir": "./dist",
     "incremental": true,
 
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    },
+
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,

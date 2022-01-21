@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 
-import { User } from '../domain/user';
+import { User } from '~/user/domain/user';
 
 export class UserDto {
   constructor(user: User) {

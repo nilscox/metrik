@@ -1,10 +1,8 @@
 import { FactoryProvider } from '@nestjs/common';
 
-import {
-  UserStore,
-  UserStoreToken,
-} from '../../../authentication/domain/user.store';
-import { ConfigPort } from '../../../common/config/config.port';
+import { ConfigPort } from '~/common/config/config.port';
+
+import { UserStore, UserStoreToken } from '../../domain/user.store';
 
 import { FixtureUserStore } from './fixture-user.store';
 import { InMemoryUserStore } from './in-memory-user.store';

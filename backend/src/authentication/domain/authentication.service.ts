@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { CryptoPort } from '../../common/crypto/crypto.port';
-import { GeneratorPort } from '../../common/generator/generator.port';
+import { CryptoPort } from '~/common/crypto/crypto.port';
+import { GeneratorPort } from '~/common/generator/generator.port';
+import { User } from '~/user/domain/user';
+
+import { UserStore, UserStoreToken } from '../../user/domain/user.store';
 
 import { InvalidCredentialsError } from './authentication-errors';
-import { User } from './user';
-import { UserStore, UserStoreToken } from './user.store';
 
 @Injectable()
 export class AuthenticationService {

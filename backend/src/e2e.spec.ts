@@ -5,9 +5,9 @@ import request, { SuperAgentTest } from 'supertest';
 
 import { AppModule } from './app.module';
 import { Credentials } from './authentication/domain/credentials';
-import { createUser } from './authentication/domain/user';
-import { UserStore, UserStoreToken } from './authentication/domain/user.store';
 import db from './sql/database';
+import { createUser } from './user/domain/user';
+import { UserStore, UserStoreToken } from './user/domain/user.store';
 
 dotenv.config({ path: '.env.test' });
 

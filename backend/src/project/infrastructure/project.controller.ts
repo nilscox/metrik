@@ -8,8 +8,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { User } from '../../authentication/domain/user';
-import { AuthenticatedUser } from '../../authentication/infrastructure/authenticated-user';
+import { AuthenticatedUser } from '~/authentication/infrastructure/authenticated-user';
+import { User } from '~/user/domain/user';
+
 import { ProjectService } from '../domain/project.service';
 
 import { CreateProjectDto } from './create-project.dto';
@@ -26,10 +27,7 @@ export class ProjectController {
     @AuthenticatedUser() user: User,
     @Body() dto: CreateProjectDto,
   ): Promise<ProjectDto> {
-    const project = await this.projectService.createNewProject(
-      dto.name,
-      dto.defaultBranch,
-    );
+    const project = await this.projectService.createNewProject(dto.name, dto.defaultBranch);
 
     return new ProjectDto(project);
   }

@@ -7,7 +7,7 @@
     "build": "nest build",
     "start": "nest start --watch",
     "start:debug": "nest start:watch --debug",
-    "lint": "eslint \"src/**/*.ts\" --fix",
+    "lint": "eslint src",
     "test": "mocha",
     "db:migrate": "ts-node src/sql/run-migrations.ts"
   },
@@ -21,6 +21,7 @@
     "class-validator": "^0.13.2",
     "cors": "^2.8.5",
     "kysely": "^0.16.7",
+    "module-alias": "^2.2.2",
     "nanoid": "^3.2.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -55,5 +56,8 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
     "typescript": "^4.3.5"
+  },
+  "_moduleAliases": {
+    "~": "src"
   }
 }

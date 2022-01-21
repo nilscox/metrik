@@ -1,7 +1,8 @@
 import expect from 'expect';
 
-import { createUser, User } from '../../../authentication/domain/user';
-import db from '../../../sql/database';
+import db from '~/sql/database';
+
+import { createUser, User } from '../../domain/user';
 
 import { SqlUserStore } from './sql-user.store';
 
@@ -20,11 +21,7 @@ describe('SqlUserStore', () => {
   };
 
   const find = async (userId: string) => {
-    return db
-      .selectFrom('user')
-      .selectAll()
-      .where('id', '=', userId)
-      .executeTakeFirstOrThrow();
+    return db.selectFrom('user').selectAll().where('id', '=', userId).executeTakeFirstOrThrow();
   };
 
   it('finds a user from its email', async () => {

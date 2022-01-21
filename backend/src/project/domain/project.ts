@@ -1,4 +1,4 @@
-import { Entity } from '../../ddd/entity';
+import { Entity } from '~/ddd/entity';
 
 export type ProjectProps = {
   id: string;
@@ -20,9 +20,7 @@ export class Project extends Entity {
   }
 }
 
-export const createProject = (
-  overrides: Partial<ProjectProps> = {},
-): Project => {
+export const createProject = (overrides: Partial<ProjectProps> = {}): Project => {
   return new Project({
     id: '1',
     name: 'name',
