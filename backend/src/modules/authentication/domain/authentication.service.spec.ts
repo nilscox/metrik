@@ -2,7 +2,7 @@ import expect from 'expect';
 
 import { StubCryptoAdapter } from '~/common/crypto';
 import { StubGeneratorAdapter } from '~/common/generator';
-import { createUser, InMemoryUserStore } from '~/user';
+import { createUser, InMemoryUserStore } from '~/modules/user';
 
 import { AuthenticationService } from './authentication.service';
 import { InvalidCredentialsError } from './authentication-errors';

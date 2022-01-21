@@ -8,8 +8,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { AuthenticatedUser } from '~/authentication';
-import { User } from '~/user';
+import { AuthenticatedUser } from '~/modules/authentication';
+import { User } from '~/modules/user';
 
 import { ProjectService } from '../domain/project.service';
 

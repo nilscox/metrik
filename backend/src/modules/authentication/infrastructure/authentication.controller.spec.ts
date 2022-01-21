@@ -4,9 +4,9 @@ import expect from 'expect';
 import { fn } from 'jest-mock';
 import request, { SuperAgentTest } from 'supertest';
 
-import { AuthorizationModule } from '~/authorization';
 import { ConfigPort, StubConfigAdapter } from '~/common/config';
-import { createUser, InMemoryUserStore, UserStoreToken } from '~/user';
+import { AuthorizationModule } from '~/modules/authorization';
+import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
 import { MockFn } from '~/utils/mock-fn';
 

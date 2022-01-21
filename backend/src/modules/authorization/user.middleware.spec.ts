@@ -1,7 +1,7 @@
 import expect from 'expect';
 import { Response } from 'express';
 
-import { createUser, InMemoryUserStore } from '~/user';
+import { createUser, InMemoryUserStore } from '~/modules/user';
 import { MetriksRequest } from '~/utils/metriks-request';
 
 import { UserMiddleware } from './user.middleware';

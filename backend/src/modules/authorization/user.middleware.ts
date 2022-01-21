@@ -1,7 +1,7 @@
 import { Inject, Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 
-import { UserStore, UserStoreToken } from '~/user';
+import { UserStore, UserStoreToken } from '~/modules/user';
 import { MetriksRequest } from '~/utils/metriks-request';
 
 @Injectable()

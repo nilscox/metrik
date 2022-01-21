@@ -1,6 +1,6 @@
 import { Plugin } from 'superagent';
 
-import { User } from '~/user';
+import { User } from '~/modules/user';
 
 export const as =
   (user: User): Plugin =>

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { CryptoPort } from '~/common/crypto';
 import { GeneratorPort } from '~/common/generator';
-import { User, UserStore, UserStoreToken } from '~/user';
+import { User, UserStore, UserStoreToken } from '~/modules/user';
 
 import { InvalidCredentialsError } from './authentication-errors';
 

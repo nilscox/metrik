@@ -9,7 +9,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { IsAuthenticatedGuard } from '~/authorization';
+import { IsAuthenticatedGuard } from '~/modules/authorization';
 
 import { MetricsStore } from '../domain/Metrics';
 

@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-import { UserModule } from '~/user';
+import { UserModule } from '~/modules/user';
 
 import { UserMiddleware } from './user.middleware';
 

@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthenticationModule } from './authentication';
-import { AuthorizationModule } from './authorization';
 import { LoggerModule } from './common/logger/logger.module';
-import { MetricsModule } from './metrics/infrastructure/metrics.module';
-import { ProjectModule } from './project';
+import { AuthenticationModule } from './modules/authentication';
+import { AuthorizationModule } from './modules/authorization';
+import { MetricsModule } from './modules/metrics/infrastructure/metrics.module';
+import { ProjectModule } from './modules/project';
 
 @Module({
   imports: [LoggerModule, AuthorizationModule, AuthenticationModule, ProjectModule, MetricsModule],

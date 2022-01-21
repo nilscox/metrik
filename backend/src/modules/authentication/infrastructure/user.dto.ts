@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 
-import { User } from '~/user';
+import { User } from '~/modules/user';
 
 export class UserDto {
   constructor(user: User) {

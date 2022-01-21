@@ -4,7 +4,7 @@ import { ConfigModule } from '~/common/config';
 import { CryptoModule } from '~/common/crypto';
 import { GeneratorModule } from '~/common/generator';
 import { LoggerModule } from '~/common/logger';
-import { UserModule } from '~/user';
+import { UserModule } from '~/modules/user';
 
 import { AuthenticationService } from '../domain/authentication.service';
 

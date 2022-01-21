@@ -3,11 +3,12 @@ import { Test } from '@nestjs/testing';
 import dotenv from 'dotenv-safe';
 import request, { SuperAgentTest } from 'supertest';
 
+import db from '~/sql/database';
+
 import { AppModule } from './app.module';
-import { Credentials } from './authentication/domain/credentials';
-import db from './sql/database';
-import { createUser } from './user/domain/user';
-import { UserStore, UserStoreToken } from './user/domain/user.store';
+import { Credentials } from './modules/authentication/domain/credentials';
+import { createUser } from './modules/user/domain/user';
+import { UserStore, UserStoreToken } from './modules/user/domain/user.store';
 
 dotenv.config({ path: '.env.test' });
 
