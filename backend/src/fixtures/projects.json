@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "name": "My project",
+    "defaultBranch": "master"
+  },
+  {
+    "id": "2",
+    "name": "My project",
+    "defaultBranch": "main"
+  }
+]

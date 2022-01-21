@@ -8,8 +8,16 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('hashedPassword', 'text', (col) => col.notNull())
     .addColumn('token', 'text')
     .execute();
+
+  await db.schema
+    .createTable('project')
+    .addColumn('id', 'text', (col) => col.primaryKey())
+    .addColumn('name', 'text', (col) => col.notNull())
+    .addColumn('default_branch', 'text', (col) => col.notNull())
+    .execute();
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
+  await db.schema.dropTable('project').execute();
   await db.schema.dropTable('user').execute();
 }

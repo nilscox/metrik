@@ -32,13 +32,14 @@ describe('e2e', () => {
 
   beforeEach(async () => {
     await db.deleteFrom('user').execute();
+    await db.deleteFrom('project').execute();
   });
 
   afterEach(async () => {
     await app?.close();
   });
 
-  it("logs in and fetches the user's last metrics", async () => {
+  it('a user logs in, creates a project and its last metrics', async () => {
     const credentials: Credentials = {
       email: 'user@domain.tld',
       password: 'some password',
@@ -51,16 +52,14 @@ describe('e2e', () => {
 
     await userStore.saveUser(user);
 
-    const loginResponse = await agent
-      .post('/auth/login')
-      .send(credentials)
-      .expect(200);
-
+    const loginResponse = await agent.post('/auth/login').send(credentials).expect(200);
     const token = loginResponse.body.token;
 
-    await agent
-      .get('/metrics/last')
-      .set('Authorization', `Beer ${token}`)
-      .expect(200);
+    agent.use((req) => {
+      req.set('Authorization', `Beer ${token}`);
+    });
+
+    const { body: project } = await agent.post('/project').send({ name: 'My project' }).expect(201);
+    project;
   });
 });
