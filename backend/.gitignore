@@ -4,4 +4,5 @@ yarn-error.log*
 coverage
 .nyc_output
 .env
+db.json
 db.sqlite
