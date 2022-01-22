@@ -30,11 +30,24 @@ export type Metric = {
 };
 
 type MetricsSnapshotProps = {
+  id: string;
   date: Date;
   metrics: Array<Metric>;
 };
 
-export class MetricsSnapshot extends ValueObject<MetricsSnapshotProps> {}
+export class MetricsSnapshot extends Entity {
+  constructor(private props: MetricsSnapshotProps) {
+    super();
+  }
+
+  get id() {
+    return this.props.id;
+  }
+
+  getProps() {
+    return this.props;
+  }
+}
 
 export type ProjectProps = {
   id: string;
@@ -77,7 +90,7 @@ export class Project extends Entity {
     return this.props.metricsConfig.find((config) => config.hasLabel(label));
   }
 
-  createMetricsSnapshot(date: Date, metrics: Array<Metric>) {
+  createMetricsSnapshot(id: string, date: Date, metrics: Array<Metric>) {
     for (const { label, value } of metrics) {
       if (metrics.filter((metric) => metric.label === label).length !== 1) {
         throw new DuplicatedMetricError(label);
@@ -92,7 +105,7 @@ export class Project extends Entity {
       config.validateType(value);
     }
 
-    this.props.snapshots.push(new MetricsSnapshot({ date, metrics }));
+    this.props.snapshots.push(new MetricsSnapshot({ id, date, metrics }));
   }
 }
 
@@ -105,6 +118,25 @@ export const createMetricsConfiguration = (
     unit: 'number',
     ...overrides,
   });
+};
+
+export const createMetricsSnapshot = (
+  overrides: Partial<MetricsSnapshotProps> = {},
+): MetricsSnapshot => {
+  return new MetricsSnapshot({
+    id: '1',
+    date: new Date(),
+    metrics: [],
+    ...overrides,
+  });
+};
+
+export const createMetric = (overrides: Partial<Metric> = {}): Metric => {
+  return {
+    label: 'label',
+    value: 1,
+    ...overrides,
+  };
 };
 
 export const createProject = (overrides: Partial<ProjectProps> = {}): Project => {

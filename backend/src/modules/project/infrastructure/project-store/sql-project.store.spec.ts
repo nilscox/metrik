@@ -5,7 +5,13 @@ import { DatabaseService, DatabaseToken } from '~/common/database';
 import { DevNullLogger, Logger } from '~/common/logger';
 import { Database } from '~/sql/database';
 
-import { createMetricsConfiguration, createProject, Project } from '../../domain/project';
+import {
+  createMetric,
+  createMetricsConfiguration,
+  createMetricsSnapshot,
+  createProject,
+  Project,
+} from '../../domain/project';
 import { ProjectModule } from '../project.module';
 
 import { SqlProjectStore } from './sql-project.store';
@@ -47,9 +53,31 @@ describe('SqlProjectStore', () => {
     return store.findById(projectId);
   };
 
+  const metricsConfiguration = createMetricsConfiguration({
+    label: 'metric',
+    type: 'number',
+    unit: 'number',
+  });
+
+  const metric = createMetric({
+    label: 'metric',
+    value: 1,
+  });
+
+  const snapshot = createMetricsSnapshot({
+    date: new Date('2022-01-01'),
+    metrics: [metric],
+  });
+
+  const projectId = 'projectId';
+  const project = createProject({
+    id: projectId,
+    metricsConfig: [metricsConfiguration],
+    snapshots: [snapshot],
+  });
+
   it('finds a project from its id', async () => {
-    const projectId = 'projectId';
-    const project = await save(createProject({ id: projectId }));
+    await save(project);
 
     const foundProject = await store.findById(projectId);
 

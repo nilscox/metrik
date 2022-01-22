@@ -101,6 +101,7 @@ describe('ProjectService', () => {
     const savedProject = await find(project.id);
     expect(savedProject.getProps().snapshots).toEqual([
       new MetricsSnapshot({
+        id: 'generated-id',
         date: now,
         metrics,
       }),

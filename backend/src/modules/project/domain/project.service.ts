@@ -44,7 +44,7 @@ export class ProjectService {
   async createMetricsSnapshot(projectId: string, metrics: Array<Metric>) {
     const project = await this.projectStore.findByIdOrFail(projectId);
 
-    project.createMetricsSnapshot(this.date.now, metrics);
+    project.createMetricsSnapshot(await this.generator.generateId(), this.date.now, metrics);
 
     await this.projectStore.save(project);
   }

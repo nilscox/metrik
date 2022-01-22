@@ -1,17 +1,23 @@
 import { Database, ProjectTable } from '~/sql/database';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 
-import { MetricConfiguration, MetricConfigurationProps, Project } from '../../domain/project';
+import {
+  Metric,
+  MetricConfiguration,
+  MetricConfigurationProps,
+  MetricsSnapshot,
+  Project,
+} from '../../domain/project';
 import { ProjectStore } from '../../domain/project.store';
 
 export class SqlProjectStore implements ProjectStore {
   constructor(private readonly db: Database) {}
 
-  async findById(id: string): Promise<Project | undefined> {
+  async findById(projectId: string): Promise<Project | undefined> {
     const props = await this.db
       .selectFrom('project')
       .selectAll()
-      .where('id', '=', id)
+      .where('project.id', '=', projectId)
       .executeTakeFirst();
 
     if (props) {
@@ -22,9 +28,41 @@ export class SqlProjectStore implements ProjectStore {
         metricsConfig: JSON.parse(props.metrics_config).map(
           (props: MetricConfigurationProps) => new MetricConfiguration(props),
         ),
-        snapshots: [],
+        snapshots: await this.findProjectMetrics(projectId),
       });
     }
+  }
+
+  private async findProjectMetrics(projectId: string): Promise<MetricsSnapshot[]> {
+    const props = await this.db
+      .selectFrom('snapshot')
+      .selectAll()
+      .where('project_id', '=', projectId)
+      .execute();
+
+    return Promise.all(
+      props.map(
+        async (record) =>
+          new MetricsSnapshot({
+            id: record.id,
+            date: new Date(record.date),
+            metrics: await this.findSnapshotMetrics(record.id),
+          }),
+      ),
+    );
+  }
+
+  private async findSnapshotMetrics(snapshotId: string): Promise<Metric[]> {
+    const props = await this.db
+      .selectFrom('metric')
+      .selectAll()
+      .where('snapshot_id', '=', snapshotId)
+      .execute();
+
+    return props.map((record) => ({
+      label: record.label,
+      value: record.value,
+    }));
   }
 
   async findByIdOrFail(id: string): Promise<Project> {
@@ -51,6 +89,42 @@ export class SqlProjectStore implements ProjectStore {
       await this.db.updateTable('project').set(record).execute();
     } else {
       await this.db.insertInto('project').values(record).execute();
+    }
+
+    const snapshotsIdsResult = await this.db
+      .selectFrom('snapshot')
+      .select('id')
+      .where('project_id', '=', project.id)
+      .execute();
+    const snapshotsIds = snapshotsIdsResult.map(({ id }) => id);
+
+    // todo: remove explicit typing
+    const snapshotsToCreate: MetricsSnapshot[] = props.snapshots.filter(
+      ({ id }) => !snapshotsIds.includes(id),
+    );
+
+    for (const snapshot of snapshotsToCreate) {
+      const props = snapshot.getProps();
+
+      await this.db
+        .insertInto('snapshot')
+        .values({
+          id: props.id,
+          date: props.date.toISOString(),
+          project_id: project.id,
+        })
+        .execute();
+
+      for (const metric of props.metrics) {
+        await this.db
+          .insertInto('metric')
+          .values({
+            label: metric.label,
+            value: metric.value,
+            snapshot_id: snapshot.id,
+          })
+          .execute();
+      }
     }
   }
 

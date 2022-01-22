@@ -17,7 +17,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "lib": [],
+    "lib": ["ES2019.Array"],
 
     "strict": true,
 

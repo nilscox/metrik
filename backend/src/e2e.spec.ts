@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import dotenv from 'dotenv-safe';
+import expect from 'expect';
 import request, { SuperAgentTest } from 'supertest';
 
 import { AppModule } from './app.module';
@@ -86,8 +87,47 @@ describe('e2e', () => {
       .send({ metrics: [{ label: 'Lines of code', value: 42 }] })
       .expect(204);
 
+    await agent
+      .post(`/project/${project.id}/metrics-snapshot`)
+      .send({
+        metrics: [
+          { label: 'Lines of code', value: 43 },
+          { label: 'Overall coverage', value: 0.96 },
+        ],
+      })
+      .expect(204);
+
     const dbProject = await app.get<ProjectStore>(ProjectStoreToken).findById(project.id);
 
-    console.dir(dbProject?.getProps(), { depth: null });
+    expect(dbProject).toEqual({
+      props: {
+        id: project.id,
+        name: 'My project',
+        defaultBranch: 'master',
+        metricsConfig: [
+          { props: { label: 'Lines of code', unit: 'number', type: 'integer' } },
+          { props: { label: 'Overall coverage', unit: 'number', type: 'float' } },
+        ],
+        snapshots: [
+          {
+            props: {
+              id: expect.any(String),
+              date: expect.any(Date),
+              metrics: [{ label: 'Lines of code', value: 42 }],
+            },
+          },
+          {
+            props: {
+              id: expect.any(String),
+              date: expect.any(Date),
+              metrics: [
+                { label: 'Lines of code', value: 43 },
+                { label: 'Overall coverage', value: 0.96 },
+              ],
+            },
+          },
+        ],
+      },
+    });
   });
 });
