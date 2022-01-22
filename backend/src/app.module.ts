@@ -5,11 +5,10 @@ import { AppService } from './app.service';
 import { LoggerModule } from './common/logger/logger.module';
 import { AuthenticationModule } from './modules/authentication';
 import { AuthorizationModule } from './modules/authorization';
-import { MetricsModule } from './modules/metrics/infrastructure/metrics.module';
 import { ProjectModule } from './modules/project';
 
 @Module({
-  imports: [LoggerModule, AuthorizationModule, AuthenticationModule, ProjectModule, MetricsModule],
+  imports: [LoggerModule, AuthorizationModule, AuthenticationModule, ProjectModule],
   controllers: [AppController],
   providers: [AppService],
 })

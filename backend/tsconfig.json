@@ -1,6 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 14",
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
@@ -25,5 +23,6 @@
 
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
-  }
+  },
+  "include": ["src/**/*"]
 }

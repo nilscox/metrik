@@ -13,7 +13,7 @@ import { UserStore, UserStoreToken } from './modules/user/domain/user.store';
 
 dotenv.config({ path: '.env.test' });
 
-describe.skip('e2e', () => {
+describe('e2e', () => {
   let db: DatabaseService;
   let userStore: UserStore;
   let app: INestApplication;
