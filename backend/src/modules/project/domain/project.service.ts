@@ -17,10 +17,24 @@ export class ProjectService {
       id: await this.generator.generateId(),
       name,
       defaultBranch,
+      metricsConfig: [],
     });
 
     await this.projectStore.save(project);
 
     return project;
+  }
+
+  async addMetricConfiguration(
+    projectId: string,
+    label: string,
+    unit: string,
+    type: string,
+  ): Promise<void> {
+    const project = await this.projectStore.findByIdOrFail(projectId);
+
+    project.addMetricConfig(label, unit, type);
+
+    await this.projectStore.save(project);
   }
 }

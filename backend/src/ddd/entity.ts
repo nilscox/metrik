@@ -1,7 +1,7 @@
 export abstract class Entity {
   protected abstract readonly id: string;
 
-  equals<T extends this>(other: T) {
+  equals(other: this) {
     return other.id === this.id;
   }
 }

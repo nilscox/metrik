@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import expect from 'expect';
 import { fn } from 'jest-mock';
@@ -10,14 +10,17 @@ import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
 import { MockFn } from '~/utils/mock-fn';
 
+import { MetricConfigurationLabelAlreadyExistsError } from '../domain/metric-configuration-label-already-exists.error';
 import { createProject } from '../domain/project';
 import { ProjectService } from '../domain/project.service';
 
+import { AddMetricConfigurationDto } from './add-metric-configuration.dto';
 import { CreateProjectDto } from './create-project.dto';
 import { ProjectModule } from './project.module';
 
 class MockProjectService extends ProjectService {
   override createNewProject: MockFn<ProjectService['createNewProject']> = fn();
+  override addMetricConfiguration: MockFn<ProjectService['addMetricConfiguration']> = fn();
 }
 
 describe('ProjectController', () => {
@@ -58,39 +61,93 @@ describe('ProjectController', () => {
     await userStore.saveUser(user);
   });
 
-  it('creates a new project', async () => {
-    const dto: CreateProjectDto = {
-      name: 'My project',
-      defaultBranch: 'pied',
-    };
+  describe('createProject', () => {
+    const endpoint = '/project';
 
-    projectService.createNewProject.mockResolvedValueOnce(project);
+    it('creates a new project', async () => {
+      const dto: CreateProjectDto = {
+        name: 'My project',
+        defaultBranch: 'pied',
+      };
 
-    const { body: createdProject } = await agent
-      .post('/project')
-      .use(as(user))
-      .send(dto)
-      .expect(201);
+      projectService.createNewProject.mockResolvedValueOnce(project);
 
-    expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, dto.defaultBranch);
+      const { body: createdProject } = await agent
+        .post(endpoint)
+        .use(as(user))
+        .send(dto)
+        .expect(HttpStatus.CREATED);
 
-    expect(createdProject).toEqual(project.getProps());
+      expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, dto.defaultBranch);
+
+      expect(createdProject).toEqual(project.getProps());
+    });
+
+    it('creates a new project with a default branch', async () => {
+      const dto: Partial<CreateProjectDto> = {
+        name: 'My project with a default branch',
+      };
+
+      projectService.createNewProject.mockResolvedValueOnce(project);
+
+      await agent.post(endpoint).use(as(user)).send(dto).expect(HttpStatus.CREATED);
+
+      expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, 'master');
+    });
+
+    it('fails when unauthenticated', async () => {
+      await agent.post(endpoint).expect(HttpStatus.FORBIDDEN);
+    });
+
+    it('fails when the request body is not valid', async () => {
+      await agent.post(endpoint).use(as(user)).expect(HttpStatus.BAD_REQUEST);
+      await agent.post(endpoint).use(as(user)).send({}).expect(HttpStatus.BAD_REQUEST);
+    });
   });
 
-  it('creates a new project with a default branch', async () => {
-    const user = createUser({ token: 'token' });
-    const dto: Partial<CreateProjectDto> = {
-      name: 'My project with a default branch',
+  describe('addMetricConfiguration', () => {
+    const dto: AddMetricConfigurationDto = {
+      label: 'Linter warnings',
+      unit: 'number',
+      type: 'integer',
     };
 
-    projectService.createNewProject.mockResolvedValueOnce(project);
+    const endpoint = `/project/${project.id}/metric`;
 
-    await agent.post('/project').use(as(user)).send(dto).expect(201);
+    it('adds a new metric configuration to a project', async () => {
+      await agent.post(endpoint).use(as(user)).send(dto).expect(HttpStatus.NO_CONTENT);
 
-    expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, 'master');
-  });
+      expect(projectService.addMetricConfiguration).toHaveBeenCalledWith(
+        project.id,
+        dto.label,
+        dto.unit,
+        dto.type,
+      );
+    });
 
-  it('prevents to create a project without being authenticated', async () => {
-    await agent.post('/project').expect(403);
+    it('handles the MetricConfigurationLabelAlreadyExistsError domain error', async () => {
+      const error = new MetricConfigurationLabelAlreadyExistsError('CI time');
+
+      projectService.addMetricConfiguration.mockRejectedValueOnce(error);
+
+      const { body } = await agent
+        .post(endpoint)
+        .use(as(user))
+        .send(dto)
+        .expect(HttpStatus.CONFLICT);
+
+      expect(body).toMatchObject({
+        message: 'a metric configuration with label "CI time" already exists',
+      });
+    });
+
+    it('fails when unauthenticated', async () => {
+      await agent.post(endpoint).expect(HttpStatus.FORBIDDEN);
+    });
+
+    it('fails when the request body is not valid', async () => {
+      await agent.post(endpoint).use(as(user)).expect(HttpStatus.BAD_REQUEST);
+      await agent.post(endpoint).use(as(user)).send({}).expect(HttpStatus.BAD_REQUEST);
+    });
   });
 });

@@ -12,7 +12,11 @@ export class InMemoryStore<T extends { id: string }> {
   }
 
   get(id: string) {
-    return clone(this.items.get(id));
+    const item = this.items.get(id);
+
+    if (item) {
+      return clone(item);
+    }
   }
 
   all() {
