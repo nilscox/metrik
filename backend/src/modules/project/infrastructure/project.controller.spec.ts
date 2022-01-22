@@ -10,17 +10,22 @@ import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
 import { MockFn } from '~/utils/mock-fn';
 
+import { DuplicatedMetricError } from '../domain/duplicated-metric.error';
+import { InvalidMetricValueTypeError } from '../domain/invalid-metric-value-type.error';
 import { MetricConfigurationLabelAlreadyExistsError } from '../domain/metric-configuration-label-already-exists.error';
 import { createProject } from '../domain/project';
 import { ProjectService } from '../domain/project.service';
+import { UnknownMetricLabelError } from '../domain/unknown-metric-label.error';
 
 import { AddMetricConfigurationDto } from './add-metric-configuration.dto';
+import { CreateMetricsSnapshotDto } from './create-metrics-snapshot.dto';
 import { CreateProjectDto } from './create-project.dto';
 import { ProjectModule } from './project.module';
 
 class MockProjectService extends ProjectService {
   override createNewProject: MockFn<ProjectService['createNewProject']> = fn();
   override addMetricConfiguration: MockFn<ProjectService['addMetricConfiguration']> = fn();
+  override createMetricsSnapshot: MockFn<ProjectService['createMetricsSnapshot']> = fn();
 }
 
 describe('ProjectController', () => {
@@ -139,6 +144,70 @@ describe('ProjectController', () => {
       expect(body).toMatchObject({
         message: 'a metric configuration with label "CI time" already exists',
       });
+    });
+
+    it('fails when unauthenticated', async () => {
+      await agent.post(endpoint).expect(HttpStatus.FORBIDDEN);
+    });
+
+    it('fails when the request body is not valid', async () => {
+      await agent.post(endpoint).use(as(user)).expect(HttpStatus.BAD_REQUEST);
+      await agent.post(endpoint).use(as(user)).send({}).expect(HttpStatus.BAD_REQUEST);
+    });
+  });
+
+  describe('createMetricsSnapshot', () => {
+    const endpoint = `/project/${project.id}/metrics-snapshot`;
+    const dto: CreateMetricsSnapshotDto = {
+      metrics: [{ label: 'label', value: 42 }],
+    };
+
+    it("creates a new snapshot of the project's metrics", async () => {
+      await agent.post(endpoint).use(as(user)).send(dto).expect(HttpStatus.NO_CONTENT);
+
+      expect(projectService.createMetricsSnapshot).toHaveBeenCalledWith(project.id, dto.metrics);
+    });
+
+    it('handles the UnknownMetricLabelError domain error', async () => {
+      const error = new UnknownMetricLabelError('label');
+
+      projectService.createMetricsSnapshot.mockRejectedValueOnce(error);
+
+      const { body } = await agent
+        .post(endpoint)
+        .use(as(user))
+        .send(dto)
+        .expect(HttpStatus.BAD_REQUEST);
+
+      expect(body).toHaveProperty('message', 'unknown metric label "label"');
+    });
+
+    it('handles the InvalidMetricValueTypeError domain error', async () => {
+      const error = new InvalidMetricValueTypeError(4.2, 'integer');
+
+      projectService.createMetricsSnapshot.mockRejectedValueOnce(error);
+
+      const { body } = await agent
+        .post(endpoint)
+        .use(as(user))
+        .send(dto)
+        .expect(HttpStatus.BAD_REQUEST);
+
+      expect(body).toHaveProperty('message', 'invalid metric value "4.2", expected type "integer"');
+    });
+
+    it('handles the DuplicatedMetricError domain error', async () => {
+      const error = new DuplicatedMetricError('label');
+
+      projectService.createMetricsSnapshot.mockRejectedValueOnce(error);
+
+      const { body } = await agent
+        .post(endpoint)
+        .use(as(user))
+        .send(dto)
+        .expect(HttpStatus.BAD_REQUEST);
+
+      expect(body).toHaveProperty('message', 'duplicated metric with label "label"');
     });
 
     it('fails when unauthenticated', async () => {

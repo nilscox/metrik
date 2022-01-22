@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { GeneratorPort } from '~/common/generator';
 
-import { Project } from './project';
+import { Metric, Project } from './project';
 import { ProjectStore, ProjectStoreToken } from './project.store';
 
 @Injectable()
@@ -18,6 +18,7 @@ export class ProjectService {
       name,
       defaultBranch,
       metricsConfig: [],
+      snapshots: [],
     });
 
     await this.projectStore.save(project);
@@ -34,6 +35,15 @@ export class ProjectService {
     const project = await this.projectStore.findByIdOrFail(projectId);
 
     project.addMetricConfig(label, unit, type);
+
+    await this.projectStore.save(project);
+  }
+
+  async createMetricsSnapshot(projectId: string, metrics: Array<Metric>) {
+    const project = await this.projectStore.findByIdOrFail(projectId);
+
+    // todo: date abstraction
+    project.createMetricsSnapshot(new Date('2022-01-01'), metrics);
 
     await this.projectStore.save(project);
   }
