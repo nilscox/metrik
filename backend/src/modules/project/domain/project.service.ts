@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DatePort } from '~/common/date/date.port';
+import { DatePort } from '~/common/date';
 import { GeneratorPort } from '~/common/generator';
 
 import { Metric, Project } from './project';
@@ -13,6 +13,10 @@ export class ProjectService {
     private readonly generator: GeneratorPort,
     private readonly date: DatePort,
   ) {}
+
+  async findProjectById(projectId: string): Promise<Project | undefined> {
+    return this.projectStore.findById(projectId);
+  }
 
   async createNewProject(name: string, defaultBranch: string): Promise<Project> {
     const project = new Project({

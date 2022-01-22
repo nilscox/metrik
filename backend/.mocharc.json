@@ -3,7 +3,7 @@
   "spec": ["src/**/*.spec.ts"],
   "require": [
     "ts-node/register/transpile-only",
-    "source-map-support/register",
-    "module-alias/register"
+    "tsconfig-paths/register",
+    "source-map-support/register"
   ]
 }

@@ -1,8 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import dotenv from 'dotenv-safe';
 
-import 'module-alias/register';
-
 dotenv.config();
 
 import { DatabaseModule } from '~/common/database/database.module';

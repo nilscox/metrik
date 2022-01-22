@@ -4,9 +4,12 @@ import {
   ClassSerializerInterceptor,
   ConflictException,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
   UseInterceptors,
@@ -35,6 +38,17 @@ import { ProjectDto } from './project.dto';
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProjectController {
   constructor(private projectService: ProjectService) {}
+
+  @Get(':id')
+  async getProject(@Param() id: string): Promise<ProjectDto> {
+    const project = await this.projectService.findProjectById(id);
+
+    if (!project) {
+      throw new NotFoundException('Project', `project with id "${id}" does not exist`);
+    }
+
+    return new ProjectDto(project);
+  }
 
   @Post()
   async createProject(

@@ -2,8 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import cors from 'cors';
 import dotenv from 'dotenv-safe';
 
-import 'module-alias/register';
-
 dotenv.config();
 
 import { AppModule } from './app.module';
