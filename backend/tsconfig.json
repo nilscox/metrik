@@ -10,7 +10,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["src/*"],
+      "@dtos/*": ["../dtos/*"]
     },
 
     "esModuleInterop": true,
@@ -24,5 +25,5 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../dtos/**/*"]
 }

@@ -57,6 +57,7 @@
     "typescript": "^4.5.5"
   },
   "_moduleAliases": {
-    "~": "src"
+    "~": "src",
+    "@dtos": "../dtos"
   }
 }

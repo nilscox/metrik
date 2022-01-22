@@ -12,7 +12,10 @@
   "settings": {
     "import/resolver": {
       "alias": {
-        "map": [["~", "./src"]],
+        "map": [
+          ["~", "./src"],
+          ["@dtos", "../dtos"]
+        ],
         "extensions": [".json", ".js", ".ts"]
       }
     }
@@ -25,7 +28,7 @@
           ["^(path|fs|stream|util)$"],
           ["^@nest", "^[a-z]"],
           ["^[A-Z]"],
-          ["^~/"],
+          ["^@dtos/", "^~/"],
           ["^../"],
           ["^./"]
         ]

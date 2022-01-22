@@ -1,6 +1,8 @@
 import { Type } from 'class-transformer';
 import { IsDefined, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
 
+import { ICreateMetricsSnapshotDto } from '@dtos/project/ICreateMetricsSnapshotDto';
+
 class MetricsSnapshotDto {
   @IsString()
   @IsNotEmpty()
@@ -10,7 +12,7 @@ class MetricsSnapshotDto {
   value!: number;
 }
 
-export class CreateMetricsSnapshotDto {
+export class CreateMetricsSnapshotDto implements ICreateMetricsSnapshotDto {
   @IsDefined()
   @ValidateNested({ each: true })
   @Type(() => MetricsSnapshotDto)

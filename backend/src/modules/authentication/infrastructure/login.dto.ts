@@ -1,6 +1,8 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class LoginDto {
+import { ILoginDto } from '@dtos/authentication/ILoginDto';
+
+export class LoginDto implements ILoginDto {
   @IsString()
   @IsEmail()
   email!: string;

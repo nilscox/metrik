@@ -1,6 +1,8 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class AddMetricConfigurationDto {
+import { IAddMetricConfigurationDto } from '@dtos/project/IAddMetricConfigurationDto';
+
+export class AddMetricConfigurationDto implements IAddMetricConfigurationDto {
   @IsString()
   @IsNotEmpty()
   label!: string;
