@@ -11,6 +11,7 @@ export interface ProjectTable {
   id: string;
   name: string;
   default_branch: string;
+  metrics_config: string;
 }
 
 export interface DatabaseDefinition {

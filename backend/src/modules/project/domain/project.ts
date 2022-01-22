@@ -6,7 +6,7 @@ import { InvalidMetricValueTypeError } from './invalid-metric-value-type.error';
 import { MetricConfigurationLabelAlreadyExistsError } from './metric-configuration-label-already-exists.error';
 import { UnknownMetricLabelError } from './unknown-metric-label.error';
 
-type MetricConfigurationProps = {
+export type MetricConfigurationProps = {
   label: string;
   unit: string;
   type: string;

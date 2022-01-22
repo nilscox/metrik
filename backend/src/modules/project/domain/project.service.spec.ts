@@ -78,7 +78,7 @@ describe('ProjectService', () => {
     ).rejects.toThrow(EntityNotFoundError);
   });
 
-  it('prevents to add a metric configuration when its label already exists', async () => {
+  it('prevents to add a metric configuration having the same label twice', async () => {
     const metricsConfig = [createMetricsConfiguration({ label: 'existing' })];
     const project = await save(createProject({ metricsConfig }));
 

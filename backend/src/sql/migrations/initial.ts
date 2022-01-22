@@ -14,6 +14,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('name', 'text', (col) => col.notNull())
     .addColumn('default_branch', 'text', (col) => col.notNull())
+    .addColumn('metrics_config', 'text', (col) => col.notNull())
     .execute();
 }
 

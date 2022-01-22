@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
 import { ConfigModule } from '~/common/config';
-import { DatabaseModule } from '~/common/database/database.module';
-import { DateModule } from '~/common/date/date.module';
+import { DatabaseModule } from '~/common/database';
+import { DateModule } from '~/common/date';
 import { GeneratorModule } from '~/common/generator';
 import { LoggerModule } from '~/common/logger';
 

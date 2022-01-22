@@ -8,6 +8,7 @@ import { DatabaseService } from './common/database/database.service';
 import { Logger, LoggerModule } from './common/logger';
 import { DevNullLogger } from './common/logger/dev-null-logger';
 import { Credentials } from './modules/authentication/domain/credentials';
+import { ProjectStore, ProjectStoreToken } from './modules/project/domain/project.store';
 import { createUser } from './modules/user/domain/user';
 import { UserStore, UserStoreToken } from './modules/user/domain/user.store';
 
@@ -48,7 +49,7 @@ describe('e2e', () => {
     await db.clear();
   });
 
-  it('a user logs in, creates a project and its last metrics', async () => {
+  it('a user logs in, creates a project and fetches its last metrics', async () => {
     const credentials: Credentials = {
       email: 'user@domain.tld',
       password: 'some password',
@@ -69,6 +70,24 @@ describe('e2e', () => {
     });
 
     const { body: project } = await agent.post('/project').send({ name: 'My project' }).expect(201);
-    project;
+
+    await agent
+      .post(`/project/${project.id}/metric`)
+      .send({ label: 'Lines of code', unit: 'number', type: 'integer' })
+      .expect(204);
+
+    await agent
+      .post(`/project/${project.id}/metric`)
+      .send({ label: 'Overall coverage', unit: 'number', type: 'float' })
+      .expect(204);
+
+    await agent
+      .post(`/project/${project.id}/metrics-snapshot`)
+      .send({ metrics: [{ label: 'Lines of code', value: 42 }] })
+      .expect(204);
+
+    const dbProject = await app.get<ProjectStore>(ProjectStoreToken).findById(project.id);
+
+    console.dir(dbProject?.getProps(), { depth: null });
   });
 });
