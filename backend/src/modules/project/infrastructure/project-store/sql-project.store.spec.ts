@@ -59,21 +59,38 @@ describe('SqlProjectStore', () => {
     unit: 'number',
   });
 
-  const metric = createMetric({
-    label: 'metric',
+  const metric1 = createMetric({
+    label: 'metric 1',
     value: 1,
   });
 
-  const snapshot = createMetricsSnapshot({
+  const metric2 = createMetric({
+    label: 'metric 2',
+    value: 2,
+  });
+
+  const metric3 = createMetric({
+    label: 'metric 3',
+    value: 3,
+  });
+
+  const snapshot1 = createMetricsSnapshot({
+    id: '1',
     date: new Date('2022-01-01'),
-    metrics: [metric],
+    metrics: [metric1, metric2],
+  });
+
+  const snapshot2 = createMetricsSnapshot({
+    id: '2',
+    date: new Date('2022-01-02'),
+    metrics: [metric3],
   });
 
   const projectId = 'projectId';
   const project = createProject({
     id: projectId,
     metricsConfig: [metricsConfiguration],
-    snapshots: [snapshot],
+    snapshots: [snapshot1, snapshot2],
   });
 
   it('finds a project from its id', async () => {
@@ -84,22 +101,57 @@ describe('SqlProjectStore', () => {
     expect(foundProject).toEqual(project);
   });
 
-  it('saves a new project', async () => {
-    const project = createProject({ metricsConfig: [createMetricsConfiguration()] });
+  it('saves a new empty project', async () => {
+    const project = createProject({ id: projectId, metricsConfig: [], snapshots: [] });
+
+    await store.save(project);
+
+    expect(await find(projectId)).toEqual(project);
+  });
+
+  it('saves a new project with configs and an empty snapshot', async () => {
+    const project = createProject({
+      id: projectId,
+      metricsConfig: [metricsConfiguration],
+      snapshots: [createMetricsSnapshot({ metrics: [] })],
+    });
 
     await store.save(project);
 
     expect(await find(project.id)).toEqual(project);
   });
 
+  it('saves a new project with configs, snapshots and metrics', async () => {
+    await store.save(project);
+
+    expect(await find(project.id)).toEqual(project);
+  });
+
   it('updates an existing project', async () => {
-    const project = await save(createProject({ metricsConfig: [createMetricsConfiguration()] }));
+    const project = await save(
+      createProject({
+        id: projectId,
+        metricsConfig: [createMetricsConfiguration()],
+      }),
+    );
 
     // @ts-expect-error see SqlUserStore#save spec
     project.props.name = 'updated';
 
     await store.save(project);
 
-    expect(await find(project.id)).toHaveProperty('props.name', 'updated');
+    expect(await find(projectId)).toHaveProperty('props.name', 'updated');
+  });
+
+  it.skip("updates an existing project's metric", async () => {
+    await save(project);
+
+    // @ts-expect-error see SqlUserStore#save spec
+    project.props.snapshots[0].props.metrics[0].value = 6;
+
+    await store.save(project);
+    console.dir(await find(projectId), { depth: null });
+
+    expect(await find(projectId)).toHaveProperty('props.snapshots[0].props.metrics[0].value', 6);
   });
 });

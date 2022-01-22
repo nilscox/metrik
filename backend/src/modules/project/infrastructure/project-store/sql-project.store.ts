@@ -1,5 +1,6 @@
-import { Database, ProjectTable } from '~/sql/database';
+import { Database, MetricsSnapshotTable, MetricTable, ProjectTable } from '~/sql/database';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
+import { partition } from '~/utils/partition';
 
 import {
   Metric,
@@ -10,58 +11,77 @@ import {
 } from '../../domain/project';
 import { ProjectStore } from '../../domain/project.store';
 
+type FindResult = {
+  project_id: string;
+  project_name: string;
+  project_default_branch: string;
+  project_metrics_config: string;
+  snapshot_id: string | null;
+  snapshot_date: string | null;
+  metric_id: string | null;
+  metric_label: string | null;
+  metric_value: number | null;
+};
+
 export class SqlProjectStore implements ProjectStore {
   constructor(private readonly db: Database) {}
 
   async findById(projectId: string): Promise<Project | undefined> {
-    const props = await this.db
+    const result = await this.db
       .selectFrom('project')
-      .selectAll()
+      .leftJoin('snapshot', 'snapshot.project_id', 'project.id')
+      .leftJoin('metric', 'metric.snapshot_id', 'snapshot.id')
+      .select([
+        'project.id as project_id',
+        'project.name as project_name',
+        'project.default_branch as project_default_branch',
+        'project.metrics_config as project_metrics_config',
+        'snapshot.id as snapshot_id',
+        'snapshot.date as snapshot_date',
+        'metric.id as metric_id',
+        'metric.label as metric_label',
+        'metric.value as metric_value',
+      ])
       .where('project.id', '=', projectId)
-      .executeTakeFirst();
-
-    if (props) {
-      return new Project({
-        id: props.id,
-        name: props.name,
-        defaultBranch: props.default_branch,
-        metricsConfig: JSON.parse(props.metrics_config).map(
-          (props: MetricConfigurationProps) => new MetricConfiguration(props),
-        ),
-        snapshots: await this.findProjectMetrics(projectId),
-      });
-    }
-  }
-
-  private async findProjectMetrics(projectId: string): Promise<MetricsSnapshot[]> {
-    const props = await this.db
-      .selectFrom('snapshot')
-      .selectAll()
-      .where('project_id', '=', projectId)
       .execute();
 
-    return Promise.all(
-      props.map(
-        async (record) =>
-          new MetricsSnapshot({
-            id: record.id,
-            date: new Date(record.date),
-            metrics: await this.findSnapshotMetrics(record.id),
-          }),
-      ),
+    return this.createProjectFromRecords(result);
+  }
+
+  private createProjectFromRecords(records: FindResult[]) {
+    const record = records[0];
+    const snapshots = Object.values(partition('snapshot_id', records)).filter(
+      ([{ snapshot_id }]) => snapshot_id !== null,
     );
+
+    return new Project({
+      id: record.project_id,
+      name: record.project_name,
+      defaultBranch: record.project_default_branch,
+      metricsConfig: JSON.parse(record.project_metrics_config).map(
+        (config: MetricConfigurationProps) => new MetricConfiguration(config),
+      ),
+      snapshots: snapshots.map(this.createSnapshotFromRecords.bind(this)),
+    });
   }
 
-  private async findSnapshotMetrics(snapshotId: string): Promise<Metric[]> {
-    const props = await this.db
-      .selectFrom('metric')
-      .selectAll()
-      .where('snapshot_id', '=', snapshotId)
-      .execute();
+  private createSnapshotFromRecords(records: FindResult[]): MetricsSnapshot {
+    const record = records[0];
+    const metrics = Object.values(partition('metric_id', records)).filter(
+      ([{ metric_id }]) => metric_id !== null,
+    );
 
-    return props.map((record) => ({
-      label: record.label,
-      value: record.value,
+    return new MetricsSnapshot({
+      id: record.snapshot_id as string,
+      date: new Date(record.snapshot_date as string),
+      metrics: Object.values(metrics).flatMap(this.createMetricsFromRecords.bind(this)),
+    });
+  }
+
+  private createMetricsFromRecords(record: FindResult[]): Metric[] {
+    return record.map((record) => ({
+      label: record.metric_label as string,
+      value: record.metric_value as number,
     }));
   }
 
@@ -91,40 +111,43 @@ export class SqlProjectStore implements ProjectStore {
       await this.db.insertInto('project').values(record).execute();
     }
 
-    const snapshotsIdsResult = await this.db
+    const existingSnapshotsIdsResult = await this.db
       .selectFrom('snapshot')
       .select('id')
       .where('project_id', '=', project.id)
       .execute();
-    const snapshotsIds = snapshotsIdsResult.map(({ id }) => id);
 
-    // todo: remove explicit typing
-    const snapshotsToCreate: MetricsSnapshot[] = props.snapshots.filter(
-      ({ id }) => !snapshotsIds.includes(id),
+    const existingSnapshotsIds = existingSnapshotsIdsResult.map(({ id }) => id);
+    const snapshotsToCreate = props.snapshots.filter(
+      ({ id }) => !existingSnapshotsIds.includes(id),
     );
 
-    for (const snapshot of snapshotsToCreate) {
-      const props = snapshot.getProps();
+    if (snapshotsToCreate.length === 0) {
+      return;
+    }
 
-      await this.db
-        .insertInto('snapshot')
-        .values({
-          id: props.id,
-          date: props.date.toISOString(),
-          project_id: project.id,
-        })
-        .execute();
+    const snapshotsToInsert: MetricsSnapshotTable[] = snapshotsToCreate
+      .map((snapshot) => snapshot.getProps())
+      .map((props) => ({
+        id: props.id,
+        date: props.date.toISOString(),
+        project_id: project.id,
+      }));
 
-      for (const metric of props.metrics) {
-        await this.db
-          .insertInto('metric')
-          .values({
-            label: metric.label,
-            value: metric.value,
-            snapshot_id: snapshot.id,
-          })
-          .execute();
-      }
+    await this.db.insertInto('snapshot').values(snapshotsToInsert).execute();
+
+    const metricsToInsert: Omit<MetricTable, 'id'>[] = snapshotsToCreate
+      .map((snapshot) => snapshot.getProps())
+      .flatMap(({ id, metrics }) =>
+        metrics.map((metric) => ({
+          label: metric.label,
+          value: metric.value,
+          snapshot_id: id,
+        })),
+      );
+
+    if (metricsToInsert.length > 0) {
+      await this.db.insertInto('metric').values(metricsToInsert).execute();
     }
   }
 

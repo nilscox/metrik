@@ -79,7 +79,7 @@ describe('e2e', () => {
 
     await agent
       .post(`/project/${project.id}/metric`)
-      .send({ label: 'Overall coverage', unit: 'number', type: 'float' })
+      .send({ label: 'Overall coverage', unit: 'percent', type: 'float' })
       .expect(204);
 
     await agent
@@ -106,7 +106,7 @@ describe('e2e', () => {
         defaultBranch: 'master',
         metricsConfig: [
           { props: { label: 'Lines of code', unit: 'number', type: 'integer' } },
-          { props: { label: 'Overall coverage', unit: 'number', type: 'float' } },
+          { props: { label: 'Overall coverage', unit: 'percent', type: 'float' } },
         ],
         snapshots: [
           {
