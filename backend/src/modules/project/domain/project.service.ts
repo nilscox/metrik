@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { DatePort } from '~/common/date/date.port';
 import { GeneratorPort } from '~/common/generator';
 
 import { Metric, Project } from './project';
@@ -10,6 +11,7 @@ export class ProjectService {
   constructor(
     @Inject(ProjectStoreToken) private readonly projectStore: ProjectStore,
     private readonly generator: GeneratorPort,
+    private readonly date: DatePort,
   ) {}
 
   async createNewProject(name: string, defaultBranch: string): Promise<Project> {
@@ -42,8 +44,7 @@ export class ProjectService {
   async createMetricsSnapshot(projectId: string, metrics: Array<Metric>) {
     const project = await this.projectStore.findByIdOrFail(projectId);
 
-    // todo: date abstraction
-    project.createMetricsSnapshot(new Date('2022-01-01'), metrics);
+    project.createMetricsSnapshot(this.date.now, metrics);
 
     await this.projectStore.save(project);
   }

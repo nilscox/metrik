@@ -1,5 +1,6 @@
 import expect from 'expect';
 
+import { StubDateAdapter } from '~/common/date/stub-date.adapter';
 import { StubGeneratorAdapter } from '~/common/generator';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 
@@ -22,12 +23,14 @@ import { UnknownMetricLabelError } from './unknown-metric-label.error';
 describe('ProjectService', () => {
   let projectStore: InMemoryProjectStore;
   let generator: StubGeneratorAdapter;
+  let date: StubDateAdapter;
   let service: ProjectService;
 
   beforeEach(() => {
     projectStore = new InMemoryProjectStore();
     generator = new StubGeneratorAdapter();
-    service = new ProjectService(projectStore, generator);
+    date = new StubDateAdapter();
+    service = new ProjectService(projectStore, generator, date);
   });
 
   const save = async (project: Project) => {
@@ -85,7 +88,8 @@ describe('ProjectService', () => {
   });
 
   it("creates a new snapshot of the project's metrics", async () => {
-    const date = new Date('2022-01-01');
+    const now = new Date('2022-01-01');
+    date.now = now;
 
     const metricsConfig = [createMetricsConfiguration({ label: 'Lines of code' })];
     const project = await save(createProject({ metricsConfig }));
@@ -97,7 +101,7 @@ describe('ProjectService', () => {
     const savedProject = await find(project.id);
     expect(savedProject.getProps().snapshots).toEqual([
       new MetricsSnapshot({
-        date,
+        date: now,
         metrics,
       }),
     ]);
