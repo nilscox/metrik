@@ -12,13 +12,14 @@ import { createStore } from './store/store';
 
 const API_URL = process.env.API_URL;
 const TOKEN = process.env.TOKEN;
+const PUBLIC_PATH = process.env.PUBLIC_PATH;
 
 const http = new FetchHttpAdapter(fetch.bind(window), API_URL, TOKEN);
 const store = createStore({ projectGateway: new HttpProjectGateway(http) });
 
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <BrowserRouter>
+    <BrowserRouter basename={PUBLIC_PATH}>
       <App />
     </BrowserRouter>
   </ReduxProvider>,

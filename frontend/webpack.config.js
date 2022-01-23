@@ -1,11 +1,11 @@
 /* eslint-disable */
 
 const path = require('path');
-const { EnvironmentPlugin, HotModuleReplacementPlugin, ProvidePlugin } = require('webpack');
+const { EnvironmentPlugin, ProvidePlugin } = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const { NODE_ENV = 'development', HOST = '0.0.0.0', PORT = '8000' } = process.env;
+const { NODE_ENV = 'development', HOST = '0.0.0.0', PORT = '8000', PUBLIC_PATH = '/' } = process.env;
 
 /** @type {import('webpack').Configuration} */
 const config = (module.exports = {
@@ -17,7 +17,7 @@ const config = (module.exports = {
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: PUBLIC_PATH,
   },
 
   resolve: {
@@ -43,6 +43,7 @@ const config = (module.exports = {
 
   plugins: [
     new EnvironmentPlugin({
+      PUBLIC_PATH,
       API_URL: 'http://localhost:3000',
       TOKEN: null,
     }),

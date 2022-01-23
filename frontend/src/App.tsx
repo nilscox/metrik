@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 
 import { ProjectPage } from './project/infrastructure/ProjectPage';
 
@@ -10,7 +10,7 @@ export const App: React.FC = () => {
       </header>
       <Routes>
         <Route path="/project/:projectId" element={<ProjectPage />} />
-        <Route path="/" element={<a href="/project/f3ohe3vEjixftLhrzVGgT">Project page</a>} />
+        <Route path="/" element={<Link to="/project/f3ohe3vEjixftLhrzVGgT">Project page</Link>} />
       </Routes>
     </div>
   );
