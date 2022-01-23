@@ -2,23 +2,28 @@ import { Test, TestingModule } from '@nestjs/testing';
 import expect from 'expect';
 
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigPort, StubConfigAdapter } from './common/config';
+import { DatabaseModule } from './common/database';
 
 describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
+      imports: [DatabaseModule],
       controllers: [AppController],
-      providers: [AppService],
-    }).compile();
+    })
+      .overrideProvider(ConfigPort)
+      .useValue(new StubConfigAdapter({ STORE: 'sql', DATABASE_FILENAME: ':memory:' }))
+      .compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = app.get(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  it("checks the main component's availability", async () => {
+    expect(await appController.healthcheck()).toEqual({
+      api: true,
+      db: true,
     });
   });
 });

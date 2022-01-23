@@ -24,7 +24,12 @@ export class DatabaseService {
   }
 
   async checkConnection(): Promise<boolean> {
-    await this.db.raw('SELECT 1');
+    if (!this.db) {
+      return false;
+    }
+
+    await this.db.raw('SELECT 1').execute();
+
     return true;
   }
 
