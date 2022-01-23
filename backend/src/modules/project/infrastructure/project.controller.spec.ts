@@ -85,6 +85,7 @@ describe('ProjectController', () => {
         snapshots: [
           createMetricsSnapshot({
             id: 'snapshot-id',
+            reference: 'ref',
             date: new Date('2022-01-01'),
             metrics: [{ label: 'CI time', value: 42 }],
           }),
@@ -106,6 +107,7 @@ describe('ProjectController', () => {
         snapshots: [
           {
             id: 'snapshot-id',
+            reference: 'ref',
             date: '2022-01-01T00:00:00.000Z',
             metrics: [{ label: 'CI time', value: 42 }],
           },
@@ -213,7 +215,27 @@ describe('ProjectController', () => {
     it("creates a new snapshot of the project's metrics", async () => {
       await agent.post(endpoint).use(as(user)).send(dto).expect(HttpStatus.NO_CONTENT);
 
-      expect(projectService.createMetricsSnapshot).toHaveBeenCalledWith(project.id, dto.metrics);
+      expect(projectService.createMetricsSnapshot).toHaveBeenCalledWith(
+        project.id,
+        undefined,
+        dto.metrics,
+      );
+    });
+
+    it("creates a new snapshot of the project's metrics with a reference", async () => {
+      const reference = 'ref';
+
+      await agent
+        .post(endpoint)
+        .use(as(user))
+        .send({ ...dto, reference })
+        .expect(HttpStatus.NO_CONTENT);
+
+      expect(projectService.createMetricsSnapshot).toHaveBeenCalledWith(
+        project.id,
+        reference,
+        dto.metrics,
+      );
     });
 
     it('handles the UnknownMetricLabelError domain error', async () => {

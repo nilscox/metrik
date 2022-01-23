@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 import { IUserDto } from '@dtos/authentication/IUserDto';
 import { User } from '~/modules/user';
@@ -8,10 +8,12 @@ export class UserDto implements IUserDto {
     Object.assign(this, user.getProps());
   }
 
+  @Expose()
   id!: string;
-  email!: string;
-  token!: string;
 
-  @Exclude()
-  hashedPassword!: string;
+  @Expose()
+  email!: string;
+
+  @Expose()
+  token!: string;
 }

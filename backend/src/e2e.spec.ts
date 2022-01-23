@@ -106,7 +106,7 @@ describe('e2e', () => {
 
     await agent
       .post(`/project/${project.id}/metrics-snapshot`)
-      .send({ metrics: [{ label: 'Lines of code', value: 42 }] })
+      .send({ reference: 'commit-sha', metrics: [{ label: 'Lines of code', value: 42 }] })
       .expect(204);
 
     await agent
@@ -135,6 +135,7 @@ describe('e2e', () => {
             props: {
               id: expect.any(String),
               date: expect.any(Date),
+              reference: 'commit-sha',
               metrics: [{ label: 'Lines of code', value: 42 }],
             },
           },

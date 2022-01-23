@@ -9,9 +9,16 @@ export interface IMetricsSnapshotDto {
   metrics: Array<IMetricDto>;
 }
 
+export interface IMetricConfigDto {
+  label: string;
+  type: string;
+  unit: string;
+}
+
 export interface IProjectDto {
   id: string;
   name: string;
   defaultBranch: string;
+  metricsConfig: IMetricConfigDto[];
   snapshots: Array<IMetricsSnapshotDto>;
 }

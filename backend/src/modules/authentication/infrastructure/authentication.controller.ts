@@ -8,6 +8,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  SerializeOptions,
   UnauthorizedException,
   UseGuards,
   UseInterceptors,
@@ -30,6 +31,7 @@ import { UserDto } from './user.dto';
 @Controller('auth')
 @UsePipes(new ValidationPipe({ transform: true }))
 @UseInterceptors(ClassSerializerInterceptor)
+@SerializeOptions({ strategy: 'excludeAll' })
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 

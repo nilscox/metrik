@@ -32,6 +32,7 @@ export type Metric = {
 type MetricsSnapshotProps = {
   id: string;
   date: Date;
+  reference?: string;
   metrics: Array<Metric>;
 };
 
@@ -90,7 +91,12 @@ export class Project extends Entity {
     return this.props.metricsConfig.find((config) => config.hasLabel(label));
   }
 
-  createMetricsSnapshot(id: string, date: Date, metrics: Array<Metric>) {
+  createMetricsSnapshot(
+    id: string,
+    reference: string | undefined,
+    date: Date,
+    metrics: Array<Metric>,
+  ) {
     for (const { label, value } of metrics) {
       if (metrics.filter((metric) => metric.label === label).length !== 1) {
         throw new DuplicatedMetricError(label);
@@ -105,7 +111,7 @@ export class Project extends Entity {
       config.validateType(value);
     }
 
-    this.props.snapshots.push(new MetricsSnapshot({ id, date, metrics }));
+    this.props.snapshots.push(new MetricsSnapshot({ id, reference, date, metrics }));
   }
 }
 

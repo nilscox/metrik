@@ -4,5 +4,6 @@ interface IMetricsSnapshotDto {
 }
 
 export interface ICreateMetricsSnapshotDto {
+  reference?: string;
   metrics: IMetricsSnapshotDto[];
 }

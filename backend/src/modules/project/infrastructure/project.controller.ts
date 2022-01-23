@@ -10,6 +10,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  SerializeOptions,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -35,6 +36,7 @@ import { ProjectDto } from './project.dto';
 @UseGuards(IsAuthenticated)
 @UsePipes(new ValidationPipe({ transform: true }))
 @UseInterceptors(ClassSerializerInterceptor)
+@SerializeOptions({ strategy: 'excludeAll' })
 export class ProjectController {
   constructor(private projectService: ProjectService) {}
 
@@ -83,7 +85,7 @@ export class ProjectController {
     @Body() dto: CreateMetricsSnapshotDto,
   ) {
     try {
-      await this.projectService.createMetricsSnapshot(projectId, dto.metrics);
+      await this.projectService.createMetricsSnapshot(projectId, dto.reference, dto.metrics);
     } catch (error) {
       if (
         error instanceof InvalidMetricValueTypeError ||

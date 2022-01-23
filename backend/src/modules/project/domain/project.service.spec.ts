@@ -93,15 +93,17 @@ describe('ProjectService', () => {
 
     const metricsConfig = [createMetricsConfiguration({ label: 'Lines of code' })];
     const project = await save(createProject({ metricsConfig }));
+    const reference = 'ref';
 
     const metrics = [{ label: 'Lines of code', value: 1234 }];
 
-    await service.createMetricsSnapshot(project.id, metrics);
+    await service.createMetricsSnapshot(project.id, reference, metrics);
 
     const savedProject = await find(project.id);
     expect(savedProject.getProps().snapshots).toEqual([
       new MetricsSnapshot({
         id: 'generated-id',
+        reference,
         date: now,
         metrics,
       }),
@@ -111,7 +113,7 @@ describe('ProjectService', () => {
   it('fails when the project id does not exist', async () => {
     const project = createProject();
 
-    await expect(service.createMetricsSnapshot(project.id, [])).rejects.toThrow(
+    await expect(service.createMetricsSnapshot(project.id, undefined, [])).rejects.toThrow(
       EntityNotFoundError,
     );
   });
@@ -122,7 +124,7 @@ describe('ProjectService', () => {
 
     const metrics = [{ label: 'Line of code', value: 4321 }];
 
-    await expect(service.createMetricsSnapshot(project.id, metrics)).rejects.toThrow(
+    await expect(service.createMetricsSnapshot(project.id, undefined, metrics)).rejects.toThrow(
       UnknownMetricLabelError,
     );
   });
@@ -136,7 +138,7 @@ describe('ProjectService', () => {
       { label: 'Lines of code', value: 5678 },
     ];
 
-    await expect(service.createMetricsSnapshot(project.id, metrics)).rejects.toThrow(
+    await expect(service.createMetricsSnapshot(project.id, undefined, metrics)).rejects.toThrow(
       DuplicatedMetricError,
     );
   });
@@ -147,7 +149,7 @@ describe('ProjectService', () => {
 
     const metrics = [{ label: 'Lines of code', value: 12.34 }];
 
-    await expect(service.createMetricsSnapshot(project.id, metrics)).rejects.toThrow(
+    await expect(service.createMetricsSnapshot(project.id, undefined, metrics)).rejects.toThrow(
       InvalidMetricValueTypeError,
     );
   });

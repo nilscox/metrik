@@ -17,6 +17,7 @@ export interface MetricTable {
 
 export interface MetricsSnapshotTable {
   id: string;
+  reference: string | null;
   date: string;
   project_id: string;
 }

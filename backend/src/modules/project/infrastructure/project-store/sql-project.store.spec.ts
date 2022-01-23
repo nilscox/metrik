@@ -76,6 +76,7 @@ describe('SqlProjectStore', () => {
 
   const snapshot1 = createMetricsSnapshot({
     id: '1',
+    reference: 'snapshot-1',
     date: new Date('2022-01-01'),
     metrics: [metric1, metric2],
   });

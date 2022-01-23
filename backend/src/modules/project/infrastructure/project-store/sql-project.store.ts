@@ -17,6 +17,7 @@ type FindResult = {
   project_default_branch: string;
   project_metrics_config: string;
   snapshot_id: string | null;
+  snapshot_reference: string | null;
   snapshot_date: string | null;
   metric_id: string | null;
   metric_label: string | null;
@@ -37,6 +38,7 @@ export class SqlProjectStore implements ProjectStore {
         'project.default_branch as project_default_branch',
         'project.metrics_config as project_metrics_config',
         'snapshot.id as snapshot_id',
+        'snapshot.reference as snapshot_reference',
         'snapshot.date as snapshot_date',
         'metric.id as metric_id',
         'metric.label as metric_label',
@@ -77,6 +79,7 @@ export class SqlProjectStore implements ProjectStore {
 
     return new MetricsSnapshot({
       id: record.snapshot_id as string,
+      reference: record.snapshot_reference ?? undefined,
       date: new Date(record.snapshot_date as string),
       metrics: Object.values(metrics).flatMap(this.createMetricsFromRecords.bind(this)),
     });
@@ -134,6 +137,7 @@ export class SqlProjectStore implements ProjectStore {
       .map((snapshot) => snapshot.getProps())
       .map((props) => ({
         id: props.id,
+        reference: props.reference ?? null,
         date: props.date.toISOString(),
         project_id: project.id,
       }));

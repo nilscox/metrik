@@ -15,6 +15,7 @@ type ProjectStoreProps = {
   }>;
   snapshots: Array<{
     id: string;
+    reference?: string;
     date: string;
     metrics: Array<{
       label: string;
@@ -57,6 +58,7 @@ export class InMemoryProjectStore extends InMemoryStore<ProjectStoreProps> imple
       return {
         id: props.id,
         date: props.date.toISOString(),
+        reference: props.reference,
         metrics: props.metrics,
       };
     };
@@ -74,6 +76,7 @@ export class InMemoryProjectStore extends InMemoryStore<ProjectStoreProps> imple
     ): MetricsSnapshot => {
       return new MetricsSnapshot({
         id: snapshot.id,
+        reference: snapshot.reference,
         date: new Date(snapshot.date),
         metrics: snapshot.metrics,
       });
