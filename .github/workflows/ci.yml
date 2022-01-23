@@ -58,7 +58,7 @@ jobs:
           cache-dependency-path: frontend/yarn.lock
       - run: yarn --frozen-lockfile
       - run: yarn build
-        with:
+        env:
           NODE_ENV: production
           API_URL: ${{ secrets.METRIK_API_URL }}
           TOKEN: ${{ secrets.METRIK_TOKEN }}

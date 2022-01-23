@@ -12,11 +12,20 @@
       "options": {
         "cwd": "${workspaceFolder}/backend"
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
+      "label": "backend tsc watch"
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "frontend/tsconfig.json",
+      "option": "watch",
+      "problemMatcher": ["$tsc-watch"],
+      "runOptions": {
+        "runOn": "folderOpen"
       },
-      "label": "tsc watch"
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "label": "frontend tsc watch"
     }
   ]
 }
