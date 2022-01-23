@@ -1,21 +1,9 @@
 [
   {
     "id": "1",
-    "email": "pierre@domain.tld",
+    "email": "user@domain.tld",
     "hashedPassword": "$2b$10$Mx1N9wuGq3NZEq8bRGUGce..tlWrCMscoAGEQY7q1BtBXn4fwux2u",
     "createdAt": "2022-01-01",
-    "token": "token"
-  },
-  {
-    "id": "2",
-    "email": "paul@domain.tld",
-    "hashedPassword": "$2b$10$JVxjLzwSFwXnKbQL9dJgwOCVB3VMRDxcQ0cdK.BwS79W0s1imtQfG",
-    "createdAt": "2022-01-02"
-  },
-  {
-    "id": "3",
-    "email": "jaques@domain.tld",
-    "hashedPassword": "$2b$10$pp13keedJzowEyak9Rav6eyhsUQ2fhu0NpBbWiFlFs/mjl.U/N5WG",
-    "createdAt": "2022-01-03"
+    "token": "strtok_r"
   }
 ]

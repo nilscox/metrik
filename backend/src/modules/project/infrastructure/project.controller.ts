@@ -9,7 +9,6 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   UseGuards,
   UseInterceptors,
@@ -40,7 +39,7 @@ export class ProjectController {
   constructor(private projectService: ProjectService) {}
 
   @Get(':id')
-  async getProject(@Param() id: string): Promise<ProjectDto> {
+  async getProject(@Param('id') id: string): Promise<ProjectDto> {
     const project = await this.projectService.findProjectById(id);
 
     if (!project) {

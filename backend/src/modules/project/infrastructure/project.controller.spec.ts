@@ -13,7 +13,11 @@ import { MockFn } from '~/utils/mock-fn';
 import { DuplicatedMetricError } from '../domain/duplicated-metric.error';
 import { InvalidMetricValueTypeError } from '../domain/invalid-metric-value-type.error';
 import { MetricConfigurationLabelAlreadyExistsError } from '../domain/metric-configuration-label-already-exists.error';
-import { createProject } from '../domain/project';
+import {
+  createMetricsConfiguration,
+  createMetricsSnapshot,
+  createProject,
+} from '../domain/project';
 import { ProjectService } from '../domain/project.service';
 import { UnknownMetricLabelError } from '../domain/unknown-metric-label.error';
 
@@ -23,6 +27,7 @@ import { CreateProjectDto } from './create-project.dto';
 import { ProjectModule } from './project.module';
 
 class MockProjectService extends ProjectService {
+  override findProjectById: MockFn<ProjectService['findProjectById']> = fn();
   override createNewProject: MockFn<ProjectService['createNewProject']> = fn();
   override addMetricConfiguration: MockFn<ProjectService['addMetricConfiguration']> = fn();
   override createMetricsSnapshot: MockFn<ProjectService['createMetricsSnapshot']> = fn();
@@ -64,6 +69,49 @@ describe('ProjectController', () => {
 
   beforeEach(async () => {
     await userStore.saveUser(user);
+  });
+
+  describe('getProject', () => {
+    const endpoint = `/project/${project.id}`;
+
+    it('fetches an existing project', async () => {
+      const project = createProject({
+        id: 'project-id',
+        name: 'My project',
+        defaultBranch: 'dev',
+        metricsConfig: [
+          createMetricsConfiguration({ label: 'CI time', type: 'number', unit: 'seconds' }),
+        ],
+        snapshots: [
+          createMetricsSnapshot({
+            id: 'snapshot-id',
+            date: new Date('2022-01-01'),
+            metrics: [{ label: 'CI time', value: 42 }],
+          }),
+        ],
+      });
+
+      projectService.findProjectById.mockResolvedValueOnce(project);
+
+      const { body: fetchedProject } = await agent
+        .get(endpoint)
+        .use(as(user))
+        .expect(HttpStatus.OK);
+
+      expect(fetchedProject).toEqual({
+        id: 'project-id',
+        name: 'My project',
+        defaultBranch: 'dev',
+        metricsConfig: [{ label: 'CI time', type: 'number', unit: 'seconds' }],
+        snapshots: [
+          {
+            id: 'snapshot-id',
+            date: '2022-01-01T00:00:00.000Z',
+            metrics: [{ label: 'CI time', value: 42 }],
+          },
+        ],
+      });
+    });
   });
 
   describe('createProject', () => {

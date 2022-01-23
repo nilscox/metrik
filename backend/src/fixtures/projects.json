@@ -3,14 +3,51 @@
     "id": "1",
     "name": "My project",
     "defaultBranch": "master",
-    "metricsConfig": [],
-    "snapshots": []
-  },
-  {
-    "id": "2",
-    "name": "My project",
-    "defaultBranch": "main",
-    "metricsConfig": [],
-    "snapshots": []
+    "metricsConfig": [
+      {
+        "label": "Lines of code",
+        "type": "integer",
+        "unit": "number"
+      },
+      {
+        "label": "Unit test time",
+        "type": "number",
+        "unit": "ms"
+      },
+      {
+        "label": "Linter warnings",
+        "type": "integer",
+        "unit": "number"
+      },
+      {
+        "label": "Coverage",
+        "type": "float",
+        "unit": "percent"
+      }
+    ],
+    "snapshots": [
+      {
+        "id": "1",
+        "date": "2021-01-23T00:19:00.000Z",
+        "metrics": [
+          {
+            "label": "Lines of code",
+            "value": 2923
+          },
+          {
+            "label": "Unit test time",
+            "value": 3290
+          },
+          {
+            "label": "Linter warnings",
+            "value": 1
+          },
+          {
+            "label": "Coverage",
+            "value": 0.9358
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -6,12 +6,16 @@ import { UserStore } from '../../domain/user.store';
 export class SqlUserStore implements UserStore {
   constructor(private db: Database) {}
 
-  async findUserByEmail(email: string): Promise<User> {
+  async findUserByEmail(email: string): Promise<User | undefined> {
     const row = await this.db
       .selectFrom('user')
       .selectAll()
       .where('email', '=', email)
       .executeTakeFirstOrThrow();
+
+    if (!row) {
+      return;
+    }
 
     return new User({
       id: row.id,
@@ -21,12 +25,16 @@ export class SqlUserStore implements UserStore {
     });
   }
 
-  async findUserByToken(token: string): Promise<User> {
+  async findUserByToken(token: string): Promise<User | undefined> {
     const row = await this.db
       .selectFrom('user')
       .selectAll()
       .where('token', '=', token)
-      .executeTakeFirstOrThrow();
+      .executeTakeFirst();
+
+    if (!row) {
+      return;
+    }
 
     return new User({
       id: row.id,
