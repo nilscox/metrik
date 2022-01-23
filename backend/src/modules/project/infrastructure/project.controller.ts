@@ -43,7 +43,7 @@ export class ProjectController {
     const project = await this.projectService.findProjectById(id);
 
     if (!project) {
-      throw new NotFoundException('Project', `project with id "${id}" does not exist`);
+      throw new NotFoundException('project not found', `project with id "${id}" does not exist`);
     }
 
     return new ProjectDto(project);
