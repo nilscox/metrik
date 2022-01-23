@@ -58,3 +58,56 @@ export const {
   selectById: selectProject,
   selectTotal: selectTotalProjects,
 } = projectsAdapter.getSelectors<AppState>(selectProjectsSlice);
+
+export const selectSnapshots = createSelector(selectProject, (project) =>
+  project?.snapshots.map((snapshot) => ({
+    ...snapshot,
+    date: new Date(snapshot.date),
+  })),
+);
+
+export const selectLastSnapshot = createSelector(
+  selectSnapshots,
+  (snapshots) => snapshots?.[snapshots?.length - 1],
+);
+
+export const selectLastSnapshotDate = createSelector(selectLastSnapshot, (snapshot) => {
+  if (!snapshot) {
+    return;
+  }
+
+  const date = snapshot.date;
+
+  return [
+    [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0'),
+    ].join('-'),
+    [date.getHours(), date.getMinutes()].join(':'),
+  ].join(' ');
+});
+
+export const selectMetricConfig = (state: AppState, projectId: string, label: string) => {
+  const project = selectProject(state, projectId);
+
+  return project?.metricsConfig.find((config) => config.label === label);
+};
+
+export const selectMetricUnit = createSelector(selectMetricConfig, (config) => config?.unit);
+
+export const selectMetricUnitDisplayValue = createSelector(selectMetricUnit, (unit) => {
+  if (unit === 'number') {
+    return undefined;
+  }
+
+  if (unit === 'seconds') {
+    return 'sec';
+  }
+
+  if (unit === 'percent') {
+    return '%';
+  }
+
+  return unit;
+});
