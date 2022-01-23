@@ -1,0 +1,7 @@
+*
+!backend/src
+!backend/nest-cli.json
+!backend/package.json
+!backend/tsconfig.*
+!backend/yarn.lock
+!dtos

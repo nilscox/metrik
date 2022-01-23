@@ -2,11 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import cors from 'cors';
 import dotenv from 'dotenv-safe';
 
-dotenv.config();
-
 import { AppModule } from './app.module';
 import { ConfigPort } from './common/config';
 import { Logger } from './common/logger';
+
+if (process.env.NODE_ENV === 'development') {
+  dotenv.config();
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
