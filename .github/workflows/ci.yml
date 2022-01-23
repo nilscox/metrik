@@ -3,8 +3,8 @@ name: ci
 on: [push]
 
 jobs:
-  build-backend:
-    name: build backend
+  backend-build:
+    name: Backend build
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -26,3 +26,19 @@ jobs:
           file: ./backend/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  backend-test:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: yarn
+          cache-dependency-path: backend/yarn.lock
+      - run: yarn --frozen-lockfile
+      - run: yarn test:coverage
