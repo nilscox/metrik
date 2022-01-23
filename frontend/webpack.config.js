@@ -34,6 +34,10 @@ const config = (module.exports = {
           target: 'es6',
         },
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
     ],
   },
 
@@ -44,6 +48,7 @@ const config = (module.exports = {
     }),
     new ProvidePlugin({ React: 'react' }),
     new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({ filename: '404.html' }),
   ],
 });
 
