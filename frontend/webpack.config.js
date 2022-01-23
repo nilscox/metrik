@@ -17,6 +17,7 @@ const config = (module.exports = {
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
   },
 
   resolve: {
@@ -37,8 +38,10 @@ const config = (module.exports = {
   },
 
   plugins: [
-    //
-    new EnvironmentPlugin(),
+    new EnvironmentPlugin({
+      API_URL: 'http://localhost:3000',
+      TOKEN: null,
+    }),
     new ProvidePlugin({ React: 'react' }),
     new HtmlWebpackPlugin(),
   ],
@@ -47,9 +50,11 @@ const config = (module.exports = {
 if (NODE_ENV === 'development') {
   config.plugins.push(new ReactRefreshWebpackPlugin());
 
+  /** @type {import('webpack-dev-server').Configuration} */
   config.devServer = {
     host: HOST,
     port: Number(PORT),
+    historyApiFallback: true,
   };
 }
 

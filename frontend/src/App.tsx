@@ -1,23 +1,44 @@
+import { Route, Routes, useParams } from 'react-router-dom';
+
 import { useAppSelector } from './hooks/useAppSelector';
 import { useEffectDispatch } from './hooks/useEffectDispatch';
-import { loadProjects } from './project/domain/loadProject';
+import { loadProject } from './project/domain/loadProject';
 import { selectLoadingProjects, selectProject } from './project/domain/project.slice';
 
 export const App: React.FC = () => {
+  return (
+    <Routes>
+      <Route path="/project/:projectId" element={<ProjectPage />} />
+    </Routes>
+  );
+};
+
+export const ProjectPage: React.FC = () => {
+  const { projectId } = useParams();
+
   const loadingProjects = useAppSelector(selectLoadingProjects);
-  const project = useAppSelector(selectProject, '1');
+  const project = useAppSelector(selectProject, projectId);
 
-  useEffectDispatch(loadProjects(), []);
+  useEffectDispatch(loadProject(projectId), []);
 
-  if (loadingProjects || !project) {
+  if (loadingProjects) {
     return <>Loading projects...</>;
   }
 
+  if (!project) {
+    return <>Error</>;
+  }
+
   const lastSnapshot = project.snapshots[project.snapshots.length - 1];
+  const date = new Date(lastSnapshot.date);
 
   return (
-    <>
-      {lastSnapshot.date}
+    <div style={{ maxWidth: '80%', margin: '60px auto' }}>
+      <div>
+        Date: {date.getFullYear()}-{String(date.getMonth() + 1).padStart(2, '0')}-
+        {String(date.getDate()).padStart(2, '0')}
+      </div>
+
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         {lastSnapshot.metrics.map((metric, n) => (
           <Metric
@@ -27,7 +48,7 @@ export const App: React.FC = () => {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

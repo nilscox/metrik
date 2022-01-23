@@ -1,10 +1,25 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
     "target": "es6",
+    "module": "ESNext",
+    "sourceMap": true,
+
+    "outDir": "./dist",
+
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "@dtos/*": ["../dtos/*"]
+    },
+
     "moduleResolution": "node",
-    "strict": true,
     "esModuleInterop": true,
+
+    "skipLibCheck": true,
+    "lib": ["ES2020"],
+
+    "strict": true,
+
     "jsx": "react-jsx"
   },
   "include": ["src/**/*.ts", "../dtos/**/*.ts"]

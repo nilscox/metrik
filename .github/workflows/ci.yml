@@ -58,6 +58,10 @@ jobs:
           cache-dependency-path: frontend/yarn.lock
       - run: yarn --frozen-lockfile
       - run: yarn build
+        with:
+          NODE_ENV: production
+          API_URL: ${{ secrets.METRIK_API_URL }}
+          TOKEN: ${{ secrets.METRIK_TOKEN }}
       - uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
           branch: gh-pages

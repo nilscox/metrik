@@ -42,12 +42,13 @@ const projectsSlice = createSlice({
       state.loading = loading;
     },
     setProjects: projectsAdapter.setAll,
+    setProject: projectsAdapter.setOne,
   },
 });
 
 export const projectsReducer = projectsSlice.reducer;
 
-export const { setLoadingProjects, setProjects } = projectsSlice.actions;
+export const { setLoadingProjects, setProjects, setProject } = projectsSlice.actions;
 
 const selectProjectsSlice: Selector<AppState, ProjectStateSlice> = (state) => state.projects;
 export const selectLoadingProjects = createSelector(selectProjectsSlice, ({ loading }) => loading);

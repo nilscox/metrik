@@ -1,13 +1,14 @@
 import { AppThunkAction } from '../../store/store';
 
-import { setLoadingProjects, setProjects } from './project.slice';
+import { setLoadingProjects, setProject } from './project.slice';
 
-export const loadProjects = (): AppThunkAction => {
-  return async (dispatch, getState, { projectGateway }) => {
+export const loadProject = (projectId: string): AppThunkAction => {
+  return async (dispatch, _getState, { projectGateway }) => {
     try {
       dispatch(setLoadingProjects(true));
-      const projects = await projectGateway.fetchProjects();
-      dispatch(setProjects(projects));
+      dispatch(setProject(await projectGateway.fetchProject(projectId)));
+    } catch (error) {
+      console.error(error);
     } finally {
       dispatch(setLoadingProjects(false));
     }

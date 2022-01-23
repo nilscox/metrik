@@ -1,5 +1,5 @@
 import { IProjectDto } from '../../../dtos/project/IProjectDto';
 
 export interface ProjectGateway {
-  fetchProjects(): Promise<IProjectDto[]>;
+  fetchProject(projectId: string): Promise<IProjectDto>;
 }
