@@ -2,6 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import dotenv from 'dotenv-safe';
 import expect from 'expect';
+import { Plugin as SuperAgentPlugin } from 'superagent';
 import request, { SuperAgentTest } from 'supertest';
 
 import { AppModule } from './app.module';
@@ -48,6 +49,27 @@ describe('e2e', () => {
 
   beforeEach(async () => {
     await db.clear();
+  });
+
+  it('a user signs up, logs out and logs back in', async () => {
+    const credentials: Credentials = {
+      email: 'user@domain.tld',
+      password: 'some password',
+    };
+
+    const asUser: SuperAgentPlugin = (req) => {
+      req.set('Authorization', `Beer ${user.token}`);
+    };
+
+    let { body: user } = await agent.post('/auth/signup').send(credentials).expect(201);
+
+    await agent.get('/auth/me').use(asUser).expect(200);
+    await agent.post('/auth/logout').use(asUser).expect(204);
+    await agent.get('/auth/me').use(asUser).expect(401);
+
+    ({ body: user } = await agent.post('/auth/login').send(credentials).expect(200));
+
+    await agent.get('/auth/me').use(asUser).expect(200);
   });
 
   it('a user logs in, creates a project and fetches its last metrics', async () => {

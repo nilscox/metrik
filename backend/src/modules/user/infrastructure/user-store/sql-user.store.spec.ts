@@ -58,13 +58,25 @@ describe('SqlUserStore', () => {
     expect(dbUser).toEqual(user);
   });
 
+  it('does not find any user from an email', async () => {
+    const email = 'user@domain.tld';
+
+    expect(await store.findUserByEmail(email)).toBeUndefined();
+  });
+
   it('finds a user from a token', async () => {
-    const token = 'some-token';
+    const token = 'strtok_r';
     const user = await insert(createUser({ token }));
 
     const dbUser = await store.findUserByToken(token);
 
     expect(dbUser).toEqual(user);
+  });
+
+  it('does not find any user from a token', async () => {
+    const token = 'strtok_r';
+
+    expect(await store.findUserByToken(token)).toBeUndefined();
   });
 
   it('creates a new user', async () => {
@@ -86,6 +98,13 @@ describe('SqlUserStore', () => {
 
     await store.saveUser(user);
 
-    expect(await find(userId)).toEqual(user.getProps());
+    expect(await find(userId)).toHaveProperty('token', 'new-token');
+
+    // @ts-expect-error see comment above
+    user.props.token = undefined;
+
+    await store.saveUser(user);
+
+    expect(await find(userId)).toHaveProperty('token', null);
   });
 });

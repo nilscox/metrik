@@ -45,6 +45,10 @@ export class SqlProjectStore implements ProjectStore {
       .where('project.id', '=', projectId)
       .execute();
 
+    if (!result.length) {
+      return;
+    }
+
     return this.createProjectFromRecords(result);
   }
 

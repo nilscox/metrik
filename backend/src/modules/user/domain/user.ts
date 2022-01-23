@@ -29,6 +29,10 @@ export class User extends Entity {
   async generateToken(generator: GeneratorPort) {
     this.props.token = await generator.generateAuthenticationToken();
   }
+
+  async unsetToken() {
+    this.props.token = undefined;
+  }
 }
 
 export const createUser = (overrides: Partial<UserProps> = {}): User => {

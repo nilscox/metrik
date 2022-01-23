@@ -101,6 +101,10 @@ describe('SqlProjectStore', () => {
     expect(foundProject).toEqual(project);
   });
 
+  it('does not find a project from an id', async () => {
+    expect(await store.findById(projectId)).toBeUndefined();
+  });
+
   it('saves a new empty project', async () => {
     const project = createProject({ id: projectId, metricsConfig: [], snapshots: [] });
 

@@ -1,8 +1,9 @@
-import { ColumnType, Generated, Kysely } from 'kysely';
+import { Generated, Kysely } from 'kysely';
 
 export interface UserTable {
   id: string;
-  email: ColumnType<string, never, never>;
+  // email: ColumnType<string, never, never>;
+  email: string;
   hashedPassword: string;
   token: string | null;
 }

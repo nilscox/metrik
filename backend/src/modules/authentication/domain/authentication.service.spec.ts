@@ -2,10 +2,10 @@ import expect from 'expect';
 
 import { StubCryptoAdapter } from '~/common/crypto';
 import { StubGeneratorAdapter } from '~/common/generator';
-import { createUser, InMemoryUserStore } from '~/modules/user';
+import { createUser, InMemoryUserStore, User } from '~/modules/user';
 
 import { AuthenticationService } from './authentication.service';
-import { InvalidCredentialsError } from './authentication-errors';
+import { EmailAlreadyExistsError, InvalidCredentialsError } from './authentication-errors';
 
 describe('AuthenticationService', () => {
   let crypto: StubCryptoAdapter;
@@ -20,10 +20,34 @@ describe('AuthenticationService', () => {
     service = new AuthenticationService(userStore, crypto, generator);
   });
 
-  describe('authenticate', () => {
-    const email = 'user@email.tld';
-    const password = 'password';
+  const email = 'user@email.tld';
+  const password = 'password';
 
+  describe('createUser', () => {
+    it('creates a new user', async () => {
+      await service.createUser(email, password);
+
+      const savedUser = await userStore.findUserByEmail(email);
+
+      const expectedUser = new User({
+        id: 'generated-id',
+        email,
+        hashedPassword: 'password-encrypted',
+        token: 'generated-token',
+      });
+
+      expect(savedUser).toBeDefined();
+      expect(savedUser).toEqual(expectedUser);
+    });
+
+    it('prevents to create a user with an already existing email', async () => {
+      await userStore.saveUser(createUser({ email }));
+
+      await expect(service.createUser(email, password)).rejects.toThrow(EmailAlreadyExistsError);
+    });
+  });
+
+  describe('authenticate', () => {
     it('creates a session as an existing user', async () => {
       const user = createUser({ email: email });
 

@@ -1,6 +1,6 @@
-import { Database } from '~/sql/database';
+import { Database, UserTable } from '~/sql/database';
 
-import { User } from '../../domain/user';
+import { User, UserProps } from '../../domain/user';
 import { UserStore } from '../../domain/user.store';
 
 export class SqlUserStore implements UserStore {
@@ -11,7 +11,7 @@ export class SqlUserStore implements UserStore {
       .selectFrom('user')
       .selectAll()
       .where('email', '=', email)
-      .executeTakeFirstOrThrow();
+      .executeTakeFirst();
 
     if (!row) {
       return;
@@ -45,11 +45,24 @@ export class SqlUserStore implements UserStore {
   }
 
   async saveUser(user: User): Promise<void> {
+    const record = this.toStoreEntity(user);
+
     if (await this.exists(user.id)) {
-      await this.db.updateTable('user').set(user.getProps()).execute();
+      await this.db.updateTable('user').set(record).execute();
     } else {
-      await this.db.insertInto('user').values(user.getProps()).execute();
+      await this.db.insertInto('user').values(record).execute();
     }
+  }
+
+  private toStoreEntity(user: User): UserTable {
+    const props = user.getProps();
+
+    return {
+      id: props.id,
+      email: props.email,
+      hashedPassword: props.hashedPassword,
+      token: props.token ?? null,
+    };
   }
 
   private async exists(userId: string): Promise<boolean> {

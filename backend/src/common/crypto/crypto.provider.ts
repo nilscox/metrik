@@ -1,9 +1,9 @@
-import { ValueProvider } from '@nestjs/common';
-import bcrypt from 'bcrypt';
+import { ClassProvider } from '@nestjs/common';
 
+import { BcryptCryptoAdapter } from './bcrypt-crypto.adapter';
 import { CryptoPort } from './crypto.port';
 
-export const cryptoProvider: ValueProvider<CryptoPort> = {
+export const cryptoProvider: ClassProvider<CryptoPort> = {
   provide: CryptoPort,
-  useValue: bcrypt,
+  useClass: BcryptCryptoAdapter,
 };

@@ -149,7 +149,7 @@ describe('ProjectController', () => {
     });
 
     it('fails when unauthenticated', async () => {
-      await agent.post(endpoint).expect(HttpStatus.FORBIDDEN);
+      await agent.post(endpoint).expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('fails when the request body is not valid', async () => {
@@ -195,7 +195,7 @@ describe('ProjectController', () => {
     });
 
     it('fails when unauthenticated', async () => {
-      await agent.post(endpoint).expect(HttpStatus.FORBIDDEN);
+      await agent.post(endpoint).expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('fails when the request body is not valid', async () => {
@@ -259,7 +259,7 @@ describe('ProjectController', () => {
     });
 
     it('fails when unauthenticated', async () => {
-      await agent.post(endpoint).expect(HttpStatus.FORBIDDEN);
+      await agent.post(endpoint).expect(HttpStatus.UNAUTHORIZED);
     });
 
     it('fails when the request body is not valid', async () => {
