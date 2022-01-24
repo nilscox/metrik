@@ -22,5 +22,5 @@
 
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts", "../dtos/**/*.ts"]
+  "include": ["src/**/*.ts", "../dtos/**/*.ts", ".storybook/*.ts"]
 }

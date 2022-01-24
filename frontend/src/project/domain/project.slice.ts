@@ -2,12 +2,12 @@ import { createEntityAdapter, createSelector, createSlice, PayloadAction, Select
 
 import { AppState } from '../../store/store';
 
-type Metric = {
+export type Metric = {
   label: string;
   value: number;
 };
 
-type MetricsSnapshot = {
+export type MetricsSnapshot = {
   date: string;
   metrics: Metric[];
 };

@@ -20,14 +20,16 @@
     "simple-import-sort",
     "@typescript-eslint",
     "react",
-    "react-hooks"
+    "react-hooks",
+    "tailwind"
   ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "plugin:tailwind/recommended"
   ],
   "rules": {
     "no-console": "off",
@@ -46,5 +48,13 @@
         ["^./"]
       ]
     }]
-  }
+  },
+  "overrides": [
+    {
+      "files": "src/**/*.stories.tsx",
+      "rules": {
+        "react-hooks/rules-of-hooks": "off"
+      }
+    }
+  ]
 }
