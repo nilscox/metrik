@@ -3,8 +3,8 @@ import { Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom';
 import { Tab, TabPanel, Tabs } from '../../components/Tabs/Tabs';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useEffectDispatch } from '../../hooks/useEffectDispatch';
-import { loadProject } from '../domain/loadProject';
 import { selectLoadingProjects, selectProject } from '../domain/project.slice';
+import { loadProject } from '../domain/usecases/loadProject/loadProject';
 
 import { ProjectDashboard } from './tabs/ProjectDashboard';
 import { ProjectMetricsConfiguration } from './tabs/ProjectMetricsConfiguration';
@@ -47,8 +47,8 @@ const ProjectPageLayout: React.FC = () => {
     <>
       <Tabs>
         <Tab>Dashboard</Tab>
-        <Tab link="metrics">Metrics</Tab>
-        <Tab link="settings">Settings</Tab>
+        <Tab link="metrics">Metrics configuration</Tab>
+        <Tab link="settings">Project settings</Tab>
       </Tabs>
 
       <Outlet />

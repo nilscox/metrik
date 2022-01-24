@@ -18,7 +18,7 @@ type MetricsConfig = {
   type: string;
 };
 
-type Project = {
+export type Project = {
   id: string;
   name: string;
   defaultBranch: string;
@@ -46,6 +46,21 @@ const projectsSlice = createSlice({
   },
 });
 
+export const createProject = (overrides: Partial<Project> = {}): Project => ({
+  id: 'id',
+  name: 'name',
+  defaultBranch: 'defaultBranch',
+  metricsConfig: [],
+  snapshots: [],
+  ...overrides,
+});
+
+export const createMetricsSnapshot = (overrides: Partial<MetricsSnapshot> = {}): MetricsSnapshot => ({
+  date: '2022-01-01T00:00:00.000Z',
+  metrics: [],
+  ...overrides,
+});
+
 export const projectsReducer = projectsSlice.reducer;
 
 export const { setLoadingProjects, setProjects, setProject } = projectsSlice.actions;
@@ -58,35 +73,6 @@ export const {
   selectById: selectProject,
   selectTotal: selectTotalProjects,
 } = projectsAdapter.getSelectors<AppState>(selectProjectsSlice);
-
-export const selectSnapshots = createSelector(selectProject, (project) =>
-  project?.snapshots.map((snapshot) => ({
-    ...snapshot,
-    date: new Date(snapshot.date),
-  })),
-);
-
-export const selectLastSnapshot = createSelector(
-  selectSnapshots,
-  (snapshots) => snapshots?.[snapshots?.length - 1],
-);
-
-export const selectLastSnapshotDate = createSelector(selectLastSnapshot, (snapshot) => {
-  if (!snapshot) {
-    return;
-  }
-
-  const date = snapshot.date;
-
-  return [
-    [
-      date.getFullYear(),
-      String(date.getMonth() + 1).padStart(2, '0'),
-      String(date.getDate()).padStart(2, '0'),
-    ].join('-'),
-    [date.getHours(), date.getMinutes()].join(':'),
-  ].join(' ');
-});
 
 export const selectMetricConfig = (state: AppState, projectId: string, label: string) => {
   const project = selectProject(state, projectId);
