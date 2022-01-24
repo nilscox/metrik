@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector } from '../../../hooks/useAppSelector';
-import { selectProject } from '../../domain/project.slice';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectProject } from '../../../domain/project.slice';
 
 export const ProjectMetricsConfiguration: React.FC = () => {
   const { projectId } = useParams();

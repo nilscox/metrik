@@ -6,9 +6,9 @@ import { useEffectDispatch } from '../../hooks/useEffectDispatch';
 import { selectLoadingProjects, selectProject } from '../domain/project.slice';
 import { loadProject } from '../domain/usecases/loadProject/loadProject';
 
-import { ProjectDashboard } from './tabs/ProjectDashboard';
-import { ProjectMetricsConfiguration } from './tabs/ProjectMetricsConfiguration';
-import { ProjectSettings } from './tabs/ProjectSettings';
+import { ProjectDashboard } from './tabs/ProjectDashboard/ProjectDashboard';
+import { ProjectMetricsConfiguration } from './tabs/ProjectMetricsConfiguration/ProjectMetricsConfiguration';
+import { ProjectSettings } from './tabs/ProjectSettings/ProjectSettings';
 
 export const ProjectPage: React.FC = () => (
   <Routes>

@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 
-import { useAppSelector } from '../../../hooks/useAppSelector';
-import { selectProject } from '../../domain/project.slice';
-import { selectLastSnapshot } from '../../domain/selectors/selectSnapshots/selectSnapshots';
+import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { selectProject } from '../../../domain/project.slice';
+import { selectLastSnapshot } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
 
 export const ProjectSettings: React.FC = () => {
   const { projectId } = useParams();
