@@ -1,6 +1,6 @@
-import { useParams } from 'react-router-dom';
+import { useAppSelector } from '~/hooks/useAppSelector';
+import { useParam } from '~/hooks/useParam';
 
-import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { Metric } from '../../../domain/project.slice';
 import { selectSnapshots } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
 
@@ -9,7 +9,7 @@ type SnapshotsTableProps = {
 };
 
 export const SnapshotsTable: React.FC<SnapshotsTableProps> = ({ onMouseOverMetric }) => {
-  const { projectId } = useParams();
+  const projectId = useParam('projectId');
   const snapshots = useAppSelector(selectSnapshots, projectId);
 
   return (

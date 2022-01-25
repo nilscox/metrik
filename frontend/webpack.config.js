@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-env node */
 
 const path = require('path');
 const { EnvironmentPlugin, ProvidePlugin } = require('webpack');
@@ -22,12 +22,16 @@ const config = (module.exports = {
 
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
+    alias: {
+      '~': path.resolve(__dirname, 'src'),
+      '@dtos': path.resolve(__dirname, '..', 'dtos'),
+    },
   },
 
   module: {
     rules: [
       {
-        test: /\.[jt]sx?$/,
+        test: /\.tsx?$/,
         loader: 'esbuild-loader',
         options: {
           loader: 'tsx',
@@ -37,6 +41,10 @@ const config = (module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
       },
     ],
   },

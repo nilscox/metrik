@@ -51,6 +51,12 @@
   },
   "overrides": [
     {
+      "files": "webpack.config.js",
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    },
+    {
       "files": "src/**/*.stories.tsx",
       "rules": {
         "react-hooks/rules-of-hooks": "off"

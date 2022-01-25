@@ -19,6 +19,7 @@
     "@storybook/builder-webpack5": "^6.4.14",
     "@storybook/manager-webpack5": "^6.4.14",
     "@storybook/react": "^6.4.14",
+    "@svgr/webpack": "^6.2.0",
     "@testing-library/react": "^12.1.2",
     "@types/mocha": "^9.0.0",
     "@types/node": "^14.0.0",
@@ -56,6 +57,8 @@
     "webpack-dev-server": "^4.7.3"
   },
   "dependencies": {
+    "@kunukn/react-collapse": "^2.2.9",
+    "@material-design-icons/svg": "^0.10.6",
     "@reduxjs/toolkit": "^1.7.1",
     "classnames": "^2.3.1",
     "react": "^17.0.2",

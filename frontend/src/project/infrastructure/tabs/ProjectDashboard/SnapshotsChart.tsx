@@ -1,7 +1,8 @@
-import { useParams } from 'react-router-dom';
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { useAppSelector } from '~/hooks/useAppSelector';
+import { useParam } from '~/hooks/useParam';
+
 import { selectSnapshots } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
 
 type SnapshotsChartProps = {
@@ -9,7 +10,7 @@ type SnapshotsChartProps = {
 };
 
 export const SnapshotsChart: React.FC<SnapshotsChartProps> = ({ metricLabel }) => {
-  const { projectId } = useParams();
+  const projectId = useParam('projectId');
   const snapshots = useAppSelector(selectSnapshots, projectId);
 
   const values = snapshots.map((snapshot) => ({

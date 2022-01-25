@@ -1,9 +1,11 @@
-import { Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
-import { Tab, TabPanel, Tabs } from '../../components/Tabs/Tabs';
-import { useAppSelector } from '../../hooks/useAppSelector';
-import { useEffectDispatch } from '../../hooks/useEffectDispatch';
-import { selectLoadingProjects, selectProject } from '../domain/project.slice';
+import { Tab, TabPanel, Tabs } from '~/components/Tabs/Tabs';
+import { useAppSelector } from '~/hooks/useAppSelector';
+import { useEffectDispatch } from '~/hooks/useEffectDispatch';
+import { useParam } from '~/hooks/useParam';
+
+import { selectLoadingProjects, selectProjectUnsafe } from '../domain/project.slice';
 import { loadProject } from '../domain/usecases/loadProject/loadProject';
 
 import { ProjectDashboard } from './tabs/ProjectDashboard/ProjectDashboard';
@@ -28,10 +30,10 @@ const ProjectTab: React.FC<{ tab: React.ComponentType }> = ({ tab: Tab }) => (
 );
 
 const ProjectPageLayout: React.FC = () => {
-  const { projectId } = useParams();
+  const projectId = useParam('projectId');
 
   const loadingProjects = useAppSelector(selectLoadingProjects);
-  const project = useAppSelector(selectProject, projectId);
+  const project = useAppSelector(selectProjectUnsafe, projectId);
 
   useEffectDispatch(loadProject(projectId), []);
 

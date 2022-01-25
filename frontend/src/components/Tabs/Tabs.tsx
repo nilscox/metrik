@@ -11,12 +11,11 @@ export const Tabs: React.FC = ({ children }) => {
 
 type TabProps = {
   link?: string;
-  onClick?: () => void;
 };
 
-export const Tab: React.FC<TabProps> = ({ link = '', onClick, children }) => {
+export const Tab: React.FC<TabProps> = ({ link = '', children }) => {
   const resolved = useResolvedPath(link);
-  const active = Boolean(useMatch({ path: resolved.pathname, end: true }));
+  const active = Boolean(useMatch({ path: resolved.pathname }));
 
   return (
     <Link
@@ -27,7 +26,6 @@ export const Tab: React.FC<TabProps> = ({ link = '', onClick, children }) => {
         'inline-block bg-none px-4 py-1 no-underline text-inherit',
         active && 'border-b-2 border-blue-600',
       )}
-      onClick={onClick}
     >
       {children}
     </Link>

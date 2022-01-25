@@ -1,21 +1,33 @@
-import { useParams } from 'react-router-dom';
+import ChevronRight from '@material-design-icons/svg/round/chevron_right.svg';
+import cx from 'classnames';
+import { Link } from 'react-router-dom';
 
-import { useAppSelector } from '../../../../hooks/useAppSelector';
+import { Collapse } from '~/components/Collapse/Collapse';
+import { useAppSelector } from '~/hooks/useAppSelector';
+import { useParam } from '~/hooks/useParam';
+import { useSearchParam } from '~/hooks/useSearchParam';
+
 import { selectProject } from '../../../domain/project.slice';
 
 export const ProjectMetricsConfiguration: React.FC = () => {
-  const { projectId } = useParams();
+  const projectId = useParam('projectId');
   const project = useAppSelector(selectProject, projectId);
 
+  const openMetric = useSearchParam('metric');
+
   return (
-    <>
-      <ul className="pl-8 list-disc">
-        {project.metricsConfig.map(({ label, unit }) => (
-          <li key={label}>
-            {label} ({unit})
-          </li>
-        ))}
-      </ul>
-    </>
+    <ul>
+      {project.metricsConfig.map(({ label, unit }) => (
+        <li key={label} className="p-2">
+          <Link to={{ search: label === openMetric ? '' : `?metric=${label}` }} className="flex flex-row">
+            <ChevronRight
+              className={cx('fill-gray-600 mr-2 transition', label === openMetric && 'rotate-90')}
+            />
+            {label}
+          </Link>
+          <Collapse open={label === openMetric}>{unit}</Collapse>
+        </li>
+      ))}
+    </ul>
   );
 };

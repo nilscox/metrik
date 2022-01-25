@@ -1,7 +1,8 @@
-import { Link, Route, Routes, useParams } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 
 import { useAppSelector } from './hooks/useAppSelector';
-import { selectProject } from './project/domain/project.slice';
+import { useParam } from './hooks/useParam';
+import { selectProject, selectProjectUnsafe } from './project/domain/project.slice';
 import { ProjectPage } from './project/infrastructure/ProjectPage';
 
 export const App: React.FC = () => {
@@ -15,7 +16,7 @@ export const App: React.FC = () => {
 
 const ProjectRoutes: React.FC = () => (
   <Routes>
-    <Route index element={<Link to="/project/f3ohe3vEjixftLhrzVGgT">Project page</Link>} />
+    <Route index element={<IndexPage />} />
     <Route path="project/*" element={<ProjectPage />} />
   </Routes>
 );
@@ -38,8 +39,8 @@ const Header: React.FC = () => (
 );
 
 const ProjectName: React.FC = () => {
-  const { projectId } = useParams();
-  const project = useAppSelector(selectProject, projectId);
+  const projectId = useParam('projectId');
+  const project = useAppSelector(selectProjectUnsafe, projectId);
 
   if (!project) {
     return null;
@@ -50,4 +51,8 @@ const ProjectName: React.FC = () => {
       <strong>{project.name}</strong>'s metrics
     </>
   );
+};
+
+const IndexPage: React.FC = () => {
+  return <Link to="/project/f3ohe3vEjixftLhrzVGgT">Project page</Link>;
 };

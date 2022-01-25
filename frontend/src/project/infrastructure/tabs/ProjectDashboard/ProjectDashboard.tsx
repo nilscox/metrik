@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useAppSelector } from '~/hooks/useAppSelector';
+import { useParam } from '~/hooks/useParam';
 
-import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { Metric } from '../../../domain/project.slice';
 import { selectLastSnapshot } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
 
@@ -11,7 +11,7 @@ import { SnapshotsChart } from './SnapshotsChart';
 import { SnapshotsTable } from './SnapshotsTable';
 
 export const ProjectDashboard: React.FC = () => {
-  const { projectId } = useParams();
+  const projectId = useParam('projectId');
   const lastSnapshot = useAppSelector(selectLastSnapshot, projectId);
 
   const [label, setLabel] = useState('lines of code');

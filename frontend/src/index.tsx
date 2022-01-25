@@ -10,7 +10,7 @@ import { App } from './App';
 import { HttpProjectGateway } from './project/infrastructure/gateways/HttpProjectGateway';
 import { createStore } from './store/store';
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.API_URL as string;
 const TOKEN = process.env.TOKEN;
 const PUBLIC_PATH = process.env.PUBLIC_PATH;
 

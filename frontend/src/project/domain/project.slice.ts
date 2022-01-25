@@ -68,11 +68,21 @@ export const { setLoadingProjects, setProjects, setProject } = projectsSlice.act
 const selectProjectsSlice: Selector<AppState, ProjectStateSlice> = (state) => state.projects;
 export const selectLoadingProjects = createSelector(selectProjectsSlice, ({ loading }) => loading);
 
-export const {
-  selectAll: selectProjects,
-  selectById: selectProject,
-  selectTotal: selectTotalProjects,
-} = projectsAdapter.getSelectors<AppState>(selectProjectsSlice);
+const adapterSelectors = projectsAdapter.getSelectors<AppState>(selectProjectsSlice);
+
+export const { selectAll: selectProjects, selectTotal: selectTotalProjects } = adapterSelectors;
+
+export const selectProjectUnsafe = adapterSelectors.selectById;
+
+export const selectProject: Selector<AppState, Project, [string]> = (state, projectId) => {
+  const project = selectProjectUnsafe(state, projectId);
+
+  if (!project) {
+    throw new Error(`expected project "${projectId}" to be defined`);
+  }
+
+  return project;
+};
 
 export const selectMetricConfig = (state: AppState, projectId: string, label: string) => {
   const project = selectProject(state, projectId);

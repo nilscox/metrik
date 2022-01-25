@@ -1,6 +1,7 @@
-import { IProjectDto } from '../../../../../dtos/project/IProjectDto';
-import { HttpPort } from '../../../ports/HttpPort';
-import { ProjectGateway } from '../../../store/ProjectGateway';
+import { IProjectDto } from '@dtos/project/IProjectDto';
+
+import { HttpPort } from '~/ports/HttpPort';
+import { ProjectGateway } from '~/store/ProjectGateway';
 
 export class HttpProjectGateway implements ProjectGateway {
   constructor(private readonly http: HttpPort) {}

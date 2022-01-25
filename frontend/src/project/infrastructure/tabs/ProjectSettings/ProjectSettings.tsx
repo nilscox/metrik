@@ -1,11 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useAppSelector } from '~/hooks/useAppSelector';
+import { useParam } from '~/hooks/useParam';
 
-import { useAppSelector } from '../../../../hooks/useAppSelector';
 import { selectProject } from '../../../domain/project.slice';
 import { selectLastSnapshot } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
 
 export const ProjectSettings: React.FC = () => {
-  const { projectId } = useParams();
+  const projectId = useParam('projectId');
   const project = useAppSelector(selectProject, projectId);
   const date = useAppSelector(selectLastSnapshot, projectId)?.date.toISOString();
 
