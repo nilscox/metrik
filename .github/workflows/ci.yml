@@ -39,8 +39,8 @@ jobs:
         with:
           node-version: "14"
           cache: yarn
-          cache-dependency-path: backend/yarn.lock
-      - run: yarn --frozen-lockfile
+          cache-dependency-path: "**/yarn.lock"
+      - run: yarn
       - run: yarn test:coverage
 
   backend-code-quality:
@@ -55,8 +55,8 @@ jobs:
         with:
           node-version: "14"
           cache: yarn
-          cache-dependency-path: backend/yarn.lock
-      - run: yarn --frozen-lockfile
+          cache-dependency-path: "**/yarn.lock"
+      - run: yarn
       - run: yarn lint
 
   frontend-build:
@@ -71,8 +71,8 @@ jobs:
         with:
           node-version: "14"
           cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-      - run: yarn --frozen-lockfile
+          cache-dependency-path: "**/yarn.lock"
+      - run: yarn
       - run: yarn build
         env:
           NODE_ENV: production
@@ -96,8 +96,8 @@ jobs:
         with:
           node-version: "14"
           cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-      - run: yarn --frozen-lockfile
+          cache-dependency-path: "**/yarn.lock"
+      - run: yarn
       - run: yarn test
 
   frontend-code-quality:
@@ -112,8 +112,8 @@ jobs:
         with:
           node-version: "14"
           cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-      - run: yarn --frozen-lockfile
+          cache-dependency-path: "**/yarn.lock"
+      - run: yarn
       - run: yarn lint
 
   frontend-deploy:
