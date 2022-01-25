@@ -1,38 +1,12 @@
-import { createEntityAdapter, createSelector, createSlice, PayloadAction, Selector } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { AppState } from '../../store/store';
+import { Project } from './types/Project';
 
-export type Metric = {
-  label: string;
-  value: number;
-};
+export const projectsStateAdapter = createEntityAdapter<Project>();
 
-export type MetricsSnapshot = {
-  date: string;
-  metrics: Metric[];
-};
-
-type MetricsConfig = {
-  label: string;
-  unit: string;
-  type: string;
-};
-
-export type Project = {
-  id: string;
-  name: string;
-  defaultBranch: string;
-  metricsConfig: MetricsConfig[];
-  snapshots: MetricsSnapshot[];
-};
-
-const projectsAdapter = createEntityAdapter<Project>();
-
-const initialState = projectsAdapter.getInitialState({
+const initialState = projectsStateAdapter.getInitialState({
   loading: false,
 });
-
-type ProjectStateSlice = typeof initialState;
 
 const projectsSlice = createSlice({
   name: 'projects',
@@ -41,69 +15,18 @@ const projectsSlice = createSlice({
     setLoadingProjects(state, { payload: loading }: PayloadAction<boolean>) {
       state.loading = loading;
     },
-    setProjects: projectsAdapter.setAll,
-    setProject: projectsAdapter.setOne,
+    setProjects: projectsStateAdapter.setAll,
+    setProject: projectsStateAdapter.setOne,
   },
 });
 
-export const createProject = (overrides: Partial<Project> = {}): Project => ({
-  id: 'id',
-  name: 'name',
-  defaultBranch: 'defaultBranch',
-  metricsConfig: [],
-  snapshots: [],
-  ...overrides,
-});
-
-export const createMetricsSnapshot = (overrides: Partial<MetricsSnapshot> = {}): MetricsSnapshot => ({
-  date: '2022-01-01T00:00:00.000Z',
-  metrics: [],
-  ...overrides,
-});
+export type ProjectStateSlice = typeof initialState;
 
 export const projectsReducer = projectsSlice.reducer;
 
-export const { setLoadingProjects, setProjects, setProject } = projectsSlice.actions;
-
-const selectProjectsSlice: Selector<AppState, ProjectStateSlice> = (state) => state.projects;
-export const selectLoadingProjects = createSelector(selectProjectsSlice, ({ loading }) => loading);
-
-const adapterSelectors = projectsAdapter.getSelectors<AppState>(selectProjectsSlice);
-
-export const { selectAll: selectProjects, selectTotal: selectTotalProjects } = adapterSelectors;
-
-export const selectProjectUnsafe = adapterSelectors.selectById;
-
-export const selectProject: Selector<AppState, Project, [string]> = (state, projectId) => {
-  const project = selectProjectUnsafe(state, projectId);
-
-  if (!project) {
-    throw new Error(`expected project "${projectId}" to be defined`);
-  }
-
-  return project;
-};
-
-export const selectMetricConfig = (state: AppState, projectId: string, label: string) => {
-  const project = selectProject(state, projectId);
-
-  return project?.metricsConfig.find((config) => config.label === label);
-};
-
-export const selectMetricUnit = createSelector(selectMetricConfig, (config) => config?.unit);
-
-export const selectMetricUnitDisplayValue = createSelector(selectMetricUnit, (unit) => {
-  if (unit === 'number') {
-    return undefined;
-  }
-
-  if (unit === 'seconds') {
-    return 'sec';
-  }
-
-  if (unit === 'percent') {
-    return '%';
-  }
-
-  return unit;
-});
+// prettier-ignore
+export const {
+  setLoadingProjects,
+  setProjects,
+  setProject,
+} = projectsSlice.actions;

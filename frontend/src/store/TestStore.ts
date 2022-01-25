@@ -1,8 +1,10 @@
 import { IProjectDto } from '@dtos/project/IProjectDto';
 
+import { setProject } from '~/project/domain/project.slice';
+import { Project } from '~/project/domain/types/Project';
+
 import { ProjectGateway } from './ProjectGateway';
 import { AppSelector, createStore, Dependencies } from './store';
-import { Project, setProject } from '~/project/domain/project.slice';
 
 class InMemoryProjectGateway implements ProjectGateway {
   projects = new Map<string, IProjectDto>();

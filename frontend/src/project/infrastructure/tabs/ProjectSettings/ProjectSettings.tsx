@@ -1,7 +1,7 @@
 import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
+import { selectProject } from '~/project/domain/project.selectors';
 
-import { selectProject } from '../../../domain/project.slice';
 import { selectLastSnapshot } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
 
 export const ProjectSettings: React.FC = () => {

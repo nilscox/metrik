@@ -2,7 +2,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 
 import { useAppSelector } from './hooks/useAppSelector';
 import { useParam } from './hooks/useParam';
-import { selectProject, selectProjectUnsafe } from './project/domain/project.slice';
+import { selectProjectUnsafe } from './project/domain/project.selectors';
 import { ProjectPage } from './project/infrastructure/ProjectPage';
 
 export const App: React.FC = () => {

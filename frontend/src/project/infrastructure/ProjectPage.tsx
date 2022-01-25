@@ -5,7 +5,7 @@ import { useAppSelector } from '~/hooks/useAppSelector';
 import { useEffectDispatch } from '~/hooks/useEffectDispatch';
 import { useParam } from '~/hooks/useParam';
 
-import { selectLoadingProjects, selectProjectUnsafe } from '../domain/project.slice';
+import { selectLoadingProjects, selectProjectUnsafe } from '../domain/project.selectors';
 import { loadProject } from '../domain/usecases/loadProject/loadProject';
 
 import { ProjectDashboard } from './tabs/ProjectDashboard/ProjectDashboard';

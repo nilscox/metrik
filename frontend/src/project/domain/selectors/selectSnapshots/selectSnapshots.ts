@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { selectProject } from '../../project.slice';
+import { selectProject } from '../../project.selectors';
 
 export const selectSnapshots = createSelector(selectProject, (project) => {
   return project?.snapshots.map((snapshot) => ({

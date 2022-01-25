@@ -33,4 +33,4 @@ export type Dependencies = {
 
 export type AppThunkAction<Return = void> = ThunkAction<Return, AppState, Dependencies, AppAction>;
 
-export type AppSelector<Result, Params extends unknown[]> = Selector<AppState, Result, Params>;
+export type AppSelector<Result, Params extends unknown[] = []> = Selector<AppState, Result, Params>;

@@ -6,8 +6,7 @@ import { Collapse } from '~/components/Collapse/Collapse';
 import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
 import { useSearchParam } from '~/hooks/useSearchParam';
-
-import { selectProject } from '../../../domain/project.slice';
+import { selectProject } from '~/project/domain/project.selectors';
 
 export const ProjectMetricsConfiguration: React.FC = () => {
   const projectId = useParam('projectId');

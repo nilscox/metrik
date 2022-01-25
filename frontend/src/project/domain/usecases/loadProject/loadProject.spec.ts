@@ -2,7 +2,7 @@ import expect from 'expect';
 
 import { TestStore } from '~/store/TestStore';
 
-import { selectLoadingProjects, selectProject } from '../../project.slice';
+import { selectLoadingProjects, selectProject } from '../../project.selectors';
 
 import { loadProject } from './loadProject';
 

@@ -1,5 +1,6 @@
+import { selectMetricUnitDisplayValue } from '~/project/domain/selectors/selectMetricConfig/selectMetricConfig';
+
 import { useAppSelector } from '../../../../hooks/useAppSelector';
-import { selectMetricUnitDisplayValue } from '../../../domain/project.slice';
 
 type MetricProps = {
   projectId: string;

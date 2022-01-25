@@ -2,7 +2,8 @@ import expect from 'expect';
 
 import { TestStore } from '~/store/TestStore';
 
-import { createMetricsSnapshot, createProject } from '../../project.slice';
+import { createMetricsSnapshot } from '../../types/MetricsSnapshot';
+import { createProject } from '../../types/Project';
 
 import { selectLastSnapshot, selectSnapshots } from './selectSnapshots';
 
@@ -34,10 +35,6 @@ describe('selectSnapshots', () => {
         },
       ]);
     });
-
-    it('returns undefined when there is no matching project', () => {
-      expect(store.select(selectSnapshots, 'project-id')).toBeUndefined();
-    });
   });
 
   describe('selectLastSnapshot', () => {
@@ -48,10 +45,6 @@ describe('selectSnapshots', () => {
         date: new Date('2022-02-10'),
         metrics: [],
       });
-    });
-
-    it('returns undefined when there is no matching project', () => {
-      expect(store.select(selectLastSnapshot, 'project-id')).toBeUndefined();
     });
 
     it('returns undefined when the project has no snapshot', () => {

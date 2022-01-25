@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
 
-import { Metric } from '../../../domain/project.slice';
 import { selectLastSnapshot } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
+import { Metric } from '../../../domain/types/Metric';
 
 import { Metric as MetricComponent } from './Metric';
 import { SnapshotsChart } from './SnapshotsChart';
