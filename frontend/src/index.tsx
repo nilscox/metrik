@@ -7,8 +7,8 @@ import './styles.css';
 
 import { FetchHttpAdapter } from './adapters/FetchHttpAdapter';
 import { App } from './App';
-import { HttpProjectGateway } from './project/infrastructure/gateways/HttpProjectGateway';
-import { createStore } from './store/store';
+import { HttpProjectGateway } from './project';
+import { createStore } from './store';
 
 const API_URL = process.env.API_URL as string;
 const TOKEN = process.env.TOKEN;

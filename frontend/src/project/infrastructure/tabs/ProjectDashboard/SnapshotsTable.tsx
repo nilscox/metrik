@@ -1,8 +1,7 @@
 import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
 
-import { selectSnapshots } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
-import { Metric } from '../../../domain/types/Metric';
+import { Metric, selectSnapshots } from '../../../domain';
 
 type SnapshotsTableProps = {
   onMouseOverMetric: (metric: Metric) => void;

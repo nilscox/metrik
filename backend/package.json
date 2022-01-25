@@ -11,7 +11,7 @@
     "test": "mocha",
     "test:coverage": "nyc yarn test",
     "db:reset": "rm db.sqlite && yarn db:migrate",
-    "db:migrate": "ts-node src/sql/run-migrations.ts"
+    "db:migrate": "ts-node -r tsconfig-paths/register src/sql/run-migrations.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.2.6",
@@ -46,6 +46,7 @@
     "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^8.7.0",
     "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "expect": "^27.4.6",

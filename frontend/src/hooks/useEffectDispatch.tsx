@@ -1,6 +1,6 @@
 import { DependencyList, useEffect } from 'react';
 
-import { AppDispatch } from '../store/store';
+import { AppDispatch } from '../store';
 
 import { useAppDispatch } from './useAppDispatch';
 

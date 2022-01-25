@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-import { TestStore } from '~/store/TestStore';
+import { TestStore } from '~/store';
 
 import { selectLoadingProjects, selectProject } from '../../project.selectors';
 

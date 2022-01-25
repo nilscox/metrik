@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { AppSelector, AppState } from '~/store/store';
+import { AppSelector, AppState } from '~/store';
 
 import { projectsStateAdapter, ProjectStateSlice } from './project.slice';
 import { Project } from './types/Project';
@@ -10,6 +10,7 @@ const selectProjectsSlice: AppSelector<ProjectStateSlice> = (state) => {
 };
 
 const adapterSelectors = projectsStateAdapter.getSelectors<AppState>(selectProjectsSlice);
+
 export const selectProjectUnsafe = adapterSelectors.selectById;
 
 // prettier-ignore

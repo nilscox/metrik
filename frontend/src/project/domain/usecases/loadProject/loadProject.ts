@@ -1,6 +1,6 @@
-import { AppThunkAction } from '~/store/store';
+import { AppThunkAction } from '~/store';
 
-import { setLoadingProjects, setProject } from '../../project.slice';
+import { setLoadingProjects, setProject } from '../../project.actions';
 
 export const loadProject = (projectId: string): AppThunkAction => {
   return async (dispatch, _getState, { projectGateway }) => {

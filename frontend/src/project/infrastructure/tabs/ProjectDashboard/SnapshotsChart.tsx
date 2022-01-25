@@ -3,7 +3,7 @@ import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
 
-import { selectSnapshots } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
+import { selectSnapshots } from '../../../domain';
 
 type SnapshotsChartProps = {
   metricLabel: string;

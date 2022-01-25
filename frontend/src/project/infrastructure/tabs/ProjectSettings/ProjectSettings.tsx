@@ -2,7 +2,7 @@ import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
 import { selectProject } from '~/project/domain/project.selectors';
 
-import { selectLastSnapshot } from '../../../domain/selectors/selectSnapshots/selectSnapshots';
+import { selectLastSnapshot } from '../../../domain';
 
 export const ProjectSettings: React.FC = () => {
   const projectId = useParam('projectId');

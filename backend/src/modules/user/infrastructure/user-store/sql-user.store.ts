@@ -1,6 +1,6 @@
 import { Database, UserTable } from '~/sql/database';
 
-import { User, UserProps } from '../../domain/user';
+import { User } from '../../domain/user';
 import { UserStore } from '../../domain/user.store';
 
 export class SqlUserStore implements UserStore {

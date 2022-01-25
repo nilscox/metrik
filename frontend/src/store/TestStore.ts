@@ -1,6 +1,6 @@
 import { IProjectDto } from '@dtos/project/IProjectDto';
 
-import { setProject } from '~/project/domain/project.slice';
+import { setProject } from '~/project/domain/project.actions';
 import { Project } from '~/project/domain/types/Project';
 
 import { ProjectGateway } from './ProjectGateway';

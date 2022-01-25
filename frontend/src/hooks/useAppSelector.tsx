@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import { AppSelector, AppState } from '../store/store';
+import { AppSelector, AppState } from '../store';
 
 export const useAppSelector = <Result, Params extends unknown[]>(
   selector: AppSelector<Result, Params>,

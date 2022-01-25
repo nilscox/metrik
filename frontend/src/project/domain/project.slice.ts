@@ -23,10 +23,4 @@ const projectsSlice = createSlice({
 export type ProjectStateSlice = typeof initialState;
 
 export const projectsReducer = projectsSlice.reducer;
-
-// prettier-ignore
-export const {
-  setLoadingProjects,
-  setProjects,
-  setProject,
-} = projectsSlice.actions;
+export const projectsActions = projectsSlice.actions;

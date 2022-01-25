@@ -5,12 +5,9 @@ import { useAppSelector } from '~/hooks/useAppSelector';
 import { useEffectDispatch } from '~/hooks/useEffectDispatch';
 import { useParam } from '~/hooks/useParam';
 
-import { selectLoadingProjects, selectProjectUnsafe } from '../domain/project.selectors';
-import { loadProject } from '../domain/usecases/loadProject/loadProject';
+import { loadProject, selectLoadingProjects, selectProjectUnsafe } from '../domain';
 
-import { ProjectDashboard } from './tabs/ProjectDashboard/ProjectDashboard';
-import { ProjectMetricsConfiguration } from './tabs/ProjectMetricsConfiguration/ProjectMetricsConfiguration';
-import { ProjectSettings } from './tabs/ProjectSettings/ProjectSettings';
+import { ProjectDashboard, ProjectMetricsConfiguration, ProjectSettings } from './tabs';
 
 export const ProjectPage: React.FC = () => (
   <Routes>

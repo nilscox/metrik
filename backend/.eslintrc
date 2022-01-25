@@ -4,13 +4,28 @@
     "project": "tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": ["import", "@typescript-eslint/eslint-plugin", "simple-import-sort"],
-  "extends": ["plugin:import/recommended", "plugin:@typescript-eslint/recommended"],
+
   "env": {
     "node": true
   },
+
+  // prettier-ignore
+  "plugins": [
+    "import",
+    "simple-import-sort",
+    "@typescript-eslint/eslint-plugin"
+  ],
+
+  // prettier-ignore
+  "extends": [
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended"
+  ],
+
   "settings": {
     "import/resolver": {
+      "typescript": {},
       "alias": {
         "map": [
           ["~", "./src"],
@@ -20,7 +35,13 @@
       }
     }
   },
+
   "rules": {
+    "sort-imports": "off",
+
+    "import/order": "off",
+    "import/no-named-as-default-member": "off",
+
     "simple-import-sort/imports": [
       "warn",
       {
@@ -34,6 +55,7 @@
         ]
       }
     ],
+
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off"
   },

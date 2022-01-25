@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { AppState } from '~/store/store';
+import { AppState } from '~/store';
 
 import { selectProject } from '../../project.selectors';
 

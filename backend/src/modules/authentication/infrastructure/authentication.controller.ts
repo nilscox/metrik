@@ -3,7 +3,6 @@ import {
   ClassSerializerInterceptor,
   ConflictException,
   Controller,
-  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,

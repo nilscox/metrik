@@ -1,6 +1,6 @@
 import { AnyAction, configureStore, Selector, ThunkAction } from '@reduxjs/toolkit';
 
-import { projectsReducer } from '../project/domain/project.slice';
+import { projectsReducer } from '~/project/domain/project.slice';
 
 import { ProjectGateway } from './ProjectGateway';
 
