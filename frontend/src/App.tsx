@@ -7,7 +7,7 @@ import { ProjectPage } from './project/infrastructure/ProjectPage';
 
 export const App: React.FC = () => {
   return (
-    <div className="container py-4 mx-auto ">
+    <div className="container py-4 mx-auto">
       <Header />
       <ProjectRoutes />
     </div>

@@ -31,6 +31,7 @@ export const Tab: React.FC<TabProps> = ({ link = '', children }) => {
     </Link>
   );
 };
+
 type TabPanelProps = {
   className?: string;
 };

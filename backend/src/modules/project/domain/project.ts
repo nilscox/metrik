@@ -1,3 +1,4 @@
+import { AggregateRoot } from '~/ddd/AggregateRoot';
 import { Entity } from '~/ddd/entity';
 import { ValueObject } from '~/ddd/value-object';
 
@@ -58,7 +59,7 @@ export type ProjectProps = {
   snapshots: MetricsSnapshot[];
 };
 
-export class Project extends Entity {
+export class Project extends AggregateRoot {
   constructor(private props: ProjectProps) {
     super();
   }
