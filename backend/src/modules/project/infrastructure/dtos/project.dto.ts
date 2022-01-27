@@ -7,7 +7,7 @@ import {
   IProjectDto,
 } from '@dtos/project/IProjectDto';
 
-import { Metric, MetricConfiguration, MetricsSnapshot, Project } from '../domain/project';
+import { Metric, MetricConfiguration, MetricsSnapshot, Project } from '../../domain/project';
 
 class MetricDto implements IMetricDto {
   constructor(metric: Metric) {

@@ -16,10 +16,10 @@ import {
 
 import { IsAuthenticated } from '~/modules/authorization';
 
+import { MetricConfigurationLabelAlreadyExistsError } from '../../../domain/errors/metric-configuration-label-already-exists.error';
 import { MetricConfigurationService } from '../domain/metric-configuration.service';
-import { MetricConfigurationLabelAlreadyExistsError } from '../domain/metric-configuration-label-already-exists.error';
 
-import { AddMetricConfigurationDto } from './add-metric-configuration.dto';
+import { AddMetricConfigurationDto } from './dtos/add-metric-configuration.dto';
 
 @Controller('project')
 @UseGuards(IsAuthenticated)

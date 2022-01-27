@@ -2,11 +2,10 @@ import { AggregateRoot } from '~/ddd/AggregateRoot';
 import { Entity } from '~/ddd/entity';
 import { ValueObject } from '~/ddd/value-object';
 
-import { MetricConfigurationLabelAlreadyExistsError } from '../modules/metric-configuration/domain/metric-configuration-label-already-exists.error';
-
-import { DuplicatedMetricError } from './duplicated-metric.error';
-import { InvalidMetricValueTypeError } from './invalid-metric-value-type.error';
-import { UnknownMetricLabelError } from './unknown-metric-label.error';
+import { DuplicatedMetricError } from './errors/duplicated-metric.error';
+import { InvalidMetricValueTypeError } from './errors/invalid-metric-value-type.error';
+import { MetricConfigurationLabelAlreadyExistsError } from './errors/metric-configuration-label-already-exists.error';
+import { UnknownMetricLabelError } from './errors/unknown-metric-label.error';
 
 export type MetricConfigurationProps = {
   label: string;

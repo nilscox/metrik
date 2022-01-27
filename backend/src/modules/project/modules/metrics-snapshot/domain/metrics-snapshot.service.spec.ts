@@ -4,15 +4,17 @@ import { StubDateAdapter } from '~/common/date/stub-date.adapter';
 import { StubGeneratorAdapter } from '~/common/generator';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 
-import { DuplicatedMetricError } from '../../../domain/duplicated-metric.error';
-import { InvalidMetricValueTypeError } from '../../../domain/invalid-metric-value-type.error';
+import {
+  DuplicatedMetricError,
+  InvalidMetricValueTypeError,
+  UnknownMetricLabelError,
+} from '../../../domain';
 import {
   createMetricsConfiguration,
   createProject,
   MetricsSnapshot,
   Project,
 } from '../../../domain/project';
-import { UnknownMetricLabelError } from '../../../domain/unknown-metric-label.error';
 import { InMemoryProjectStore } from '../../../project-aggregate';
 
 import { MetricsSnapshotService } from './metrics-snapshot.service';

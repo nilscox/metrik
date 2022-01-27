@@ -16,12 +16,12 @@ import {
 
 import { IsAuthenticated } from '~/modules/authorization';
 
-import { DuplicatedMetricError } from '../../../domain/duplicated-metric.error';
-import { InvalidMetricValueTypeError } from '../../../domain/invalid-metric-value-type.error';
-import { UnknownMetricLabelError } from '../../../domain/unknown-metric-label.error';
+import { DuplicatedMetricError } from '../../../domain/errors/duplicated-metric.error';
+import { InvalidMetricValueTypeError } from '../../../domain/errors/invalid-metric-value-type.error';
+import { UnknownMetricLabelError } from '../../../domain/errors/unknown-metric-label.error';
 import { MetricsSnapshotService } from '../domain/metrics-snapshot.service';
 
-import { CreateMetricsSnapshotDto } from './create-metrics-snapshot.dto';
+import { CreateMetricsSnapshotDto } from './dtos/create-metrics-snapshot.dto';
 
 @Controller('project/:id')
 @UseGuards(IsAuthenticated)

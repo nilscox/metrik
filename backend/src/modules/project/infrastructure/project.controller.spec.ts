@@ -17,7 +17,7 @@ import {
 } from '../domain/project';
 import { ProjectService } from '../domain/project.service';
 
-import { CreateProjectDto } from './create-project.dto';
+import { CreateProjectDto } from './dtos/create-project.dto';
 import { ProjectModule } from './project.module';
 
 class MockProjectService extends ProjectService {

@@ -1,5 +1,6 @@
 import expect from 'expect';
 
+import { MetricConfigurationLabelAlreadyExistsError } from '~/modules/project/domain/errors/metric-configuration-label-already-exists.error';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 
 import {
@@ -11,7 +12,6 @@ import {
 import { InMemoryProjectStore } from '../../../project-aggregate';
 
 import { MetricConfigurationService } from './metric-configuration.service';
-import { MetricConfigurationLabelAlreadyExistsError } from './metric-configuration-label-already-exists.error';
 
 describe('MetricConfigurationService', () => {
   let projectStore: InMemoryProjectStore;

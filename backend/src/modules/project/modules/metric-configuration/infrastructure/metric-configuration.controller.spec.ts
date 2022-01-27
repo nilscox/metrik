@@ -10,11 +10,11 @@ import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
 import { MockFn } from '~/utils/mock-fn';
 
+import { MetricConfigurationLabelAlreadyExistsError } from '../../../domain/errors/metric-configuration-label-already-exists.error';
 import { createProject } from '../../../domain/project';
 import { MetricConfigurationService } from '../domain/metric-configuration.service';
-import { MetricConfigurationLabelAlreadyExistsError } from '../domain/metric-configuration-label-already-exists.error';
 
-import { AddMetricConfigurationDto } from './add-metric-configuration.dto';
+import { AddMetricConfigurationDto } from './dtos/add-metric-configuration.dto';
 import { MetricConfigurationModule } from './metric-configuration.module';
 
 class MockMetricConfigurationService extends MetricConfigurationService {

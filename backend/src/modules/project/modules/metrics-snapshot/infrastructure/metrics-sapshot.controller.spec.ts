@@ -10,13 +10,15 @@ import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
 import { MockFn } from '~/utils/mock-fn';
 
-import { DuplicatedMetricError } from '../../../domain/duplicated-metric.error';
-import { InvalidMetricValueTypeError } from '../../../domain/invalid-metric-value-type.error';
-import { createProject } from '../../../domain/project';
-import { UnknownMetricLabelError } from '../../../domain/unknown-metric-label.error';
+import {
+  createProject,
+  DuplicatedMetricError,
+  InvalidMetricValueTypeError,
+  UnknownMetricLabelError,
+} from '../../../domain';
 import { MetricsSnapshotService } from '../domain/metrics-snapshot.service';
 
-import { CreateMetricsSnapshotDto } from './create-metrics-snapshot.dto';
+import { CreateMetricsSnapshotDto } from './dtos/create-metrics-snapshot.dto';
 import { MetricsSnapshotModule } from './metrics-snapshot.module';
 
 class MockMetricsSnapshotService extends MetricsSnapshotService {

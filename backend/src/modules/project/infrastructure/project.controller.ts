@@ -19,8 +19,8 @@ import { User } from '~/modules/user';
 
 import { ProjectService } from '../domain/project.service';
 
-import { CreateProjectDto } from './create-project.dto';
-import { ProjectDto } from './project.dto';
+import { CreateProjectDto } from './dtos/create-project.dto';
+import { ProjectDto } from './dtos/project.dto';
 
 @Controller('project')
 @UseGuards(IsAuthenticated)
