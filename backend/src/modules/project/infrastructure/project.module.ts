@@ -6,12 +6,20 @@ import { GeneratorModule } from '~/common/generator';
 import { LoggerModule } from '~/common/logger';
 
 import { ProjectService } from '../domain/project.service';
+import { MetricConfigurationModule } from '../modules/metric-configuration';
 import { ProjectAggregateModule } from '../project-aggregate';
 
 import { ProjectController } from './project.controller';
 
 @Module({
-  imports: [ConfigModule, LoggerModule, GeneratorModule, DateModule, ProjectAggregateModule],
+  imports: [
+    ConfigModule,
+    LoggerModule,
+    GeneratorModule,
+    DateModule,
+    ProjectAggregateModule,
+    MetricConfigurationModule,
+  ],
   controllers: [ProjectController],
   providers: [ProjectService],
 })

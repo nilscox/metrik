@@ -12,7 +12,6 @@ import { MockFn } from '~/utils/mock-fn';
 
 import { DuplicatedMetricError } from '../domain/duplicated-metric.error';
 import { InvalidMetricValueTypeError } from '../domain/invalid-metric-value-type.error';
-import { MetricConfigurationLabelAlreadyExistsError } from '../domain/metric-configuration-label-already-exists.error';
 import {
   createMetricsConfiguration,
   createMetricsSnapshot,
@@ -21,7 +20,6 @@ import {
 import { ProjectService } from '../domain/project.service';
 import { UnknownMetricLabelError } from '../domain/unknown-metric-label.error';
 
-import { AddMetricConfigurationDto } from './add-metric-configuration.dto';
 import { CreateMetricsSnapshotDto } from './create-metrics-snapshot.dto';
 import { CreateProjectDto } from './create-project.dto';
 import { ProjectModule } from './project.module';
@@ -29,7 +27,6 @@ import { ProjectModule } from './project.module';
 class MockProjectService extends ProjectService {
   override findProjectById: MockFn<ProjectService['findProjectById']> = fn();
   override createNewProject: MockFn<ProjectService['createNewProject']> = fn();
-  override addMetricConfiguration: MockFn<ProjectService['addMetricConfiguration']> = fn();
   override createMetricsSnapshot: MockFn<ProjectService['createMetricsSnapshot']> = fn();
 }
 
@@ -148,52 +145,6 @@ describe('ProjectController', () => {
       await agent.post(endpoint).use(as(user)).send(dto).expect(HttpStatus.CREATED);
 
       expect(projectService.createNewProject).toHaveBeenCalledWith(dto.name, 'master');
-    });
-
-    it('fails when unauthenticated', async () => {
-      await agent.post(endpoint).expect(HttpStatus.UNAUTHORIZED);
-    });
-
-    it('fails when the request body is not valid', async () => {
-      await agent.post(endpoint).use(as(user)).expect(HttpStatus.BAD_REQUEST);
-      await agent.post(endpoint).use(as(user)).send({}).expect(HttpStatus.BAD_REQUEST);
-    });
-  });
-
-  describe('addMetricConfiguration', () => {
-    const dto: AddMetricConfigurationDto = {
-      label: 'Linter warnings',
-      unit: 'number',
-      type: 'integer',
-    };
-
-    const endpoint = `/project/${project.id}/metric`;
-
-    it('adds a new metric configuration to a project', async () => {
-      await agent.post(endpoint).use(as(user)).send(dto).expect(HttpStatus.NO_CONTENT);
-
-      expect(projectService.addMetricConfiguration).toHaveBeenCalledWith(
-        project.id,
-        dto.label,
-        dto.unit,
-        dto.type,
-      );
-    });
-
-    it('handles the MetricConfigurationLabelAlreadyExistsError domain error', async () => {
-      const error = new MetricConfigurationLabelAlreadyExistsError('CI time');
-
-      projectService.addMetricConfiguration.mockRejectedValueOnce(error);
-
-      const { body } = await agent
-        .post(endpoint)
-        .use(as(user))
-        .send(dto)
-        .expect(HttpStatus.CONFLICT);
-
-      expect(body).toMatchObject({
-        message: 'a metric configuration with label "CI time" already exists',
-      });
     });
 
     it('fails when unauthenticated', async () => {
