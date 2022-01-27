@@ -12,7 +12,7 @@ import {
   createProject,
   Project,
 } from '../../domain/project';
-import { ProjectModule } from '../project.module';
+import { ProjectAggregateModule } from '../index';
 
 import { SqlProjectStore } from './sql-project.store';
 
@@ -23,7 +23,7 @@ describe('SqlProjectStore', () => {
 
   before(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [ProjectModule],
+      imports: [ProjectAggregateModule],
     })
       .overrideProvider(Logger)
       .useClass(DevNullLogger)

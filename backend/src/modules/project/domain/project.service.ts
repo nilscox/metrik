@@ -3,8 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DatePort } from '~/common/date';
 import { GeneratorPort } from '~/common/generator';
 
+import { ProjectStore, ProjectStoreToken } from '../project-aggregate';
+
 import { Metric, Project } from './project';
-import { ProjectStore, ProjectStoreToken } from './project.store';
 
 @Injectable()
 export class ProjectService {

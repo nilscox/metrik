@@ -1,4 +1,4 @@
-import { Project } from './project';
+import { Project } from '../../domain/project';
 
 export const ProjectStoreToken = Symbol('ProjectStore');
 

@@ -9,7 +9,8 @@ import {
   MetricsSnapshot,
   Project,
 } from '../../domain/project';
-import { ProjectStore } from '../../domain/project.store';
+
+import { ProjectStore } from './project.store';
 
 type FindResult = {
   project_id: string;

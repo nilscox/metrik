@@ -4,10 +4,9 @@ import { ConfigPort } from '~/common/config';
 import { DatabaseToken } from '~/common/database/database.provider';
 import { Database } from '~/sql/database';
 
-import { ProjectStore, ProjectStoreToken } from '../../domain/project.store';
-
 import { FixtureProjectStore } from './fixture-project.store';
 import { InMemoryProjectStore } from './in-memory-project.store';
+import { ProjectStore, ProjectStoreToken } from './project.store';
 import { SqlProjectStore } from './sql-project.store';
 
 export const projectStoreProvider: FactoryProvider<ProjectStore> = {

@@ -4,7 +4,7 @@ import { StubDateAdapter } from '~/common/date/stub-date.adapter';
 import { StubGeneratorAdapter } from '~/common/generator';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 
-import { InMemoryProjectStore } from '../infrastructure/project-store/in-memory-project.store';
+import { InMemoryProjectStore } from '../project-aggregate';
 
 import { DuplicatedMetricError } from './duplicated-metric.error';
 import { InvalidMetricValueTypeError } from './invalid-metric-value-type.error';

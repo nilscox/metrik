@@ -2,7 +2,8 @@ import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 import { InMemoryStore } from '~/utils/in-memory.store';
 
 import { MetricConfiguration, MetricsSnapshot, Project } from '../../domain/project';
-import { ProjectStore } from '../../domain/project.store';
+
+import { ProjectStore } from './project.store';
 
 type ProjectStoreProps = {
   id: string;
