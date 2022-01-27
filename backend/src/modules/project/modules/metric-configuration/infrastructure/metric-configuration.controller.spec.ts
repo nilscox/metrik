@@ -6,11 +6,11 @@ import request, { SuperAgentTest } from 'supertest';
 
 import { ConfigPort, StubConfigAdapter } from '~/common/config';
 import { AuthorizationModule } from '~/modules/authorization';
-import { createProject } from '~/modules/project/domain/project';
 import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
 import { MockFn } from '~/utils/mock-fn';
 
+import { createProject } from '../../../domain/project';
 import { MetricConfigurationService } from '../domain/metric-configuration.service';
 import { MetricConfigurationLabelAlreadyExistsError } from '../domain/metric-configuration-label-already-exists.error';
 

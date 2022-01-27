@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { ProjectAggregateModule } from '~/modules/project/project-aggregate';
-
+import { ProjectAggregateModule } from '../../../project-aggregate';
 import { MetricConfigurationService } from '../domain/metric-configuration.service';
 
 import { MetricConfigurationController } from './metric-configuration.controller';

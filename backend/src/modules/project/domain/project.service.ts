@@ -1,18 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DatePort } from '~/common/date';
 import { GeneratorPort } from '~/common/generator';
 
 import { ProjectStore, ProjectStoreToken } from '../project-aggregate';
 
-import { Metric, Project } from './project';
+import { Project } from './project';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @Inject(ProjectStoreToken) private readonly projectStore: ProjectStore,
     private readonly generator: GeneratorPort,
-    private readonly date: DatePort,
   ) {}
 
   async findProjectById(projectId: string): Promise<Project | undefined> {
@@ -31,22 +29,5 @@ export class ProjectService {
     await this.projectStore.save(project);
 
     return project;
-  }
-
-  async createMetricsSnapshot(
-    projectId: string,
-    reference: string | undefined,
-    metrics: Array<Metric>,
-  ) {
-    const project = await this.projectStore.findByIdOrFail(projectId);
-
-    project.createMetricsSnapshot(
-      await this.generator.generateId(),
-      reference,
-      this.date.now,
-      metrics,
-    );
-
-    await this.projectStore.save(project);
   }
 }

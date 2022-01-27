@@ -1,6 +1,5 @@
 import expect from 'expect';
 
-import { InMemoryProjectStore } from '~/modules/project/project-aggregate';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 
 import {
@@ -9,6 +8,7 @@ import {
   MetricConfiguration,
   Project,
 } from '../../../domain/project';
+import { InMemoryProjectStore } from '../../../project-aggregate';
 
 import { MetricConfigurationService } from './metric-configuration.service';
 import { MetricConfigurationLabelAlreadyExistsError } from './metric-configuration-label-already-exists.error';
