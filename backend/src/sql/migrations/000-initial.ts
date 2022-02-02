@@ -1,5 +1,7 @@
 import { Kysely } from 'kysely';
 
+import { MetricTypeEnum } from '~/modules/metric/domain/metric-type';
+
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('user')
@@ -14,25 +16,40 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('name', 'text', (col) => col.notNull())
     .addColumn('default_branch', 'text', (col) => col.notNull())
-    .addColumn('metrics_config', 'text', (col) => col.notNull())
     .execute();
 
+  const metricTypes = Object.values(MetricTypeEnum)
+    .map((value) => `'${value}'`)
+    .join(',');
+
   await db.schema
-    .createTable('snapshot')
+    .createTable('metric')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('date', 'text', (col) => col.notNull())
+    .addColumn('label', 'text', (col) => col.notNull())
+    .addColumn('type', 'text', (col) => col.check(db.raw(`type IN (${metricTypes})`)).notNull())
     .addColumn('project_id', 'text', (col) =>
       col.references('project.id').onDelete('cascade').notNull(),
     )
     .execute();
 
   await db.schema
-    .createTable('metric')
-    .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
-    .addColumn('label', 'text', (col) => col.notNull())
-    .addColumn('value', 'numeric')
+    .createTable('snapshot')
+    .addColumn('id', 'text', (col) => col.primaryKey())
+    .addColumn('date', 'date', (col) => col.notNull())
+    .addColumn('project_id', 'text', (col) =>
+      col.references('project.id').onDelete('cascade').notNull(),
+    )
+    .execute();
+
+  await db.schema
+    .createTable('metric_value')
+    .addColumn('id', 'text', (col) => col.primaryKey())
+    .addColumn('value', 'double precision', (col) => col.notNull())
     .addColumn('snapshot_id', 'text', (col) =>
       col.references('snapshot.id').onDelete('cascade').notNull(),
+    )
+    .addColumn('metric_id', 'text', (col) =>
+      col.references('metric.id').onDelete('cascade').notNull(),
     )
     .execute();
 }

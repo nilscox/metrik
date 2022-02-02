@@ -5,12 +5,13 @@ import expect from 'expect';
 import { Plugin as SuperAgentPlugin } from 'superagent';
 import request, { SuperAgentTest } from 'supertest';
 
+import { ProjectStore, ProjectStoreToken } from '../project_/domain/project.store';
+
 import { AppModule } from './app.module';
 import { DatabaseService } from './common/database/database.service';
 import { Logger, LoggerModule } from './common/logger';
 import { DevNullLogger } from './common/logger/dev-null-logger';
 import { Credentials } from './modules/authentication/domain/credentials';
-import { ProjectStore, ProjectStoreToken } from './modules/project/domain/project.store';
 import { createUser } from './modules/user/domain/user';
 import { UserStore, UserStoreToken } from './modules/user/domain/user.store';
 

@@ -9,11 +9,7 @@ export type UserProps = {
   token?: string;
 };
 
-export class User extends Entity {
-  constructor(private props: UserProps) {
-    super();
-  }
-
+export class User extends Entity<UserProps> {
   get id() {
     return this.props.id;
   }
@@ -32,6 +28,10 @@ export class User extends Entity {
 
   async unsetToken() {
     this.props.token = undefined;
+  }
+
+  validate(): void {
+    //
   }
 }
 

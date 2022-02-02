@@ -1,4 +1,6 @@
-import { Generated, Kysely } from 'kysely';
+import { Kysely } from 'kysely';
+
+import { MetricTypeEnum } from '~/modules/metric/domain/metric-type';
 
 export interface UserTable {
   id: string;
@@ -8,32 +10,39 @@ export interface UserTable {
   token: string | null;
 }
 
-export interface MetricTable {
-  id: Generated<string>;
-  label: string;
-  value: number;
-  snapshot_id: string;
-}
-
-export interface MetricsSnapshotTable {
-  id: string;
-  reference: string | null;
-  date: string;
-  project_id: string;
-}
-
 export interface ProjectTable {
   id: string;
   name: string;
   default_branch: string;
-  metrics_config: string;
+}
+
+export interface MetricTable {
+  id: string;
+  label: string;
+  type: MetricTypeEnum;
+  project_id: string;
+}
+
+export interface SnapshotTable {
+  id: string;
+  date: string;
+  project_id: string;
+}
+
+export interface MetricValueTable {
+  id: string;
+  snapshot_id: string;
+  metric_id: string;
+  value: number;
 }
 
 export interface DatabaseDefinition {
   user: UserTable;
   project: ProjectTable;
-  snapshot: MetricsSnapshotTable;
   metric: MetricTable;
+  snapshot: SnapshotTable;
+  metric_value: MetricValueTable;
 }
 
 export type Database = Kysely<DatabaseDefinition>;
+export type TableName = keyof DatabaseDefinition;
