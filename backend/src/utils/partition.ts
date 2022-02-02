@@ -1,7 +1,4 @@
-export const partition = <K extends PropertyKey, T extends { [key in K]: PropertyKey | null }>(
-  key: K,
-  rows: T[],
-): Record<PropertyKey, T[]> => {
+export const partition = <T>(key: keyof T, rows: T[]): Record<PropertyKey, T[]> => {
   return rows.reduce(
     (obj, row) => ({
       ...obj,

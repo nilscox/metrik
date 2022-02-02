@@ -27,7 +27,7 @@ describe('AuthenticationService', () => {
     it('creates a new user', async () => {
       await service.createUser(email, password);
 
-      const savedUser = await userStore.findUserByEmail(email);
+      const savedUser = await userStore.findByEmail(email);
 
       const expectedUser = new User({
         id: 'generated-id',
@@ -41,7 +41,7 @@ describe('AuthenticationService', () => {
     });
 
     it('prevents to create a user with an already existing email', async () => {
-      await userStore.saveUser(createUser({ email }));
+      await userStore.save(createUser({ email }));
 
       await expect(service.createUser(email, password)).rejects.toThrow(EmailAlreadyExistsError);
     });
@@ -51,16 +51,13 @@ describe('AuthenticationService', () => {
     it('creates a session as an existing user', async () => {
       const user = createUser({ email: email });
 
-      await userStore.saveUser(user);
+      await userStore.save(user);
 
       const loggedInUser = await service.authenticate(email, password);
 
       expect(loggedInUser.equals(user)).toBe(true);
 
-      expect(await userStore.findUserById(user.id)).toHaveProperty(
-        'props.token',
-        'generated-token',
-      );
+      expect(await userStore.findById(user.id)).toHaveProperty('props.token', 'generated-token');
     });
 
     it('discards a user who sent credentials that do not match any existing user', async () => {
@@ -70,7 +67,7 @@ describe('AuthenticationService', () => {
     it('discards a user who sent invalid credentials', async () => {
       const user = createUser({ email });
 
-      await userStore.saveUser(user);
+      await userStore.save(user);
 
       await expect(service.authenticate(email, 'nope')).rejects.toThrow(InvalidCredentialsError);
     });

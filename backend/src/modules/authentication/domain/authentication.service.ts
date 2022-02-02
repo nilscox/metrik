@@ -15,7 +15,7 @@ export class AuthenticationService {
   ) {}
 
   async createUser(email: string, password: string): Promise<User> {
-    const existingEmailUser = await this.userStore.findUserByEmail(email);
+    const existingEmailUser = await this.userStore.findByEmail(email);
 
     if (existingEmailUser) {
       throw new EmailAlreadyExistsError(email);
@@ -31,13 +31,13 @@ export class AuthenticationService {
 
     await user.generateToken(this.generator);
 
-    await this.userStore.saveUser(user);
+    await this.userStore.save(user);
 
     return user;
   }
 
   async authenticate(email: string, password: string): Promise<User> {
-    const user = await this.userStore.findUserByEmail(email);
+    const user = await this.userStore.findByEmail(email);
 
     if (!user) {
       throw new InvalidCredentialsError();
@@ -51,7 +51,7 @@ export class AuthenticationService {
 
     await user.generateToken(this.generator);
 
-    await this.userStore.saveUser(user);
+    await this.userStore.save(user);
 
     return user;
   }
@@ -59,6 +59,6 @@ export class AuthenticationService {
   async revokeAuthentication(user: User): Promise<void> {
     user.unsetToken();
 
-    await this.userStore.saveUser(user);
+    await this.userStore.save(user);
   }
 }

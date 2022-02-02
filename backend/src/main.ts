@@ -11,12 +11,14 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger();
+
+  const app = await NestFactory.create(AppModule, {
+    logger,
+  });
 
   const config = app.get(ConfigPort);
-  const logger = app.get<Logger>(Logger);
 
-  app.useLogger(logger);
   app.use(cors({ origin: true }));
 
   const port = Number(config.get('LISTEN_PORT'));
@@ -24,7 +26,7 @@ async function bootstrap() {
 
   await app.listen(port, host);
 
-  logger.log(`server listening on ${host}:${port}`, 'Main');
+  logger.info(`server listening on ${host}:${port}`, 'Main');
 }
 
 bootstrap();

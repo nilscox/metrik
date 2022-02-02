@@ -1,8 +1,10 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+
+import { Logger } from '.';
 
 @Injectable()
-export class DevNullLogger extends ConsoleLogger {
-  log(): void {
+export class DevNullLogger extends Logger {
+  override _log(): void {
     //
   }
 }

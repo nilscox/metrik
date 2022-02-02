@@ -10,23 +10,27 @@
     "lint": "eslint src",
     "test": "mocha",
     "test:coverage": "nyc yarn test",
+    "ts-node": "node -r ts-node/register -r tsconfig-paths/register",
+    "typeorm": "yarn ts-node node_modules/.bin/typeorm",
     "db:reset": "rm db.sqlite && yarn db:migrate",
-    "db:migrate": "ts-node -r tsconfig-paths/register src/sql/run-migrations.ts"
+    "db:migrate": "yarn ts-node src/sql/run-migrations.ts",
+    "db:generate-migration": "yarn typeorm migration:generate -n"
   },
   "dependencies": {
     "@nestjs/common": "^8.2.6",
     "@nestjs/core": "^8.2.6",
     "@nestjs/platform-express": "^8.2.6",
+    "@nestjs/typeorm": "^8.0.3",
     "bcrypt": "^5.0.1",
     "better-sqlite3": "^7.5.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "cors": "^2.8.5",
     "dotenv-safe": "^8.2.0",
-    "kysely": "^0.16.8",
     "nanoid": "^3.2.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
+    "typeorm": "^0.2.41",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -1,65 +1,48 @@
-import path from 'path';
-
-import { Inject, Injectable } from '@nestjs/common';
-import { FileMigrationProvider, Migrator } from 'kysely';
-
-import { Database } from '~/sql/database';
+import { Injectable, OnApplicationShutdown } from '@nestjs/common';
+import { Connection } from 'typeorm';
 
 import { Logger } from '../logger';
 
-import { DatabaseToken } from './database.provider';
-
 @Injectable()
-export class DatabaseService {
-  constructor(
-    private readonly logger: Logger,
-    @Inject(DatabaseToken) private readonly db: Database,
-  ) {
+export class DatabaseService implements OnApplicationShutdown {
+  constructor(private readonly logger: Logger, private readonly connection: Connection) {
     logger.setContext('DatabaseService');
   }
 
+  get isConnected() {
+    return this.connection.isConnected;
+  }
+
+  async onApplicationShutdown() {
+    if (this.isConnected) {
+      await this.connection.close();
+    }
+  }
+
   async clear() {
-    await this.db.deleteFrom('user').execute();
-    await this.db.deleteFrom('project').execute();
+    this.logger.debug('clearing the database');
+    await this.connection.query('delete from user');
+    await this.connection.query('delete from project');
   }
 
   async checkConnection(): Promise<boolean> {
-    if (!this.db) {
+    if (!this.isConnected) {
       return false;
     }
 
-    await this.db.raw('SELECT 1').execute();
+    await this.connection.query('SELECT 1');
 
     return true;
   }
 
   async closeConnection(): Promise<void> {
-    await this.db.destroy();
+    this.logger.debug('closing connection');
+    await this.connection.close();
   }
 
-  async runMigrations(): Promise<boolean> {
-    const migrator = new Migrator({
-      db: this.db,
-      provider: new FileMigrationProvider(path.resolve(__dirname, '..', '..', 'sql', 'migrations')),
-    });
-
-    const { error, results } = await migrator.migrateToLatest();
-
-    results?.forEach((it) => {
-      if (it.status === 'Success') {
-        this.logger.log(`migration "${it.migrationName}" was executed successfully`);
-      } else if (it.status === 'Error') {
-        this.logger.error(`failed to execute migration "${it.migrationName}"`);
-      }
-    });
-
-    if (error) {
-      this.logger.error('failed to migrate');
-      this.logger.error(error);
-
-      return false;
-    }
-
-    return true;
+  async runMigrations(): Promise<void> {
+    this.logger.log('running migrations');
+    await this.connection.runMigrations();
+    this.logger.debug('migrations run successful');
   }
 }

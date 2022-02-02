@@ -1,8 +1,9 @@
 import { Inject, Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 
-import { UserStore, UserStoreToken } from '~/modules/user';
 import { MetriksRequest } from '~/utils/metriks-request';
+
+import { UserStore, UserStoreToken } from '../user';
 
 @Injectable()
 export class UserMiddleware implements NestMiddleware {
@@ -17,7 +18,7 @@ export class UserMiddleware implements NestMiddleware {
     }
 
     if (match) {
-      const user = await this.userStore.findUserByToken(match[1]);
+      const user = await this.userStore.findByToken(match[1]);
 
       if (!user) {
         throw new UnauthorizedException('invalid token');

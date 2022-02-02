@@ -5,6 +5,8 @@ import { fn } from 'jest-mock';
 import request, { SuperAgentTest } from 'supertest';
 
 import { ConfigPort, StubConfigAdapter } from '~/common/config';
+import { DatabaseService } from '~/common/database';
+import { DevNullLogger, Logger } from '~/common/logger';
 import { AuthorizationModule } from '~/modules/authorization';
 import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
@@ -33,18 +35,22 @@ describe('AuthenticationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AuthorizationModule, AuthenticationModule],
     })
+      .overrideProvider(Logger)
+      .useClass(DevNullLogger)
       .overrideProvider(ConfigPort)
-      .useValue(new StubConfigAdapter({ STORE: 'memory' }))
+      .useValue(new StubConfigAdapter())
       .overrideProvider(AuthenticationService)
       .useClass(MockAuthenticationService)
       .compile();
 
     app = module.createNestApplication();
     await app.init();
+
+    await app.get(DatabaseService).runMigrations();
   });
 
   afterEach(async () => {
-    await app.close();
+    await app?.close();
   });
 
   beforeEach(() => {
@@ -85,7 +91,7 @@ describe('AuthenticationController', () => {
     it('fails when an authenticated user tries to to signup', async () => {
       const user = createUser({ token: 'token' });
 
-      await userStore.saveUser(user);
+      await userStore.save(user);
 
       const { body } = await agent
         .post(endpoint)
@@ -146,7 +152,7 @@ describe('AuthenticationController', () => {
     it('fails when an authenticated user tries to login again', async () => {
       const user = createUser({ token: 'token' });
 
-      await userStore.saveUser(user);
+      await userStore.save(user);
 
       const { body } = await agent
         .post(endpoint)
@@ -171,7 +177,7 @@ describe('AuthenticationController', () => {
     it('logs out as an authenticated user', async () => {
       const user = createUser({ token: 'token' });
 
-      await userStore.saveUser(user);
+      await userStore.save(user);
       authenticationService.authenticate.mockResolvedValueOnce(user);
 
       await agent.post(endpoint).use(as(user)).expect(HttpStatus.NO_CONTENT);
@@ -190,7 +196,7 @@ describe('AuthenticationController', () => {
     it('retrieves the user currently authenticated', async () => {
       const user = createUser({ email: credentials.email, token: 'token' });
 
-      await userStore.saveUser(user);
+      await userStore.save(user);
 
       const { body } = await agent.get(endpoint).use(as(user)).expect(HttpStatus.OK);
 

@@ -1,18 +1,17 @@
-import { Injectable } from '@nestjs/common';
-
 import { ConfigPort, ConfigVariable } from './config.port';
 
-@Injectable()
 export class StubConfigAdapter implements ConfigPort {
+  private static defaultConfig: Record<ConfigVariable, string> = {
+    LISTEN_HOST: '',
+    LISTEN_PORT: '',
+    DATABASE_FILENAME: ':memory:',
+    STORE: 'memory',
+    DATABASE_LOGS: 'false',
+  };
+
   constructor(private readonly config: Partial<Record<ConfigVariable, string>> = {}) {}
 
   get(key: ConfigVariable): string {
-    const value = this.config[key];
-
-    if (!value) {
-      throw new Error(`no value is set for configuration variable "${key}"`);
-    }
-
-    return value;
+    return this.config[key] ?? StubConfigAdapter.defaultConfig[key];
   }
 }

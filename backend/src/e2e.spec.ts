@@ -6,13 +6,14 @@ import { Plugin as SuperAgentPlugin } from 'superagent';
 import request, { SuperAgentTest } from 'supertest';
 
 import { AppModule } from './app.module';
-import { DatabaseService } from './common/database/database.service';
-import { Logger, LoggerModule } from './common/logger';
-import { DevNullLogger } from './common/logger/dev-null-logger';
-import { Credentials } from './modules/authentication/domain/credentials';
-import { ProjectStore, ProjectStoreToken } from './modules/project/domain/project.store';
-import { createUser } from './modules/user/domain/user';
-import { UserStore, UserStoreToken } from './modules/user/domain/user.store';
+import { DatabaseService } from './common/database';
+import { DatePort, StubDateAdapter } from './common/date';
+import { DevNullLogger, Logger, LoggerModule } from './common/logger';
+import { Credentials } from './modules/authentication';
+import { Metric, MetricTypeEnum } from './modules/metric';
+import { Project, ProjectStore, ProjectStoreToken } from './modules/project';
+import { Snapshot, SnapshotStore, SnapshotStoreToken } from './modules/snapshot';
+import { createUser, UserStore, UserStoreToken } from './modules/user';
 
 dotenv.config({ path: '.env.test' });
 
@@ -29,13 +30,15 @@ describe('e2e', () => {
     })
       .overrideProvider(Logger)
       .useClass(DevNullLogger)
+      .overrideProvider(DatePort)
+      .useClass(StubDateAdapter)
       .compile();
 
     app = moduleRef.createNestApplication();
     await app.init();
 
     db = app.get(DatabaseService);
-    userStore = app.get<UserStore>(UserStoreToken);
+    userStore = app.get(UserStoreToken);
 
     await db.runMigrations();
 
@@ -43,7 +46,6 @@ describe('e2e', () => {
   });
 
   after(async () => {
-    await db.closeConnection();
     await app?.close();
   });
 
@@ -73,6 +75,8 @@ describe('e2e', () => {
   });
 
   it('a user logs in, creates a project and fetches its last metrics', async () => {
+    const dateAdapter = app.get<StubDateAdapter>(DatePort);
+
     const credentials: Credentials = {
       email: 'user@domain.tld',
       password: 'some password',
@@ -83,7 +87,7 @@ describe('e2e', () => {
     const hashedPassword = '$2b$10$QB2yC/AtXUMZA3mxOahcjuETGF6rOkpJXnKQY3LIlPJHmhOWai5aO';
     const user = createUser({ email: credentials.email, hashedPassword });
 
-    await userStore.saveUser(user);
+    await userStore.save(user);
 
     const loginResponse = await agent.post('/auth/login').send(credentials).expect(200);
     const token = loginResponse.body.token;
@@ -94,63 +98,97 @@ describe('e2e', () => {
 
     const { body: project } = await agent.post('/project').send({ name: 'My project' }).expect(201);
 
-    await agent
+    const { body: metric1 } = await agent
       .post(`/project/${project.id}/metric`)
-      .send({ label: 'Lines of code', unit: 'number', type: 'integer' })
-      .expect(204);
+      .send({ label: 'Lines of code', type: 'number' })
+      .expect(201);
 
-    await agent
+    const { body: metric2 } = await agent
       .post(`/project/${project.id}/metric`)
-      .send({ label: 'Overall coverage', unit: 'percent', type: 'float' })
-      .expect(204);
+      .send({ label: 'Overall coverage', type: 'percentage' })
+      .expect(201);
 
-    await agent
+    const firstSnapshotDate = new Date('2022-01-01');
+    dateAdapter.now = firstSnapshotDate;
+
+    const { body: snapshot1 } = await agent
       .post(`/project/${project.id}/metrics-snapshot`)
-      .send({ reference: 'commit-sha', metrics: [{ label: 'Lines of code', value: 42 }] })
-      .expect(204);
+      .send({ reference: 'commit-sha', metrics: [{ metricId: metric1.id, value: 42 }] })
+      .expect(201);
 
-    await agent
+    const secondSnapshotDate = new Date('2022-01-02');
+    dateAdapter.now = secondSnapshotDate;
+
+    const { body: snapshot2 } = await agent
       .post(`/project/${project.id}/metrics-snapshot`)
       .send({
         metrics: [
-          { label: 'Lines of code', value: 43 },
-          { label: 'Overall coverage', value: 0.96 },
+          { metricId: metric1.id, value: 43 },
+          { metricId: metric2.id, value: 0.96 },
         ],
       })
-      .expect(204);
+      .expect(201);
 
     const dbProject = await app.get<ProjectStore>(ProjectStoreToken).findById(project.id);
 
-    expect(dbProject).toEqual({
-      props: {
-        id: project.id,
-        name: 'My project',
-        defaultBranch: 'master',
-        metricsConfig: [
-          { props: { label: 'Lines of code', unit: 'number', type: 'integer' } },
-          { props: { label: 'Overall coverage', unit: 'percent', type: 'float' } },
+    const dbSnapshots = await app
+      .get<SnapshotStore>(SnapshotStoreToken)
+      .findAllForProjectId(project.id);
+
+    expect(dbProject).toEqual(
+      Project.create(
+        {
+          id: project.id,
+          name: 'My project',
+          defaultBranch: 'master',
+        },
+        [
+          Metric.create({
+            id: metric1.id,
+            label: 'Lines of code',
+            type: MetricTypeEnum.number,
+            projectId: project.id,
+          }),
+          Metric.create({
+            id: metric2.id,
+            label: 'Overall coverage',
+            type: MetricTypeEnum.percentage,
+            projectId: project.id,
+          }),
         ],
-        snapshots: [
+      ),
+    );
+
+    expect(dbSnapshots).toEqual([
+      Snapshot.create({
+        id: snapshot1.id,
+        projectId: project.id,
+        date: firstSnapshotDate,
+        metrics: [
           {
-            props: {
-              id: expect.any(String),
-              date: expect.any(Date),
-              reference: 'commit-sha',
-              metrics: [{ label: 'Lines of code', value: 42 }],
-            },
+            id: expect.any(String) as unknown as string,
+            metricId: metric1.id,
+            value: 42,
+          },
+        ],
+      }),
+      Snapshot.create({
+        id: snapshot2.id,
+        projectId: project.id,
+        date: secondSnapshotDate,
+        metrics: [
+          {
+            id: expect.any(String) as unknown as string,
+            metricId: metric1.id,
+            value: 43,
           },
           {
-            props: {
-              id: expect.any(String),
-              date: expect.any(Date),
-              metrics: [
-                { label: 'Lines of code', value: 43 },
-                { label: 'Overall coverage', value: 0.96 },
-              ],
-            },
+            id: expect.any(String) as unknown as string,
+            metricId: metric2.id,
+            value: 0.96,
           },
         ],
-      },
-    });
+      }),
+    ]);
   });
 });

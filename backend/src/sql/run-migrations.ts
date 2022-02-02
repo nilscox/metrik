@@ -9,7 +9,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 async function runMigrations() {
-  const app = await NestFactory.createApplicationContext(DatabaseModule);
+  const app = await NestFactory.createApplicationContext(DatabaseModule, {
+    bufferLogs: true,
+  });
+
   const database = app.get(DatabaseService);
 
   await database.runMigrations();

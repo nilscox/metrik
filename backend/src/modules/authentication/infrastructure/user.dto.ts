@@ -5,7 +5,7 @@ import { User } from '~/modules/user';
 
 export class UserDto implements IUserDto {
   constructor(user: User) {
-    Object.assign(this, user.getProps());
+    Object.assign(this, user.props);
   }
 
   @Expose()

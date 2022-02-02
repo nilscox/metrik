@@ -1,24 +1,22 @@
-export interface IMetricDto {
-  label: string;
-  value: number;
-}
-
 export interface IMetricsSnapshotDto {
   id: string;
   date: string;
   metrics: Array<IMetricDto>;
 }
 
-export interface IMetricConfigDto {
+export enum MetricTypeEnum {
+  number = "number",
+  percentage = "percentage",
+  duration = "duration",
+}
+
+export interface IMetricDto {
   label: string;
-  type: string;
-  unit: string;
+  type: MetricTypeEnum;
 }
 
 export interface IProjectDto {
   id: string;
   name: string;
   defaultBranch: string;
-  metricsConfig: IMetricConfigDto[];
-  snapshots: Array<IMetricsSnapshotDto>;
 }

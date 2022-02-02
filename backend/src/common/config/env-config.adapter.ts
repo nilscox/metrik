@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigPort, ConfigVariable } from './config.port';
 
 @Injectable()
-export class EnvConfigAdapter implements ConfigPort {
+export class EnvConfigAdapter extends ConfigPort {
   get(key: ConfigVariable): string {
     const value = process.env[key];
 

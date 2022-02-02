@@ -21,7 +21,7 @@ describe('UserMiddleware', () => {
     const token = 'some-token';
     const user = createUser({ token });
 
-    userStore.saveUser(user);
+    userStore.save(user);
 
     const headers = { authorization: `Beer ${token}` };
     const req = { headers } as MetriksRequest;
