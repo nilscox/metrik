@@ -35,14 +35,14 @@ class ProjectMapper implements EntityMapper<Project, ProjectOrmEntity> {
   private readonly metricMapper = new MetricMapper();
 
   toDomain = (ormEntity: ProjectOrmEntity): Project => {
-    return new Project(
-      {
-        id: ormEntity.id,
-        name: new ProjectName(ormEntity.name),
-        defaultBranch: new BranchName(ormEntity.default_branch),
-      },
-      ormEntity.metrics.map((metricOrmEntity) => this.metricMapper.toDomain(metricOrmEntity)),
-    );
+    return new Project({
+      id: ormEntity.id,
+      name: new ProjectName(ormEntity.name),
+      defaultBranch: new BranchName(ormEntity.default_branch),
+      metrics: ormEntity.metrics.map((metricOrmEntity) =>
+        this.metricMapper.toDomain(metricOrmEntity),
+      ),
+    });
   };
 
   toOrm = (project: Project): ProjectOrmEntity => {
@@ -50,7 +50,7 @@ class ProjectMapper implements EntityMapper<Project, ProjectOrmEntity> {
       id: project.props.id,
       name: project.props.name.value,
       default_branch: project.props.defaultBranch.value,
-      metrics: project.metrics.map((metric) => this.metricMapper.toOrm(metric)),
+      metrics: project.props.metrics.map((metric) => this.metricMapper.toOrm(metric)),
     });
   };
 }

@@ -9,6 +9,7 @@ export type ProjectProps = {
   id: string;
   name: ProjectName;
   defaultBranch: BranchName;
+  metrics: Metric[];
 };
 
 export type CreateProjectProps = {
@@ -18,27 +19,25 @@ export type CreateProjectProps = {
 };
 
 export class Project extends AggregateRoot<ProjectProps> {
-  constructor(props: ProjectProps, public metrics: Metric[]) {
+  constructor(props: ProjectProps) {
     super(props);
   }
 
-  static create(props: CreateProjectProps, metrics: Metric[]) {
-    return new Project(
-      {
-        id: props.id,
-        name: new ProjectName(props.name),
-        defaultBranch: new BranchName(props.defaultBranch ?? 'master'),
-      },
-      metrics,
-    );
+  static create(props: CreateProjectProps) {
+    return new Project({
+      id: props.id,
+      name: new ProjectName(props.name),
+      defaultBranch: new BranchName(props.defaultBranch ?? 'master'),
+      metrics: [],
+    });
   }
 
   addMetric(metric: Metric) {
-    this.metrics.push(metric);
+    this.props.metrics.push(metric);
   }
 
   getMetric(metricId: string) {
-    const metric = this.metrics.find((metric) => metric.props.id === metricId);
+    const metric = this.props.metrics.find((metric) => metric.props.id === metricId);
 
     if (!metric) {
       throw new MetricNotFoundError(this.props.id, metricId);
@@ -50,5 +49,6 @@ export class Project extends AggregateRoot<ProjectProps> {
   validate(): void {
     this.props.name.validate();
     this.props.defaultBranch.validate();
+    this.props.metrics.forEach((metric) => metric.validate());
   }
 }

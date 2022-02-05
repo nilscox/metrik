@@ -32,20 +32,19 @@ describe('SqlProjectStore', () => {
     connection?.close();
   });
 
-  const metric = Metric.create({
-    id: 'm1',
-    label: 'metric',
-    type: MetricTypeEnum.number,
-    projectId: 'p1',
+  const project = Project.create({
+    id: 'p1',
+    name: 'My project',
+    defaultBranch: 'master',
   });
 
-  const project = Project.create(
-    {
-      id: 'p1',
-      name: 'My project',
-      defaultBranch: 'master',
-    },
-    [metric],
+  project.addMetric(
+    Metric.create({
+      id: 'm1',
+      label: 'metric',
+      type: MetricTypeEnum.number,
+      projectId: 'p1',
+    }),
   );
 
   it('saves and finds a project', async () => {

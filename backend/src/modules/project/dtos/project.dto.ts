@@ -1,6 +1,7 @@
 import { Expose } from 'class-transformer';
 
 import { IProjectDto } from '@dtos/project/IProjectDto';
+import { MetricDto } from '~/modules/metric/dtos/metric.dto';
 
 import { Project } from '../domain/project';
 
@@ -11,6 +12,7 @@ export class ProjectDto implements IProjectDto {
     this.id = props.id;
     this.name = props.name.value;
     this.defaultBranch = props.defaultBranch.value;
+    this.metrics = props.metrics.map((metric) => new MetricDto(metric));
   }
 
   @Expose()
@@ -21,4 +23,7 @@ export class ProjectDto implements IProjectDto {
 
   @Expose()
   defaultBranch: string;
+
+  @Expose()
+  metrics: MetricDto[];
 }

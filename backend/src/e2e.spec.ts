@@ -14,6 +14,9 @@ import { Metric, MetricTypeEnum } from './modules/metric';
 import { Project, ProjectStore, ProjectStoreToken } from './modules/project';
 import { Snapshot, SnapshotStore, SnapshotStoreToken } from './modules/snapshot';
 import { createUser, UserStore, UserStoreToken } from './modules/user';
+import { logResponse } from './utils/log-response';
+
+logResponse;
 
 dotenv.config({ path: '.env.test' });
 
@@ -74,7 +77,7 @@ describe('e2e', () => {
     await agent.get('/auth/me').use(asUser).expect(200);
   });
 
-  it('a user logs in, creates a project and fetches its last metrics', async () => {
+  it('a user logs in, creates a project and adds two snapshots', async () => {
     const dateAdapter = app.get<StubDateAdapter>(DatePort);
 
     const credentials: Credentials = {
@@ -108,6 +111,27 @@ describe('e2e', () => {
       .send({ label: 'Overall coverage', type: 'percentage' })
       .expect(201);
 
+    await agent
+      .get(`/project/${project.id}`)
+      .expect(200)
+      .expect({
+        id: project.id,
+        name: 'My project',
+        defaultBranch: 'master',
+        metrics: [
+          {
+            id: metric1.id,
+            label: 'Lines of code',
+            type: 'number',
+          },
+          {
+            id: metric2.id,
+            label: 'Overall coverage',
+            type: 'percentage',
+          },
+        ],
+      });
+
     const firstSnapshotDate = new Date('2022-01-01');
     dateAdapter.now = firstSnapshotDate;
 
@@ -135,29 +159,31 @@ describe('e2e', () => {
       .get<SnapshotStore>(SnapshotStoreToken)
       .findAllForProjectId(project.id);
 
-    expect(dbProject).toEqual(
-      Project.create(
-        {
-          id: project.id,
-          name: 'My project',
-          defaultBranch: 'master',
-        },
-        [
-          Metric.create({
-            id: metric1.id,
-            label: 'Lines of code',
-            type: MetricTypeEnum.number,
-            projectId: project.id,
-          }),
-          Metric.create({
-            id: metric2.id,
-            label: 'Overall coverage',
-            type: MetricTypeEnum.percentage,
-            projectId: project.id,
-          }),
-        ],
-      ),
+    const expectedProject = Project.create({
+      id: project.id,
+      name: 'My project',
+      defaultBranch: 'master',
+    });
+
+    expectedProject.addMetric(
+      Metric.create({
+        id: metric1.id,
+        label: 'Lines of code',
+        type: MetricTypeEnum.number,
+        projectId: project.id,
+      }),
     );
+
+    expectedProject.addMetric(
+      Metric.create({
+        id: metric2.id,
+        label: 'Overall coverage',
+        type: MetricTypeEnum.percentage,
+        projectId: project.id,
+      }),
+    );
+
+    expect(dbProject).toEqual(expectedProject);
 
     expect(dbSnapshots).toEqual([
       Snapshot.create({
