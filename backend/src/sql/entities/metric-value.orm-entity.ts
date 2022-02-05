@@ -1,7 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
-import { MetricOrmEntity } from '~/modules/project/persistence/metric.orm-entity';
-
+import { MetricOrmEntity } from './metric.orm-entity';
 import { SnapshotOrmEntity } from './snapshot.orm-entity';
 
 @Entity({ name: 'metric_value' })

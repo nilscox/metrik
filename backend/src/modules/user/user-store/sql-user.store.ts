@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 
 import { BaseStore } from '~/sql/base-store';
+import { UserOrmEntity } from '~/sql/entities';
 import { EntityMapper } from '~/sql/entity-mapper';
 
 import { User } from '../domain/user';
 
-import { UserOrmEntity } from './user.orm-entity';
 import { UserStore } from './user.store';
 
 class UserMapper implements EntityMapper<User, UserOrmEntity> {

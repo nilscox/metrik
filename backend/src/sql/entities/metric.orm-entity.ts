@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
-import { MetricTypeEnum } from '~/modules/metric/domain/metric-type';
+import { MetricTypeEnum } from '~/modules/metric';
 
 import { ProjectOrmEntity } from './project.orm-entity';
 

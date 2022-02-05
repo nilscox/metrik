@@ -5,8 +5,7 @@ import { Connection } from 'typeorm';
 import { DatabaseService } from '~/common/database';
 import { DevNullLogger, Logger } from '~/common/logger';
 import { MetricTypeEnum } from '~/modules/metric';
-import { MetricOrmEntity } from '~/modules/project/persistence/metric.orm-entity';
-import { ProjectOrmEntity } from '~/modules/project/persistence/project.orm-entity';
+import { MetricOrmEntity, ProjectOrmEntity } from '~/sql/entities';
 
 import { SnapshotStoreToken } from '../application/snapshot.store';
 import { Snapshot } from '../domain/snapshot';

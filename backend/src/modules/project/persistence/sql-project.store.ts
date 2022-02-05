@@ -4,15 +4,13 @@ import { Repository } from 'typeorm';
 
 import { Metric, MetricLabel, MetricType } from '~/modules/metric';
 import { BaseStore } from '~/sql/base-store';
+import { MetricOrmEntity, ProjectOrmEntity } from '~/sql/entities';
 import { EntityMapper } from '~/sql/entity-mapper';
 
 import { ProjectStore } from '../application/project.store';
 import { BranchName } from '../domain/branch-name';
 import { Project } from '../domain/project';
 import { ProjectName } from '../domain/project-name';
-
-import { MetricOrmEntity } from './metric.orm-entity';
-import { ProjectOrmEntity } from './project.orm-entity';
 
 class MetricMapper implements EntityMapper<Metric, MetricOrmEntity> {
   toDomain = (ormEntity: MetricOrmEntity): Metric => {

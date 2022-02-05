@@ -4,14 +4,12 @@ import { Repository } from 'typeorm';
 
 import { DateVO } from '~/ddd/date.value-object';
 import { BaseStore } from '~/sql/base-store';
+import { MetricValueOrmEntity, SnapshotOrmEntity } from '~/sql/entities';
 import { EntityMapper } from '~/sql/entity-mapper';
 
 import { SnapshotStore } from '../application/snapshot.store';
 import { MetricValue } from '../domain/metric-value';
 import { Snapshot } from '../domain/snapshot';
-
-import { MetricValueOrmEntity } from './metric-value.orm-entity';
-import { SnapshotOrmEntity } from './snapshot.orm-entity';
 
 class MetricValueMapper implements EntityMapper<MetricValue, MetricValueOrmEntity> {
   toDomain = (ormEntity: MetricValueOrmEntity): MetricValue => {
