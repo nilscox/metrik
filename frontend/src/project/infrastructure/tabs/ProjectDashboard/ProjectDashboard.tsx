@@ -2,8 +2,7 @@ import { useState } from 'react';
 
 import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
-
-import { Metric, selectLastSnapshot } from '../../../domain';
+import { MetricValue, selectLastSnapshot } from '~/project/domain';
 
 import { Metric as MetricComponent } from './Metric';
 import { SnapshotsChart } from './SnapshotsChart';
@@ -13,10 +12,10 @@ export const ProjectDashboard: React.FC = () => {
   const projectId = useParam('projectId');
   const lastSnapshot = useAppSelector(selectLastSnapshot, projectId);
 
-  const [label, setLabel] = useState('lines of code');
+  const [metricId, setMetricId] = useState(lastSnapshot.metrics[0].metricId);
 
-  const handleMouseOverMetric = (metric: Metric) => {
-    setLabel(metric.label);
+  const handleMouseOverMetric = ({ metricId }: MetricValue) => {
+    setMetricId(metricId);
   };
 
   return (
@@ -34,7 +33,7 @@ export const ProjectDashboard: React.FC = () => {
 
       <div className="flex flex-row gap-4">
         <SnapshotsTable onMouseOverMetric={handleMouseOverMetric} />
-        <SnapshotsChart metricLabel={label} />
+        <SnapshotsChart metricId={metricId} />
       </div>
     </>
   );

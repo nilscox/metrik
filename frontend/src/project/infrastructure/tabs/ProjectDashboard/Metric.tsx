@@ -1,15 +1,16 @@
 import { useAppSelector } from '~/hooks/useAppSelector';
-import { selectMetricUnitDisplayValue } from '~/project/domain/selectors/selectMetricConfig/selectMetricConfig';
+import { selectMetricLabel, selectMetricUnitDisplayValue } from '~/project/domain';
 
 type MetricProps = {
   projectId: string;
-  label: string;
+  metricId: string;
   value: number;
   onMouseOver: () => void;
 };
 
-export const Metric: React.FC<MetricProps> = ({ projectId, label, value, onMouseOver }) => {
-  const unit = useAppSelector(selectMetricUnitDisplayValue, projectId, label);
+export const Metric: React.FC<MetricProps> = ({ projectId, metricId, value, onMouseOver }) => {
+  const label = useAppSelector(selectMetricLabel, projectId, metricId);
+  const unit = useAppSelector(selectMetricUnitDisplayValue, projectId, metricId);
 
   return (
     <div

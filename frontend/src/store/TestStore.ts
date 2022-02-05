@@ -1,4 +1,5 @@
 import { IProjectDto } from '@dtos/project/IProjectDto';
+import { ISnapshotDto } from '@dtos/project/ISnapshotDto';
 
 import { setProject } from '~/project/domain/project.actions';
 import { Project } from '~/project/domain/types/Project';
@@ -8,9 +9,14 @@ import { AppSelector, createStore, Dependencies } from './store';
 
 class InMemoryProjectGateway implements ProjectGateway {
   projects = new Map<string, IProjectDto>();
+  snapshots: ISnapshotDto[] = [];
 
   async fetchProject(projectId: string): Promise<IProjectDto | undefined> {
     return this.projects.get(projectId);
+  }
+
+  async fetchSnapshots(): Promise<ISnapshotDto[]> {
+    return this.snapshots;
   }
 }
 

@@ -1,8 +1,8 @@
-import { Metric } from './Metric';
+import { MetricValue } from './MetricValue';
 
 export type MetricsSnapshot = {
   date: string;
-  metrics: Metric[];
+  metrics: MetricValue[];
 };
 
 export const createMetricsSnapshot = (overrides: Partial<MetricsSnapshot> = {}): MetricsSnapshot => ({

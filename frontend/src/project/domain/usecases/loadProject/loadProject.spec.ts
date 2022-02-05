@@ -15,13 +15,21 @@ describe('loadProjects', () => {
 
   const projectId = 'project-id';
 
+  const snapshotId = 'snapshot-id';
+  const snapshotDate = new Date('2022-01-01').toISOString();
+
   it('loads a project', async () => {
     store.projectGateway.projects.set(projectId, {
       id: projectId,
       name: 'My project',
       defaultBranch: 'master',
-      metricsConfig: [],
-      snapshots: [],
+      metrics: [],
+    });
+
+    store.projectGateway.snapshots.push({
+      id: snapshotId,
+      date: snapshotDate,
+      metrics: [],
     });
 
     const promise = store.dispatch(loadProject(projectId));
@@ -36,8 +44,14 @@ describe('loadProjects', () => {
       id: projectId,
       name: 'My project',
       defaultBranch: 'master',
-      metricsConfig: [],
-      snapshots: [],
+      metrics: [],
+      snapshots: [
+        {
+          id: snapshotId,
+          date: snapshotDate,
+          metrics: [],
+        },
+      ],
     });
   });
 });

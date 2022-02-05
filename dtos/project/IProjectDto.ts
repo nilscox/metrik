@@ -11,6 +11,7 @@ export enum MetricTypeEnum {
 }
 
 export interface IMetricDto {
+  id: string;
   label: string;
   type: MetricTypeEnum;
 }

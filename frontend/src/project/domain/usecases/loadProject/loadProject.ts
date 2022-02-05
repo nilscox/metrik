@@ -8,9 +8,10 @@ export const loadProject = (projectId: string): AppThunkAction => {
       dispatch(setLoadingProjects(true));
 
       const project = await projectGateway.fetchProject(projectId);
+      const snapshots = await projectGateway.fetchSnapshots(projectId);
 
       if (project) {
-        dispatch(setProject(project));
+        dispatch(setProject({ ...project, snapshots }));
       } else {
         console.warn(`cannot find project ${projectId}`);
       }

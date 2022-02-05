@@ -6,17 +6,17 @@ import { Collapse } from '~/components/Collapse/Collapse';
 import { useAppSelector } from '~/hooks/useAppSelector';
 import { useParam } from '~/hooks/useParam';
 import { useSearchParam } from '~/hooks/useSearchParam';
-import { selectProject } from '~/project/domain/project.selectors';
+import { selectProjectMetrics } from '~/project/domain';
 
 export const ProjectMetricsConfiguration: React.FC = () => {
   const projectId = useParam('projectId');
-  const project = useAppSelector(selectProject, projectId);
+  const metrics = useAppSelector(selectProjectMetrics, projectId);
 
   const openMetric = useSearchParam('metric');
 
   return (
     <ul>
-      {project.metricsConfig.map(({ label, unit }) => (
+      {metrics.map(({ label, type }) => (
         <li key={label} className="p-2">
           <Link to={{ search: label === openMetric ? '' : `?metric=${label}` }} className="flex flex-row">
             <ChevronRight
@@ -24,7 +24,7 @@ export const ProjectMetricsConfiguration: React.FC = () => {
             />
             {label}
           </Link>
-          <Collapse open={label === openMetric}>{unit}</Collapse>
+          <Collapse open={label === openMetric}>{type}</Collapse>
         </li>
       ))}
     </ul>
