@@ -8,8 +8,7 @@ import { IsAuthenticated } from '~/modules/authorization';
 import { IsNotAuthenticated } from '~/modules/authorization/is-not-authenticated.guard';
 import { UserModule } from '~/modules/user';
 
-import { AuthenticationService } from '../domain/authentication.service';
-
+import { AuthenticationService } from './application/authentication.service';
 import { AuthenticationController } from './authentication.controller';
 
 @Module({

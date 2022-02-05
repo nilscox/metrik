@@ -4,8 +4,10 @@ import { StubCryptoAdapter } from '~/common/crypto';
 import { StubGeneratorAdapter } from '~/common/generator';
 import { createUser, InMemoryUserStore, User } from '~/modules/user';
 
+import { EmailAlreadyExistsError } from '../domain/errors/email-already-exists.error';
+import { InvalidCredentialsError } from '../domain/errors/invalid-credentials.error';
+
 import { AuthenticationService } from './authentication.service';
-import { EmailAlreadyExistsError, InvalidCredentialsError } from './authentication-errors';
 
 describe('AuthenticationService', () => {
   let crypto: StubCryptoAdapter;

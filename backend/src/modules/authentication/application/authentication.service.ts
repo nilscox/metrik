@@ -4,7 +4,8 @@ import { CryptoPort } from '~/common/crypto';
 import { GeneratorPort } from '~/common/generator';
 import { User, UserStore, UserStoreToken } from '~/modules/user';
 
-import { EmailAlreadyExistsError, InvalidCredentialsError } from './authentication-errors';
+import { EmailAlreadyExistsError } from '../domain/errors/email-already-exists.error';
+import { InvalidCredentialsError } from '../domain/errors/invalid-credentials.error';
 
 @Injectable()
 export class AuthenticationService {

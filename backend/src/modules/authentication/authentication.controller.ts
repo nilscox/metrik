@@ -19,13 +19,13 @@ import { IsAuthenticated } from '~/modules/authorization';
 import { IsNotAuthenticated } from '~/modules/authorization/is-not-authenticated.guard';
 import { User } from '~/modules/user';
 
-import { AuthenticationService } from '../domain/authentication.service';
-import { EmailAlreadyExistsError, InvalidCredentialsError } from '../domain/authentication-errors';
-
-import { AuthenticatedUser } from './authenticated-user';
-import { LoginDto } from './login.dto';
-import { SignupDto } from './signup.dto';
-import { UserDto } from './user.dto';
+import { AuthenticationService } from './application/authentication.service';
+import { AuthenticatedUser } from './authenticated-user.decorator';
+import { EmailAlreadyExistsError } from './domain/errors/email-already-exists.error';
+import { InvalidCredentialsError } from './domain/errors/invalid-credentials.error';
+import { LoginDto } from './dtos/login.dto';
+import { SignupDto } from './dtos/signup.dto';
+import { UserDto } from './dtos/user.dto';
 
 @Controller('auth')
 @UsePipes(new ValidationPipe({ transform: true }))

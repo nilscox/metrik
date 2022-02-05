@@ -1,4 +1,4 @@
 export { Credentials } from './domain/credentials';
 
-export { AuthenticatedUser } from './infrastructure/authenticated-user';
-export { AuthenticationModule } from './infrastructure/authentication.module';
+export { AuthenticatedUser } from './authenticated-user.decorator';
+export { AuthenticationModule } from './authentication.module';

@@ -12,11 +12,11 @@ import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
 import { MockFn } from '~/utils/mock-fn';
 
-import { AuthenticationService } from '../domain/authentication.service';
-import { EmailAlreadyExistsError, InvalidCredentialsError } from '../domain/authentication-errors';
-import { Credentials } from '../domain/credentials';
-
+import { AuthenticationService } from './application/authentication.service';
 import { AuthenticationModule } from './authentication.module';
+import { Credentials } from './domain/credentials';
+import { EmailAlreadyExistsError } from './domain/errors/email-already-exists.error';
+import { InvalidCredentialsError } from './domain/errors/invalid-credentials.error';
 
 class MockAuthenticationService extends AuthenticationService {
   override createUser: MockFn<AuthenticationService['createUser']> = fn();
