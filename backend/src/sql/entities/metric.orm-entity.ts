@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
-import { MetricTypeEnum } from '~/modules/metric';
+// don't import from ~/modules/metric to avoid a circular dependency
+import { MetricTypeEnum } from '~/modules/metric/domain/metric-type';
 
 import { ProjectOrmEntity } from './project.orm-entity';
 
