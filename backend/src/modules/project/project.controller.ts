@@ -3,7 +3,6 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
-  NotFoundException,
   Param,
   Post,
   SerializeOptions,
@@ -12,7 +11,6 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { EntityNotFoundError } from 'typeorm';
 
 import { GeneratorPort } from '~/common/generator';
 
@@ -35,15 +33,7 @@ export class ProjectController {
 
   @Get(':id')
   async getProject(@Param('id') projectId: string): Promise<ProjectDto> {
-    try {
-      return new ProjectDto(await this.projectService.findById(projectId));
-    } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw error;
-    }
+    return new ProjectDto(await this.projectService.findById(projectId));
   }
 
   @Post()
