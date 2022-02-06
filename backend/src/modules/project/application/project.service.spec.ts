@@ -1,5 +1,6 @@
 import expect from 'expect';
 
+import { GeneratorPort, StubGeneratorAdapter } from '~/common/generator';
 import { BranchStore, InMemoryBranchStore } from '~/modules/branch';
 
 import { InMemoryProjectStore } from '../persistence/in-memory-project.store';
@@ -8,26 +9,26 @@ import { ProjectService } from './project.service';
 import { ProjectStore } from './project.store';
 
 describe('ProjectService', () => {
+  let generator: GeneratorPort;
   let projectStore: ProjectStore;
   let branchStore: BranchStore;
   let projectService: ProjectService;
 
   beforeEach(() => {
+    generator = new StubGeneratorAdapter();
     projectStore = new InMemoryProjectStore();
     branchStore = new InMemoryBranchStore();
-    projectService = new ProjectService(projectStore, branchStore);
+    projectService = new ProjectService(generator, projectStore, branchStore);
   });
 
   describe('createProject', () => {
     it('creates a new project', async () => {
-      // todo: make this a command
       const created = await projectService.createProject({
-        id: 'p1',
         name: 'My project',
-        defaultBranch: { id: 'b1', projectId: 'p1', name: 'main' },
+        defaultBranch: 'main',
       });
 
-      expect(await projectStore.findById('p1')).toEqual(created);
+      expect(await projectStore.findById('generated-id')).toEqual(created);
     });
   });
 });

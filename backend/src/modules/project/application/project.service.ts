@@ -1,14 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { GeneratorPort } from '~/common/generator';
 import { Branch, BranchStore, BranchStoreToken } from '~/modules/branch';
 
-import { CreateProjectProps, Project } from '../domain/project';
+import { Project } from '../domain/project';
 
 import { ProjectStore, ProjectStoreToken } from './project.store';
+
+type CreateProjectCommand = {
+  name: string;
+  defaultBranch?: string;
+};
 
 @Injectable()
 export class ProjectService {
   constructor(
+    private readonly generator: GeneratorPort,
     @Inject(ProjectStoreToken) private readonly projectStore: ProjectStore,
     @Inject(BranchStoreToken) private readonly branchStore: BranchStore,
   ) {}
@@ -21,8 +28,18 @@ export class ProjectService {
     return this.branchStore.findAllForProjectId(projectId);
   }
 
-  async createProject(props: CreateProjectProps): Promise<Project> {
-    const project = Project.create(props);
+  async createProject(command: CreateProjectCommand): Promise<Project> {
+    const projectId = await this.generator.generateId();
+
+    const project = Project.create({
+      id: projectId,
+      name: command.name,
+      defaultBranch: {
+        id: await this.generator.generateId(),
+        projectId,
+        name: command.defaultBranch,
+      },
+    });
 
     await this.projectStore.insert(project);
 

@@ -1,6 +1,6 @@
 import { ValueObject } from '~/ddd/value-object';
 
-export class InvalidDateError extends Error {
+class InvalidDateError extends Error {
   constructor() {
     super('invalid date');
   }

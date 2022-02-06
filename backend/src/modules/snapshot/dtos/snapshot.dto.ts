@@ -5,7 +5,7 @@ import { IMetricValueDto, ISnapshotDto } from '@shared/dtos/project/ISnapshotDto
 import { MetricValue } from '../domain/metric-value';
 import { Snapshot } from '../domain/snapshot';
 
-export class MetricValueDto implements IMetricValueDto {
+class MetricValueDto implements IMetricValueDto {
   constructor(value: MetricValue) {
     this.metricId = value.props.metricId;
     this.value = value.props.value;

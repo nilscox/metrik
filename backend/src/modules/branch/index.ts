@@ -1,4 +1,4 @@
-export { Branch, BranchProps, CreateBranchProps, createBranch } from './domain/branch';
+export { Branch, CreateBranchProps, createBranch } from './domain/branch';
 export { BranchName } from './domain/branch-name';
 
 export { BranchStore, BranchStoreToken } from './application/branche.store';

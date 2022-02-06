@@ -12,9 +12,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { GeneratorPort } from '~/common/generator';
-
-import { IsAuthenticated } from '../authorization';
+import { IsAuthenticated } from '~/modules/authorization';
 
 import { ProjectService } from './application/project.service';
 import { CreateProjectDto } from './dtos/create-project.dto';
@@ -26,10 +24,7 @@ import { ProjectDto } from './dtos/project.dto';
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({ strategy: 'excludeAll' })
 export class ProjectController {
-  constructor(
-    private readonly generator: GeneratorPort,
-    private readonly projectService: ProjectService,
-  ) {}
+  constructor(private readonly projectService: ProjectService) {}
 
   @Get(':id')
   async getProject(@Param('id') projectId: string): Promise<ProjectDto> {
@@ -41,18 +36,7 @@ export class ProjectController {
 
   @Post()
   async createProject(@Body() dto: CreateProjectDto): Promise<ProjectDto> {
-    const projectId = await this.generator.generateId();
-
-    const project = await this.projectService.createProject({
-      id: projectId,
-      name: dto.name,
-      defaultBranch: {
-        id: await this.generator.generateId(),
-        projectId,
-        name: dto.defaultBranch,
-      },
-    });
-
+    const project = await this.projectService.createProject(dto);
     const branches = await this.projectService.findBranches(project.props.id);
 
     return new ProjectDto(project, branches);
