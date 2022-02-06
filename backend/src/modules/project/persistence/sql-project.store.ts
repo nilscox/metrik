@@ -59,20 +59,8 @@ class ProjectMapper implements EntityMapper<Project, ProjectOrmEntity> {
 export class SqlProjectStore extends BaseStore<Project, ProjectOrmEntity> implements ProjectStore {
   constructor(
     @InjectRepository(ProjectOrmEntity)
-    private readonly projectRepository: Repository<ProjectOrmEntity>,
+    repository: Repository<ProjectOrmEntity>,
   ) {
-    super('project', new ProjectMapper());
-  }
-
-  async findById(id: string): Promise<Project | undefined> {
-    return this.toDomain(await this.projectRepository.findOne(id));
-  }
-
-  async save(projects: Project | Project[]): Promise<void> {
-    if (!Array.isArray(projects)) {
-      return this.save([projects]);
-    }
-
-    await this.projectRepository.save(projects.map((project) => this.toOrm(project)));
+    super('project', repository, new ProjectMapper());
   }
 }

@@ -1,3 +1,6 @@
+import { Repository } from 'typeorm';
+
+import { AggregateRoot } from '~/ddd/aggregate-root';
 import { EntityNotFoundError } from '~/utils/entity-not-found.error';
 
 import { EntityMapper } from './entity-mapper';
@@ -9,17 +12,31 @@ export interface EntityStore<Entity> {
   save(entity: Entity): Promise<void>;
 }
 
-export abstract class BaseStore<DomainEntity, OrmEntity> implements EntityStore<DomainEntity> {
+export abstract class BaseStore<DomainEntity extends AggregateRoot<{ id: string }>, OrmEntity>
+  implements EntityStore<DomainEntity>
+{
   constructor(
     private entityName: string,
+    protected readonly repository: Repository<OrmEntity>,
     protected readonly mapper: EntityMapper<DomainEntity, OrmEntity>,
   ) {}
 
-  abstract findById(id: string): Promise<DomainEntity | undefined>;
-  abstract save(entity: DomainEntity): Promise<void>;
+  async findById(id: string): Promise<DomainEntity | undefined> {
+    return this.toDomain(await this.repository.findOne(id));
+  }
+
+  async save(entities: DomainEntity | DomainEntity[]): Promise<void> {
+    if (!Array.isArray(entities)) {
+      return this.save([entities]);
+    }
+
+    entities.forEach((entity) => entity.validate());
+
+    await this.repository.save(entities.map((project) => this.toOrm(project)));
+  }
 
   async exists(id: string) {
-    return (await this.findById(id)) !== undefined;
+    return (await this.repository.count({ where: { id } })) === 1;
   }
 
   async findByIdOrFail(id: string): Promise<DomainEntity> {

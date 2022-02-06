@@ -5,12 +5,14 @@ import expect from 'expect';
 import { Plugin as SuperAgentPlugin } from 'superagent';
 import request, { SuperAgentTest } from 'supertest';
 
+import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
+
 import { AppModule } from './app.module';
 import { DatabaseService } from './common/database';
 import { DatePort, StubDateAdapter } from './common/date';
 import { DevNullLogger, Logger, LoggerModule } from './common/logger';
 import { Credentials } from './modules/authentication';
-import { Metric, MetricTypeEnum } from './modules/metric';
+import { Metric } from './modules/metric';
 import { Project, ProjectStore, ProjectStoreToken } from './modules/project';
 import { Snapshot, SnapshotStore, SnapshotStoreToken } from './modules/snapshot';
 import { createUser, UserStore, UserStoreToken } from './modules/user';

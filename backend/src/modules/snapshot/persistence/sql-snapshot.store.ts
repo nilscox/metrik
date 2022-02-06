@@ -63,20 +63,12 @@ export class SqlSnapshotStore
 {
   constructor(
     @InjectRepository(SnapshotOrmEntity)
-    private readonly snapshotRepository: Repository<SnapshotOrmEntity>,
+    repository: Repository<SnapshotOrmEntity>,
   ) {
-    super('snapshot', new SnapshotMapper());
-  }
-
-  async findById(id: string): Promise<Snapshot | undefined> {
-    return this.toDomain(await this.snapshotRepository.findOne(id));
+    super('snapshot', repository, new SnapshotMapper());
   }
 
   async findAllForProjectId(projectId: string): Promise<Snapshot[]> {
-    return this.toDomain(await this.snapshotRepository.find({ where: { projectId } }));
-  }
-
-  async save(snapshot: Snapshot): Promise<void> {
-    await this.snapshotRepository.save(this.toOrm(snapshot));
+    return this.toDomain(await this.repository.find({ where: { projectId } }));
   }
 }

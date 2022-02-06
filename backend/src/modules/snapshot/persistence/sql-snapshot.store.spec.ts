@@ -2,9 +2,9 @@ import { Test } from '@nestjs/testing';
 import expect from 'expect';
 import { Connection } from 'typeorm';
 
+import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
 import { DatabaseService } from '~/common/database';
 import { DevNullLogger, Logger } from '~/common/logger';
-import { MetricTypeEnum } from '~/modules/metric';
 import { MetricOrmEntity, ProjectOrmEntity } from '~/sql/entities';
 
 import { SnapshotStoreToken } from '../application/snapshot.store';

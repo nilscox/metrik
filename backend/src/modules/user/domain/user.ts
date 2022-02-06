@@ -1,6 +1,6 @@
 import { CryptoPort } from '~/common/crypto';
 import { GeneratorPort } from '~/common/generator';
-import { Entity } from '~/ddd/entity';
+import { AggregateRoot } from '~/ddd/aggregate-root';
 
 export type UserProps = {
   id: string;
@@ -9,7 +9,7 @@ export type UserProps = {
   token?: string;
 };
 
-export class User extends Entity<UserProps> {
+export class User extends AggregateRoot<UserProps> {
   get id() {
     return this.props.id;
   }

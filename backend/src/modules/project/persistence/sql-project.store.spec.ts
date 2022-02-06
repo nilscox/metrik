@@ -2,9 +2,10 @@ import { Test } from '@nestjs/testing';
 import expect from 'expect';
 import { Connection } from 'typeorm';
 
+import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
 import { DatabaseService } from '~/common/database';
 import { DevNullLogger, Logger } from '~/common/logger';
-import { Metric, MetricTypeEnum } from '~/modules/metric';
+import { Metric } from '~/modules/metric';
 
 import { ProjectStore, ProjectStoreToken } from '../application/project.store';
 import { Project } from '../domain/project';

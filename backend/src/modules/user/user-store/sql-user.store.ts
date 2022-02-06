@@ -32,14 +32,8 @@ class UserMapper implements EntityMapper<User, UserOrmEntity> {
 
 @Injectable()
 export class SqlUserStore extends BaseStore<User, UserOrmEntity> implements UserStore {
-  constructor(
-    @InjectRepository(UserOrmEntity) private readonly userRepository: Repository<UserOrmEntity>,
-  ) {
-    super('user', new UserMapper());
-  }
-
-  findById(id: string): Promise<User | undefined> {
-    return this.findWhere({ id });
+  constructor(@InjectRepository(UserOrmEntity) repository: Repository<UserOrmEntity>) {
+    super('user', repository, new UserMapper());
   }
 
   findByEmail(email: string): Promise<User | undefined> {
@@ -53,14 +47,10 @@ export class SqlUserStore extends BaseStore<User, UserOrmEntity> implements User
   private async findWhere(
     where: FindOneOptions<UserOrmEntity>['where'],
   ): Promise<User | undefined> {
-    const ormEntity = await this.userRepository.findOne({ where });
+    const ormEntity = await this.repository.findOne({ where });
 
     if (ormEntity) {
       return this.toDomain(ormEntity);
     }
-  }
-
-  async save(user: User): Promise<void> {
-    await this.userRepository.save(this.toOrm(user));
   }
 }
