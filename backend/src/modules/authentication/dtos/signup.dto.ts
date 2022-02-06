@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-import { ISignupDto } from '@dtos/authentication/ISignupDto';
+import { ISignupDto } from '@shared/dtos/authentication/ISignupDto';
 
 export class SignupDto implements ISignupDto {
   @IsString()

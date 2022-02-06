@@ -8,10 +8,10 @@
     "outDir": "./dist",
     "incremental": true,
 
-    "baseUrl": "../",
+    "baseUrl": "..",
     "paths": {
       "~/*": ["backend/src/*"],
-      "@dtos/*": ["dtos/*"]
+      "@shared/*": ["shared/*"]
     },
 
     "esModuleInterop": true,

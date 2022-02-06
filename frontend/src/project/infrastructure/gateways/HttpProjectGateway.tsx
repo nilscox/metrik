@@ -1,6 +1,5 @@
-import { IProjectDto } from '@dtos/project/IProjectDto';
-import { ISnapshotDto } from '@dtos/project/ISnapshotDto';
-
+import { IProjectDto } from '@shared/dtos/project/IProjectDto';
+import { ISnapshotDto } from '@shared/dtos/project/ISnapshotDto';
 import { HttpPort } from '~/ports/HttpPort';
 import { ProjectGateway } from '~/store';
 

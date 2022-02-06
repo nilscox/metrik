@@ -1,13 +1,9 @@
+import { MetricTypeEnum } from "../../enums/MetricTypeEnum";
+
 export interface IMetricsSnapshotDto {
   id: string;
   date: string;
   metrics: Array<IMetricDto>;
-}
-
-export enum MetricTypeEnum {
-  number = "number",
-  percentage = "percentage",
-  duration = "duration",
 }
 
 export interface IMetricDto {

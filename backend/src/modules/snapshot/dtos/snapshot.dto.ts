@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-import { IMetricValueDto, ISnapshotDto } from '@dtos/project/ISnapshotDto';
+import { IMetricValueDto, ISnapshotDto } from '@shared/dtos/project/ISnapshotDto';
 
 import { MetricValue } from '../domain/metric-value';
 import { Snapshot } from '../domain/snapshot';

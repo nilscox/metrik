@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-import { IProjectDto } from '@dtos/project/IProjectDto';
+import { IProjectDto } from '@shared/dtos/project/IProjectDto';
 import { MetricDto } from '~/modules/metric/dtos/metric.dto';
 
 import { Project } from '../domain/project';

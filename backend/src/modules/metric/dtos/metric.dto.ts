@@ -1,9 +1,9 @@
 import { Expose } from 'class-transformer';
 
-import { IMetricDto } from '@dtos/project/IProjectDto';
+import { IMetricDto } from '@shared/dtos/project/IProjectDto';
+import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
 
 import { Metric } from '../domain/metric';
-import { MetricTypeEnum } from '../domain/metric-type';
 
 export class MetricDto implements IMetricDto {
   constructor(metric: Metric) {

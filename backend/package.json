@@ -12,7 +12,7 @@
     "test:coverage": "nyc yarn test",
     "ts-node": "node -r ts-node/register -r tsconfig-paths/register",
     "typeorm": "yarn ts-node node_modules/.bin/typeorm",
-    "db:reset": "rm db.sqlite && yarn db:migrate",
+    "db:reset": "rm -f db.sqlite && yarn db:migrate",
     "db:migrate": "yarn ts-node src/sql/run-migrations.ts",
     "db:generate-migration": "yarn typeorm migration:generate -n"
   },

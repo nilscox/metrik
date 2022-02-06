@@ -1,7 +1,8 @@
+import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
 import { Entity } from '~/ddd/entity';
 
 import { MetricLabel } from './metric-label';
-import { MetricType, MetricTypeEnum } from './metric-type';
+import { MetricType } from './metric-type';
 
 export type MetricProps = {
   id: string;

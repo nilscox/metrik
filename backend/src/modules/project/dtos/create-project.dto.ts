@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
-import { ICreateProjectDto } from '@dtos/project/ICreateProjectDto';
+import { ICreateProjectDto } from '@shared/dtos/project/ICreateProjectDto';
 
 export class CreateProjectDto implements ICreateProjectDto {
   @IsString()

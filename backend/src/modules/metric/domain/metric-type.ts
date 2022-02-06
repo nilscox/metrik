@@ -1,12 +1,7 @@
+import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
 import { ValueObject } from '~/ddd/value-object';
 
 import { InvalidMetricTypeError } from './errors/invalid-metric-type.error';
-
-export enum MetricTypeEnum {
-  number = 'number',
-  percentage = 'percentage',
-  duration = 'duration',
-}
 
 export class MetricType extends ValueObject<MetricTypeEnum> {
   validate(): void {

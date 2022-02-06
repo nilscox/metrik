@@ -9,7 +9,7 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"],
-      "@dtos/*": ["../dtos/*"]
+      "@shared/*": ["../shared/*"]
     },
 
     "moduleResolution": "node",
@@ -22,5 +22,5 @@
 
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*", "../dtos/**/*", ".storybook/*"]
+  "include": ["src/**/*", "../shared/**/*", ".storybook/*"]
 }

@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-import { IUserDto } from '@dtos/authentication/IUserDto';
+import { IUserDto } from '@shared/dtos/authentication/IUserDto';
 import { User } from '~/modules/user';
 
 export class UserDto implements IUserDto {

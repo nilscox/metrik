@@ -1,6 +1,5 @@
-import { IProjectDto } from '@dtos/project/IProjectDto';
-import { ISnapshotDto } from '@dtos/project/ISnapshotDto';
-
+import { IProjectDto } from '@shared/dtos/project/IProjectDto';
+import { ISnapshotDto } from '@shared/dtos/project/ISnapshotDto';
 import { setProject } from '~/project/domain/project.actions';
 import { Project } from '~/project/domain/types/Project';
 
