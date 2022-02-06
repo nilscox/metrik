@@ -154,8 +154,8 @@ jobs:
           name: metrics
       - run: echo ci_time=$(($(date '+%s') - $(cat ci-start.txt))) >> $GITHUB_ENV
       - run: |
-          curl ${{ secrets.METRIK_API_URL }}/project/${{ secrets.METRIK_PROJECT_ID }}/metrics-snapshot \
+          echo curl ${{ secrets.METRIK_API_URL }}/project/${{ secrets.METRIK_PROJECT_ID }}/metrics-snapshot \
             --request POST \
             --header 'Authorization: Beer ${{ secrets.METRIK_TOKEN }}' \
             --header 'Content-Type: application/json' \
-            --data "{\"reference\":\"${{ github.sha }}\",\"metrics\":[{\"label\":\"source files\",\"value\":$number_of_files},{\"label\":\"lines of code\",\"value\":$lines_of_code},{\"label\":\"ci time\",\"value\":$ci_time}]}"
+            --data "{\"branch\":\"\${{ github.ref_name }}"\",ref\":\"${{ github.sha }}\",\"metrics\":[{\"label\":\"source files\",\"value\":$number_of_files},{\"label\":\"lines of code\",\"value\":$lines_of_code},{\"label\":\"ci time\",\"value\":$ci_time}]}"
