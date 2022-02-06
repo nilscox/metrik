@@ -17,6 +17,7 @@ const projectsSlice = createSlice({
     },
     setProjects: projectsStateAdapter.setAll,
     setProject: projectsStateAdapter.setOne,
+    updateProject: projectsStateAdapter.updateOne,
   },
 });
 

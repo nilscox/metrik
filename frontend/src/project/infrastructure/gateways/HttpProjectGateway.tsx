@@ -16,8 +16,9 @@ export class HttpProjectGateway implements ProjectGateway {
     return response.body;
   }
 
-  async fetchSnapshots(projectId: string): Promise<ISnapshotDto[]> {
-    const response = await this.http.get<ISnapshotDto[]>(`/project/${projectId}/metrics-snapshot`);
+  async fetchSnapshots(projectId: string, branch?: string): Promise<ISnapshotDto[]> {
+    const query = branch ? `?branch=${branch}` : '';
+    const response = await this.http.get<ISnapshotDto[]>(`/project/${projectId}/metrics-snapshot${query}`);
 
     return response.body;
   }

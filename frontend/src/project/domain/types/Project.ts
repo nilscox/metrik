@@ -6,6 +6,7 @@ export type Project = {
   name: string;
   defaultBranch: string;
   metrics: Metric[];
+  loadingSnapshots: boolean;
   snapshots: MetricsSnapshot[];
 };
 
@@ -14,6 +15,7 @@ export const createProject = (overrides: Partial<Project> = {}): Project => ({
   name: 'name',
   defaultBranch: 'defaultBranch',
   metrics: [],
+  loadingSnapshots: false,
   snapshots: [],
   ...overrides,
 });
