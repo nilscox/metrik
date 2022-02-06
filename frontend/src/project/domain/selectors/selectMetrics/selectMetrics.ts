@@ -10,18 +10,28 @@ export const selectProjectMetrics = (state: AppState, projectId: string) => {
   return project.metrics;
 };
 
-export const selectMetric = (state: AppState, projectId: string, metricId: string) => {
+export const selectMetricUnsafe = (state: AppState, projectId: string, metricId: string) => {
   const metrics = selectProjectMetrics(state, projectId);
 
   return metrics.find((metric) => metric.id === metricId);
 };
 
+export const selectMetric = (state: AppState, projectId: string, metricId: string) => {
+  const metric = selectMetricUnsafe(state, projectId, metricId);
+
+  if (!metric) {
+    throw new Error(`expected metric with id "${metricId}" to be defined`);
+  }
+
+  return metric;
+};
+
 export const selectMetricLabel = createSelector(selectMetric, (metric) => {
-  return metric?.label;
+  return metric.label;
 });
 
 export const selectMetricType = createSelector(selectMetric, (metric) => {
-  return metric?.type;
+  return metric.type;
 });
 
 export const selectMetricUnitDisplayValue = createSelector(selectMetricType, (type) => {

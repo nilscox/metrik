@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  input {
+    @apply border px-2 py-0.5 rounded-sm w-full;
+  }
+
+  select {
+    @apply bg-transparent border px-1 py-1 rounded-sm;
+  }
+}
+
 * {
   outline: none;
 }
