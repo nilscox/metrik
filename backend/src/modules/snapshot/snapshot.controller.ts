@@ -47,6 +47,8 @@ export class SnapshotController {
   ): Promise<SnapshotDto> {
     const snapshot = await this.snapshotService.createSnapshot({
       id: await this.generator.generateId(),
+      branch: dto.branch,
+      ref: dto.ref,
       date: this.date.now,
       projectId,
       metrics: await Promise.all(

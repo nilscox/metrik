@@ -21,12 +21,20 @@ export class MetricValueDto implements IMetricValueDto {
 export class SnapshotDto implements ISnapshotDto {
   constructor(snapshot: Snapshot) {
     this.id = snapshot.props.id;
+    this.branch = snapshot.props.branch.value;
+    this.ref = snapshot.props.ref;
     this.date = snapshot.props.date.toString();
     this.metrics = snapshot.props.metrics.map((value) => new MetricValueDto(value));
   }
 
   @Expose()
   id: string;
+
+  @Expose()
+  branch: string;
+
+  @Expose()
+  ref: string;
 
   @Expose()
   date: string;

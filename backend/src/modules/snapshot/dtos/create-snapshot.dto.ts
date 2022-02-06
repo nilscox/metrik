@@ -13,6 +13,14 @@ export class CreateMetricValueDto implements ICreateMetricValueDto {
 }
 
 export class CreateSnapshotDto implements ICreateSnapshotDto {
+  @IsString()
+  @IsNotEmpty()
+  branch!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  ref!: string;
+
   @ValidateNested()
   @Type(() => CreateMetricValueDto)
   metrics!: CreateMetricValueDto[];

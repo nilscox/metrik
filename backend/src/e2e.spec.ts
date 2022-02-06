@@ -137,7 +137,11 @@ describe('e2e', () => {
 
     const { body: snapshot1 } = await agent
       .post(`/project/${project.id}/metrics-snapshot`)
-      .send({ reference: 'commit-sha', metrics: [{ metricId: metric1.id, value: 42 }] })
+      .send({
+        branch: 'master',
+        ref: 'ref1',
+        metrics: [{ metricId: metric1.id, value: 42 }],
+      })
       .expect(201);
 
     const secondSnapshotDate = new Date('2022-01-02');
@@ -146,6 +150,8 @@ describe('e2e', () => {
     const { body: snapshot2 } = await agent
       .post(`/project/${project.id}/metrics-snapshot`)
       .send({
+        branch: 'master',
+        ref: 'ref2',
         metrics: [
           { metricId: metric1.id, value: 43 },
           { metricId: metric2.id, value: 0.96 },
@@ -189,6 +195,8 @@ describe('e2e', () => {
       Snapshot.create({
         id: snapshot1.id,
         projectId: project.id,
+        branch: 'master',
+        ref: 'ref1',
         date: firstSnapshotDate,
         metrics: [
           {
@@ -201,6 +209,8 @@ describe('e2e', () => {
       Snapshot.create({
         id: snapshot2.id,
         projectId: project.id,
+        branch: 'master',
+        ref: 'ref2',
         date: secondSnapshotDate,
         metrics: [
           {

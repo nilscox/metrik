@@ -5,6 +5,8 @@ export interface IMetricValueDto {
 
 export interface ISnapshotDto {
   id: string;
+  branch: string;
+  ref: string;
   date: string;
   metrics: IMetricValueDto[];
 }

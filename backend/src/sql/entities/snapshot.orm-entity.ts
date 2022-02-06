@@ -12,6 +12,12 @@ export class SnapshotOrmEntity {
   id!: string;
 
   @Column()
+  branch!: string;
+
+  @Column()
+  ref!: string;
+
+  @Column()
   date!: string;
 
   @Column()

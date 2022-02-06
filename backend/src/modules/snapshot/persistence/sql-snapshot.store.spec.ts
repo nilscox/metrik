@@ -39,6 +39,8 @@ describe('SqlSnapshotStore', () => {
 
   const snapshot = Snapshot.create({
     id: 's1',
+    branch: 'master',
+    ref: '001',
     date,
     projectId: 'p1',
     metrics: [
