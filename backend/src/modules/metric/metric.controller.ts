@@ -36,7 +36,7 @@ export class MetricController {
     @Body() dto: CreateMetricDto,
   ): Promise<MetricDto> {
     const metric = await this.metricService.createMetric({
-      id: await this.generator.generateId(),
+      id: this.generator.generateId(),
       projectId,
       ...dto,
     });

@@ -25,7 +25,7 @@ export class AuthenticationService {
     const hashedPassword = await this.crypto.encrypt(password);
 
     const user = new User({
-      id: await this.generator.generateId(),
+      id: this.generator.generateId(),
       email,
       hashedPassword,
     });
@@ -50,7 +50,7 @@ export class AuthenticationService {
       throw new InvalidCredentialsError();
     }
 
-    await user.generateToken(this.generator);
+    user.generateToken(this.generator);
 
     await this.userStore.save(user);
 

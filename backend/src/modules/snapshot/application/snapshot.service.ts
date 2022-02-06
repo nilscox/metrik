@@ -33,7 +33,7 @@ export class SnapshotService {
 
     if (!branch) {
       branch = Branch.create({
-        id: await this.generator.generateId(),
+        id: this.generator.generateId(),
         projectId: command.projectId,
         name: command.branch,
       });
@@ -41,17 +41,14 @@ export class SnapshotService {
       await this.branchStore.save(branch);
     }
 
-    // todo: make generator not async
-    const metrics = await Promise.all(
-      command.metrics.map(async ({ metricId, value }) => ({
-        id: await this.generator.generateId(),
-        metricId,
-        value,
-      })),
-    );
+    const metrics = command.metrics.map(({ metricId, value }) => ({
+      id: this.generator.generateId(),
+      metricId,
+      value,
+    }));
 
     const snapshot = Snapshot.create({
-      id: await this.generator.generateId(),
+      id: this.generator.generateId(),
       branch,
       ref: command.ref,
       date: this.date.now,

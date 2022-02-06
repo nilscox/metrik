@@ -1,11 +1,11 @@
 import { GeneratorPort } from './generator.port';
 
 export class StubGeneratorAdapter extends GeneratorPort {
-  async generateId(): Promise<string> {
+  generateId(): string {
     return 'generated-id';
   }
 
-  async generateAuthenticationToken(): Promise<string> {
+  generateAuthenticationToken(): string {
     return 'generated-token';
   }
 }

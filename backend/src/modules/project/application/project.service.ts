@@ -29,13 +29,13 @@ export class ProjectService {
   }
 
   async createProject(command: CreateProjectCommand): Promise<Project> {
-    const projectId = await this.generator.generateId();
+    const projectId = this.generator.generateId();
 
     const project = Project.create({
       id: projectId,
       name: command.name,
       defaultBranch: {
-        id: await this.generator.generateId(),
+        id: this.generator.generateId(),
         projectId,
         name: command.defaultBranch,
       },

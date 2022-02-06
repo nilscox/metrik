@@ -18,8 +18,8 @@ export class User extends AggregateRoot<UserProps> {
     return crypto.compare(typedPassword, this.props.hashedPassword);
   }
 
-  async generateToken(generator: GeneratorPort) {
-    this.props.token = await generator.generateAuthenticationToken();
+  generateToken(generator: GeneratorPort) {
+    this.props.token = generator.generateAuthenticationToken();
   }
 
   async unsetToken() {

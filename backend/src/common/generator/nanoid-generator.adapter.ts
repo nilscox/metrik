@@ -1,15 +1,17 @@
-import { customAlphabet, nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
 
 import { GeneratorPort } from './generator.port';
 
 export class NanoIdGeneratorAdapter extends GeneratorPort {
-  async generateId(): Promise<string> {
-    return nanoid();
+  private idGenerator = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 10);
+
+  generateId(): string {
+    return this.idGenerator();
   }
 
-  private tokenGenerator = customAlphabet('abcdefghijklmnopqrstuvwxyz', 16);
+  private tokenGenerator = customAlphabet('abcdefghijklmnopqrstuvwxyz', 24);
 
-  async generateAuthenticationToken(): Promise<string> {
+  generateAuthenticationToken(): string {
     return this.tokenGenerator();
   }
 }

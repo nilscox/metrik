@@ -1,4 +1,4 @@
 export abstract class GeneratorPort {
-  abstract generateId(): Promise<string>;
-  abstract generateAuthenticationToken(): Promise<string>;
+  abstract generateId(): string;
+  abstract generateAuthenticationToken(): string;
 }
