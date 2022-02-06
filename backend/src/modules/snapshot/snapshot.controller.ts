@@ -12,9 +12,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { DatePort } from '~/common/date';
-import { GeneratorPort } from '~/common/generator';
-
 import { IsAuthenticated } from '../authorization';
 
 import { SnapshotService } from './application/snapshot.service';
@@ -27,11 +24,7 @@ import { SnapshotDto } from './dtos/snapshot.dto';
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({ strategy: 'excludeAll' })
 export class SnapshotController {
-  constructor(
-    private readonly generator: GeneratorPort,
-    private readonly date: DatePort,
-    private readonly snapshotService: SnapshotService,
-  ) {}
+  constructor(private readonly snapshotService: SnapshotService) {}
 
   @Get()
   async getSnapshots(@Param('projectId') projectId: string): Promise<SnapshotDto[]> {
@@ -46,17 +39,10 @@ export class SnapshotController {
     @Body() dto: CreateSnapshotDto,
   ): Promise<SnapshotDto> {
     const snapshot = await this.snapshotService.createSnapshot({
-      id: await this.generator.generateId(),
+      projectId,
       branch: dto.branch,
       ref: dto.ref,
-      date: this.date.now,
-      projectId,
-      metrics: await Promise.all(
-        dto.metrics.map(async (metric) => ({
-          id: await this.generator.generateId(),
-          ...metric,
-        })),
-      ),
+      metrics: dto.metrics,
     });
 
     return new SnapshotDto(snapshot);

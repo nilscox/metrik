@@ -1,21 +1,21 @@
 import { AggregateRoot } from '~/ddd/aggregate-root';
-import { Metric } from '~/modules/metric/domain/metric';
+import { Branch, BranchName, createBranch, CreateBranchProps } from '~/modules/branch';
+import { Metric } from '~/modules/metric';
 
-import { BranchName } from './branch-name';
 import { MetricNotFoundError } from './errors/metric-not-found.error';
 import { ProjectName } from './project-name';
 
 export type ProjectProps = {
   id: string;
   name: ProjectName;
-  defaultBranch: BranchName;
+  defaultBranch: Branch;
   metrics: Metric[];
 };
 
 export type CreateProjectProps = {
   id: string;
   name: string;
-  defaultBranch?: string;
+  defaultBranch: Omit<CreateBranchProps, 'name'> & { name?: string };
 };
 
 export class Project extends AggregateRoot<ProjectProps> {
@@ -27,7 +27,10 @@ export class Project extends AggregateRoot<ProjectProps> {
     return new Project({
       id: props.id,
       name: new ProjectName(props.name),
-      defaultBranch: new BranchName(props.defaultBranch ?? 'master'),
+      defaultBranch: Branch.create({
+        ...props.defaultBranch,
+        name: props.defaultBranch?.name ?? 'master',
+      }),
       metrics: [],
     });
   }
@@ -52,3 +55,15 @@ export class Project extends AggregateRoot<ProjectProps> {
     this.props.metrics.forEach((metric) => metric.validate());
   }
 }
+
+export const createProject = (overrides: Partial<ProjectProps> = {}) => {
+  return new Project({
+    id: 'projectId',
+    name: new ProjectName('name'),
+    defaultBranch: createBranch({
+      projectId: 'projectId',
+    }),
+    metrics: [],
+    ...overrides,
+  });
+};

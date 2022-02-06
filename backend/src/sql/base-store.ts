@@ -21,6 +21,10 @@ export abstract class BaseStore<DomainEntity extends AggregateRoot<{ id: string 
     protected readonly mapper: EntityMapper<DomainEntity, OrmEntity>,
   ) {}
 
+  async findAll(): Promise<DomainEntity[]> {
+    return this.toDomain(await this.repository.find());
+  }
+
   async findById(id: string): Promise<DomainEntity | undefined> {
     return this.toDomain(await this.repository.findOne(id));
   }
@@ -32,7 +36,7 @@ export abstract class BaseStore<DomainEntity extends AggregateRoot<{ id: string 
 
     entities.forEach((entity) => entity.validate());
 
-    await this.repository.save(entities.map((project) => this.toOrm(project)));
+    await this.repository.save(entities.map((entity) => this.toOrm(entity)));
   }
 
   async exists(id: string) {

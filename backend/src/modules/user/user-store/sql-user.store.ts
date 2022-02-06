@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { Connection, FindOneOptions } from 'typeorm';
 
 import { BaseStore } from '~/sql/base-store';
 import { UserOrmEntity } from '~/sql/entities';
@@ -32,8 +31,8 @@ class UserMapper implements EntityMapper<User, UserOrmEntity> {
 
 @Injectable()
 export class SqlUserStore extends BaseStore<User, UserOrmEntity> implements UserStore {
-  constructor(@InjectRepository(UserOrmEntity) repository: Repository<UserOrmEntity>) {
-    super('user', repository, new UserMapper());
+  constructor(connection: Connection) {
+    super('user', connection.getRepository(UserOrmEntity), new UserMapper());
   }
 
   findByEmail(email: string): Promise<User | undefined> {

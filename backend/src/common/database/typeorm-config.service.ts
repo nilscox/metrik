@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { SnakeNamingStrategy } from 'typeorm-snake-naming-strategy';
 
 import { ConfigPort } from '~/common/config';
 import { Logger } from '~/common/logger';
@@ -17,12 +18,14 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     return {
       type: 'better-sqlite3',
       database: this.config.get('DATABASE_FILENAME'),
-      migrations: ['dist/backend/src/sql/migrations/*.js'],
+      migrations: ['src/sql/migrations/*.ts'],
+      // migrations: ['dist/backend/src/sql/migrations/*.js'],
       entities,
       migrationsRun: false,
       synchronize: false,
       logging,
       logger: new DatabaseLogger(this.logger, logging),
+      namingStrategy: new SnakeNamingStrategy(),
     };
   }
 }

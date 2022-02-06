@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 
+import { BranchOrmEntity } from './branch.orm-entity';
 import { MetricValueOrmEntity } from './metric-value.orm-entity';
 
 @Entity({ name: 'snapshot' })
@@ -11,17 +12,14 @@ export class SnapshotOrmEntity {
   @PrimaryColumn()
   id!: string;
 
-  @Column()
-  branch!: string;
+  @ManyToOne(() => BranchOrmEntity, { eager: true })
+  branch!: BranchOrmEntity;
 
   @Column()
   ref!: string;
 
   @Column()
   date!: string;
-
-  @Column()
-  projectId!: string;
 
   @OneToMany(() => MetricValueOrmEntity, (metric) => metric.snapshot, {
     eager: true,

@@ -1,10 +1,11 @@
-import { ClassProvider } from '@nestjs/common';
+import { createStoreProvider } from '~/utils/create-store-provider';
 
-import { ProjectStoreToken } from '../application/project.store';
+import { ProjectStore, ProjectStoreToken } from '../application/project.store';
 
+import { InMemoryProjectStore } from './in-memory-project.store';
 import { SqlProjectStore } from './sql-project.store';
 
-export const projectStoreProvider: ClassProvider = {
-  provide: ProjectStoreToken,
-  useClass: SqlProjectStore,
-};
+export const projectStoreProvider = createStoreProvider<ProjectStore>(ProjectStoreToken, {
+  inMemory: InMemoryProjectStore,
+  sql: SqlProjectStore,
+});

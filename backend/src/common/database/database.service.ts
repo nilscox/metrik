@@ -15,14 +15,13 @@ export class DatabaseService implements OnApplicationShutdown {
 
   async onApplicationShutdown() {
     if (this.isConnected) {
-      await this.connection.close();
+      await this.closeConnection();
     }
   }
 
   async clear() {
     this.logger.debug('clearing the database');
-    await this.connection.query('delete from user');
-    await this.connection.query('delete from project');
+    await this.connection.synchronize(true);
   }
 
   async checkConnection(): Promise<boolean> {

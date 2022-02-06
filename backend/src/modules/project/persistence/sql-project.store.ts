@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection } from 'typeorm';
 
+import { BranchMapper } from '~/modules/branch';
 import { Metric, MetricLabel, MetricType } from '~/modules/metric';
 import { BaseStore } from '~/sql/base-store';
-import { MetricOrmEntity, ProjectOrmEntity } from '~/sql/entities';
+import { BranchOrmEntity, MetricOrmEntity, ProjectOrmEntity } from '~/sql/entities';
 import { EntityMapper } from '~/sql/entity-mapper';
 
 import { ProjectStore } from '../application/project.store';
-import { BranchName } from '../domain/branch-name';
 import { Project } from '../domain/project';
 import { ProjectName } from '../domain/project-name';
 
@@ -33,12 +32,13 @@ class MetricMapper implements EntityMapper<Metric, MetricOrmEntity> {
 
 class ProjectMapper implements EntityMapper<Project, ProjectOrmEntity> {
   private readonly metricMapper = new MetricMapper();
+  private readonly branchMapper = new BranchMapper();
 
   toDomain = (ormEntity: ProjectOrmEntity): Project => {
     return new Project({
       id: ormEntity.id,
       name: new ProjectName(ormEntity.name),
-      defaultBranch: new BranchName(ormEntity.default_branch),
+      defaultBranch: this.branchMapper.toDomain(ormEntity.defaultBranch),
       metrics: ormEntity.metrics.map((metricOrmEntity) =>
         this.metricMapper.toDomain(metricOrmEntity),
       ),
@@ -49,7 +49,7 @@ class ProjectMapper implements EntityMapper<Project, ProjectOrmEntity> {
     return new ProjectOrmEntity({
       id: project.props.id,
       name: project.props.name.value,
-      default_branch: project.props.defaultBranch.value,
+      defaultBranch: this.branchMapper.toOrm(project.props.defaultBranch),
       metrics: project.props.metrics.map((metric) => this.metricMapper.toOrm(metric)),
     });
   };
@@ -57,10 +57,23 @@ class ProjectMapper implements EntityMapper<Project, ProjectOrmEntity> {
 
 @Injectable()
 export class SqlProjectStore extends BaseStore<Project, ProjectOrmEntity> implements ProjectStore {
-  constructor(
-    @InjectRepository(ProjectOrmEntity)
-    repository: Repository<ProjectOrmEntity>,
-  ) {
-    super('project', repository, new ProjectMapper());
+  constructor(private readonly connection: Connection) {
+    super('project', connection.getRepository(ProjectOrmEntity), new ProjectMapper());
+  }
+
+  async insert(project: Project): Promise<void> {
+    await this.connection.transaction(async (manager) => {
+      const projectOrmEntity = this.toOrm(project);
+      const defaultBranchOrmEntity = projectOrmEntity.defaultBranch as BranchOrmEntity;
+
+      // @ts-expect-error avoid circular dependency
+      projectOrmEntity.defaultBranch = null;
+
+      await manager.insert(ProjectOrmEntity, projectOrmEntity);
+      await manager.insert(BranchOrmEntity, defaultBranchOrmEntity);
+
+      projectOrmEntity.defaultBranch = defaultBranchOrmEntity;
+      await manager.save(ProjectOrmEntity, projectOrmEntity);
+    });
   }
 }

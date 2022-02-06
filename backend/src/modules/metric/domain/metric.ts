@@ -33,3 +33,13 @@ export class Metric extends Entity<MetricProps> {
     this.props.type.validate();
   }
 }
+
+export const createMetric = (overrides: Partial<MetricProps> = {}) => {
+  return new Metric({
+    id: 'metricId',
+    projectId: 'projectId',
+    label: new MetricLabel('label'),
+    type: new MetricType(MetricTypeEnum.number),
+    ...overrides,
+  });
+};

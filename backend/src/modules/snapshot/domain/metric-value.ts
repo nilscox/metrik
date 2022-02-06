@@ -32,3 +32,12 @@ export class MetricValue extends Entity<MetricValueProps> {
     // }
   }
 }
+
+export const createMetricValue = (overrides: Partial<MetricValueProps> = {}) => {
+  return new MetricValue({
+    id: 'metricValueId',
+    metricId: 'metricId',
+    value: 0,
+    ...overrides,
+  });
+};

@@ -1,5 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 import { ICreateMetricValueDto, ICreateSnapshotDto } from '@shared/dtos/project/ICreateSnapshotDto';
 
@@ -21,6 +28,8 @@ export class CreateSnapshotDto implements ICreateSnapshotDto {
   @IsNotEmpty()
   ref!: string;
 
+  @IsArray()
+  @ArrayMinSize(1)
   @ValidateNested()
   @Type(() => CreateMetricValueDto)
   metrics!: CreateMetricValueDto[];

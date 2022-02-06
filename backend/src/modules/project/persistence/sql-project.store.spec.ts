@@ -36,7 +36,11 @@ describe('SqlProjectStore', () => {
   const project = Project.create({
     id: 'p1',
     name: 'My project',
-    defaultBranch: 'master',
+    defaultBranch: {
+      id: 'b1',
+      projectId: 'p1',
+      name: 'main',
+    },
   });
 
   project.addMetric(
@@ -49,7 +53,7 @@ describe('SqlProjectStore', () => {
   );
 
   it('saves and finds a project', async () => {
-    await store.save(project);
+    await store.insert(project);
 
     await expect(await store.findById('p1')).toEqual(project);
   });

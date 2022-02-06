@@ -6,3 +6,4 @@ coverage
 .env
 db.json
 *.sqlite
+src/test.spec.ts

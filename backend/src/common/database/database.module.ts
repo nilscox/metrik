@@ -5,11 +5,12 @@ import { ConfigModule } from '~/common/config';
 import { LoggerModule } from '~/common/logger';
 import entities from '~/sql/entities';
 
-import { DatabaseService } from './database.service';
+import { databaseServiceProvider } from './database-service.provider';
 import { TypeOrmConfigService } from './typeorm-config.service';
 
 @Module({
   imports: [
+    ConfigModule,
     LoggerModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, LoggerModule],
@@ -17,7 +18,7 @@ import { TypeOrmConfigService } from './typeorm-config.service';
     }),
     TypeOrmModule.forFeature(entities),
   ],
-  providers: [DatabaseService],
-  exports: [TypeOrmModule, DatabaseService],
+  providers: [databaseServiceProvider],
+  exports: [TypeOrmModule, databaseServiceProvider],
 })
 export class DatabaseModule {}

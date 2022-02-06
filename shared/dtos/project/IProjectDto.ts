@@ -12,6 +12,11 @@ export interface IMetricDto {
   type: MetricTypeEnum;
 }
 
+export interface IBranchDto {
+  id: string;
+  name: string;
+}
+
 export interface IProjectDto {
   id: string;
   name: string;

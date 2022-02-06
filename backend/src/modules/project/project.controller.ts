@@ -33,16 +33,28 @@ export class ProjectController {
 
   @Get(':id')
   async getProject(@Param('id') projectId: string): Promise<ProjectDto> {
-    return new ProjectDto(await this.projectService.findById(projectId));
+    const project = await this.projectService.findById(projectId);
+    const branches = await this.projectService.findBranches(projectId);
+
+    return new ProjectDto(project, branches);
   }
 
   @Post()
   async createProject(@Body() dto: CreateProjectDto): Promise<ProjectDto> {
+    const projectId = await this.generator.generateId();
+
     const project = await this.projectService.createProject({
-      id: await this.generator.generateId(),
-      ...dto,
+      id: projectId,
+      name: dto.name,
+      defaultBranch: {
+        id: await this.generator.generateId(),
+        projectId,
+        name: dto.defaultBranch,
+      },
     });
 
-    return new ProjectDto(project);
+    const branches = await this.projectService.findBranches(project.props.id);
+
+    return new ProjectDto(project, branches);
   }
 }

@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection } from 'typeorm';
 
 import { DateVO } from '~/ddd/date.value-object';
-import { BranchName } from '~/modules/project/domain/branch-name';
+import { BranchMapper } from '~/modules/branch';
 import { BaseStore } from '~/sql/base-store';
 import { MetricValueOrmEntity, SnapshotOrmEntity } from '~/sql/entities';
 import { EntityMapper } from '~/sql/entity-mapper';
@@ -32,14 +31,14 @@ class MetricValueMapper implements EntityMapper<MetricValue, MetricValueOrmEntit
 
 class SnapshotMapper implements EntityMapper<Snapshot, SnapshotOrmEntity> {
   private readonly metricValueMapper = new MetricValueMapper();
+  private readonly branchMapper = new BranchMapper();
 
   toDomain = (ormEntity: SnapshotOrmEntity): Snapshot => {
     return new Snapshot({
       id: ormEntity.id,
-      branch: new BranchName(ormEntity.branch),
+      branch: this.branchMapper.toDomain(ormEntity.branch),
       ref: ormEntity.ref,
       date: new DateVO(new Date(ormEntity.date)),
-      projectId: ormEntity.projectId,
       metrics: ormEntity.metrics.map(this.metricValueMapper.toDomain),
     });
   };
@@ -47,10 +46,9 @@ class SnapshotMapper implements EntityMapper<Snapshot, SnapshotOrmEntity> {
   toOrm = (snapshot: Snapshot): SnapshotOrmEntity => {
     return new SnapshotOrmEntity({
       id: snapshot.props.id,
-      branch: snapshot.props.branch.value,
+      branch: this.branchMapper.toOrm(snapshot.props.branch),
       ref: snapshot.props.ref,
       date: snapshot.props.date.toString(),
-      projectId: snapshot.props.projectId,
       metrics: snapshot.props.metrics.map(this.metricValueMapper.toOrm),
     });
   };
@@ -61,14 +59,18 @@ export class SqlSnapshotStore
   extends BaseStore<Snapshot, SnapshotOrmEntity>
   implements SnapshotStore
 {
-  constructor(
-    @InjectRepository(SnapshotOrmEntity)
-    repository: Repository<SnapshotOrmEntity>,
-  ) {
-    super('snapshot', repository, new SnapshotMapper());
+  constructor(connection: Connection) {
+    super('snapshot', connection.getRepository(SnapshotOrmEntity), new SnapshotMapper());
   }
 
   async findAllForProjectId(projectId: string): Promise<Snapshot[]> {
-    return this.toDomain(await this.repository.find({ where: { projectId } }));
+    return this.toDomain(
+      await this.repository
+        .createQueryBuilder('snapshot')
+        .leftJoinAndSelect('snapshot.branch', 'branch')
+        .leftJoinAndSelect('snapshot.metrics', 'metrics')
+        .where('branch.projectId = :projectId', { projectId })
+        .getMany(),
+    );
   }
 }

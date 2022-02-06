@@ -9,29 +9,19 @@ type EntityProps<T> = T extends Entity<infer P> ? P : never;
 export class InMemoryStore<DomainEntity extends Entity<{ id: string }>>
   implements EntityStore<DomainEntity>
 {
-  private items = new Map<string, EntityProps<DomainEntity>>();
+  private items = new Map<string, DomainEntity>();
 
   constructor(
     private entityConstructor: new (props: EntityProps<DomainEntity>) => DomainEntity,
     items: EntityProps<DomainEntity>[] = [],
   ) {
     for (const item of items) {
-      this.add(item);
-    }
-  }
-
-  protected findByPredicate(
-    predicate: (props: EntityProps<DomainEntity>) => boolean,
-  ): DomainEntity | undefined {
-    const props = this.find(predicate);
-
-    if (props) {
-      return new this.entityConstructor(props);
+      this.add(new this.entityConstructor(item));
     }
   }
 
   async findById(id: string): Promise<DomainEntity | undefined> {
-    return this.findByPredicate((props) => props.id === id);
+    return this.find((entity) => entity.props.id === id);
   }
 
   async findByIdOrFail(id: string): Promise<DomainEntity> {
@@ -45,15 +35,16 @@ export class InMemoryStore<DomainEntity extends Entity<{ id: string }>>
   }
 
   async exists(id: string): Promise<boolean> {
-    return (await this.findById(id)) !== undefined;
+    return this.has(id);
   }
 
   async save(entity: DomainEntity): Promise<void> {
-    this.add(entity.props as EntityProps<DomainEntity>);
+    entity.validate();
+    this.add(entity);
   }
 
-  add(item: EntityProps<DomainEntity>) {
-    this.items.set(item.id, clone(item));
+  add(item: DomainEntity) {
+    this.items.set(item.props.id, clone(item));
   }
 
   get(id: string) {
@@ -64,13 +55,19 @@ export class InMemoryStore<DomainEntity extends Entity<{ id: string }>>
     }
   }
 
+  has(id: string) {
+    return this.items.has(id);
+  }
+
   all() {
     return clone(Array.from(this.items.values()));
   }
 
-  find(
-    predicate: (item: EntityProps<DomainEntity>) => boolean,
-  ): EntityProps<DomainEntity> | undefined {
+  find(predicate: (item: DomainEntity) => boolean): DomainEntity | undefined {
     return this.all().find(predicate);
+  }
+
+  filter(predicate: (item: DomainEntity) => boolean): DomainEntity[] {
+    return this.all().filter(predicate);
   }
 }
