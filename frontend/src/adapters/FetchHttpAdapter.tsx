@@ -31,6 +31,7 @@ export class FetchHttpAdapter implements HttpPort {
     const response = await this.fetch(this.baseUrl + route, {
       method,
       headers,
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

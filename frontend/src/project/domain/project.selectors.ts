@@ -32,3 +32,11 @@ export const selectProject: AppSelector<Project, [string]> = (state, projectId) 
 export const selectLoadingProjects = createSelector(selectProjectsSlice, ({ loading }) => {
   return loading;
 });
+
+export const selectIsMetricCreationFormOpen = createSelector(selectProject, ({ metricCreationFormOpen }) => {
+  return metricCreationFormOpen;
+});
+
+export const selectCreatingMetric = createSelector(selectProject, ({ creatingMetric }) => {
+  return creatingMetric;
+});

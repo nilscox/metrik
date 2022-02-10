@@ -2,21 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
+@layer base {
+  * {
+    outline: none;
+  }
+
+  body {
+    @apply text-text/90;
+  }
+
+  a {
+    @apply text-link underline;
+  }
+
   input {
-    @apply border px-2 py-0.5 rounded-sm w-full;
+    @apply border border-light px-2 py-0.5 rounded-sm w-full;
   }
 
   select {
-    @apply bg-transparent border px-1 py-1 rounded-sm;
+    @apply bg-transparent border border-light px-1 py-1 rounded-sm;
   }
-}
-
-* {
-  outline: none;
-}
-
-a {
-  color: blue;
-  text-decoration: underline;
 }

@@ -3,7 +3,7 @@ import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 
 export const Tabs: React.FC = ({ children }) => {
   return (
-    <div role="tablist" className="border-b border-gray-200">
+    <div role="tablist" className="border-b border-grey/50">
       {children}
     </div>
   );
@@ -24,7 +24,7 @@ export const Tab: React.FC<TabProps> = ({ link = '', children }) => {
       aria-selected={active}
       className={cx(
         'inline-block bg-none px-4 py-1 no-underline text-inherit',
-        active && 'border-b-2 border-blue-600',
+        active && 'border-b-2 border-grey/75',
       )}
     >
       {children}

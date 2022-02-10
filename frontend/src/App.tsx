@@ -54,5 +54,5 @@ const ProjectName: React.FC = () => {
 };
 
 const IndexPage: React.FC = () => {
-  return <Link to="/project/f3ohe3vEjixftLhrzVGgT">Project page</Link>;
+  return <Link to={`/project/${process.env.PROJECT_ID}`}>Project page</Link>;
 };

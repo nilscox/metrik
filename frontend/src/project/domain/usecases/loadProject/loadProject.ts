@@ -1,8 +1,11 @@
 import { AppThunkAction } from '~/store';
 
-import { setLoadingProjects, setProject } from '../../project.actions';
-
-import { loadSnapshots } from './loadSnapshots';
+import {
+  setLoadingProjects,
+  setLoadingSnapshots,
+  setProject,
+  setProjectSnapshots,
+} from '../../project.actions';
 
 export const loadProject = (projectId: string): AppThunkAction => {
   return async (dispatch, _getState, { projectGateway }) => {
@@ -12,7 +15,15 @@ export const loadProject = (projectId: string): AppThunkAction => {
       const project = await projectGateway.fetchProject(projectId);
 
       if (project) {
-        dispatch(setProject({ ...project, loadingSnapshots: false, snapshots: [] }));
+        dispatch(
+          setProject({
+            ...project,
+            snapshots: [],
+            loadingSnapshots: false,
+            creatingMetric: false,
+          }),
+        );
+
         await dispatch(loadSnapshots(projectId));
       } else {
         console.warn(`cannot find project ${projectId}`);
@@ -21,6 +32,22 @@ export const loadProject = (projectId: string): AppThunkAction => {
       console.error(error);
     } finally {
       dispatch(setLoadingProjects(false));
+    }
+  };
+};
+
+export const loadSnapshots = (projectId: string, branch?: string): AppThunkAction => {
+  return async (dispatch, _getState, { projectGateway }) => {
+    try {
+      dispatch(setLoadingSnapshots(projectId, true));
+
+      const snapshots = await projectGateway.fetchSnapshots(projectId, branch);
+
+      dispatch(setProjectSnapshots(projectId, snapshots));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(setLoadingSnapshots(projectId, false));
     }
   };
 };

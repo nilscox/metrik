@@ -1366,6 +1366,17 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@jest/types@^27.5.1":
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.5.1.tgz#3c79ec4a8ba61c170bf937bcf9e98a9df175ec80"
+  integrity sha512-Cx46iJ9QpwQTjIdq5VJu2QTMMs3QlEjI0x1QbBP5W1+nMzyc2XmimiRR/CbX9TO0cPTeUlxWMOu8mslYsJ8DEw==
+  dependencies:
+    "@types/istanbul-lib-coverage" "^2.0.0"
+    "@types/istanbul-reports" "^3.0.0"
+    "@types/node" "*"
+    "@types/yargs" "^16.0.0"
+    chalk "^4.0.0"
+
 "@kunukn/react-collapse@^2.2.9":
   version "2.2.9"
   resolved "https://registry.yarnpkg.com/@kunukn/react-collapse/-/react-collapse-2.2.9.tgz#89787666b25145d179b65c55fcd335af7fa8fb6d"
@@ -8426,6 +8437,14 @@ jest-message-util@^26.6.2:
     pretty-format "^26.6.2"
     slash "^3.0.0"
     stack-utils "^2.0.2"
+
+jest-mock@^27.5.1:
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/jest-mock/-/jest-mock-27.5.1.tgz#19948336d49ef4d9c52021d34ac7b5f36ff967d6"
+  integrity sha512-K4jKbY1d4ENhbrG2zuPWaQBvDly+iZ2yAW+T1fATN78hc0sInwn7wZB8XtlNnvHug5RMwV897Xm4LqmPM4e2Og==
+  dependencies:
+    "@jest/types" "^27.5.1"
+    "@types/node" "*"
 
 jest-pnp-resolver@^1.2.2:
   version "1.2.2"

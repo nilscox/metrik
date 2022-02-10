@@ -1,5 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { Metric } from './types/Metric';
 import { Project } from './types/Project';
 
 export const projectsStateAdapter = createEntityAdapter<Project>();
@@ -18,6 +19,14 @@ const projectsSlice = createSlice({
     setProjects: projectsStateAdapter.setAll,
     setProject: projectsStateAdapter.setOne,
     updateProject: projectsStateAdapter.updateOne,
+    addMetric(state, { payload }: PayloadAction<{ projectId: string; metric: Metric }>) {
+      const metrics = state.entities[payload.projectId]?.metrics ?? [];
+
+      projectsStateAdapter.updateOne(state, {
+        id: payload.projectId,
+        changes: { metrics: [...metrics, payload.metric] },
+      });
+    },
   },
 });
 

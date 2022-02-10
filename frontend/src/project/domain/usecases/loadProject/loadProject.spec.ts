@@ -29,6 +29,8 @@ describe('loadProjects', () => {
     store.projectGateway.snapshots.push({
       id: snapshotId,
       date: snapshotDate,
+      branch: 'master',
+      ref: 'commit',
       metrics: [],
     });
 
@@ -49,9 +51,13 @@ describe('loadProjects', () => {
         {
           id: snapshotId,
           date: snapshotDate,
+          branch: 'master',
+          ref: 'commit',
           metrics: [],
         },
       ],
+      loadingSnapshots: false,
+      creatingMetric: false,
     });
   });
 });

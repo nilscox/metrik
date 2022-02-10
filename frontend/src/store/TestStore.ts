@@ -1,23 +1,8 @@
-import { IProjectDto } from '@shared/dtos/project/IProjectDto';
-import { ISnapshotDto } from '@shared/dtos/project/ISnapshotDto';
 import { setProject } from '~/project/domain/project.actions';
 import { Project } from '~/project/domain/types/Project';
 
-import { ProjectGateway } from './ProjectGateway';
+import { InMemoryProjectGateway } from './InMemoryProjectGateway';
 import { AppSelector, createStore, Dependencies } from './store';
-
-class InMemoryProjectGateway implements ProjectGateway {
-  projects = new Map<string, IProjectDto>();
-  snapshots: ISnapshotDto[] = [];
-
-  async fetchProject(projectId: string): Promise<IProjectDto | undefined> {
-    return this.projects.get(projectId);
-  }
-
-  async fetchSnapshots(): Promise<ISnapshotDto[]> {
-    return this.snapshots;
-  }
-}
 
 interface TestDependencies extends Dependencies {
   projectGateway: InMemoryProjectGateway;

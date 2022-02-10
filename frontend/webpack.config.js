@@ -54,6 +54,7 @@ const config = (module.exports = {
       PUBLIC_PATH,
       API_URL: 'http://localhost:3000',
       TOKEN: null,
+      PROJECT_ID: null,
     }),
     new ProvidePlugin({ React: 'react' }),
     new HtmlWebpackPlugin(),

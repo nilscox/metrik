@@ -8,6 +8,8 @@ export type Project = {
   metrics: Metric[];
   loadingSnapshots: boolean;
   snapshots: MetricsSnapshot[];
+  metricCreationFormOpen: boolean;
+  creatingMetric: boolean;
 };
 
 export const createProject = (overrides: Partial<Project> = {}): Project => ({
@@ -17,5 +19,7 @@ export const createProject = (overrides: Partial<Project> = {}): Project => ({
   metrics: [],
   loadingSnapshots: false,
   snapshots: [],
+  metricCreationFormOpen: false,
+  creatingMetric: false,
   ...overrides,
 });
