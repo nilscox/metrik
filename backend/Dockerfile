@@ -8,7 +8,7 @@ COPY backend/package.json backend/yarn.lock ./
 RUN yarn --production=false --frozen-lockfile
 
 COPY backend ./
-COPY dtos ../dtos
+COPY shared ../shared
 RUN yarn build
 
 FROM node:14-alpine AS runtime
