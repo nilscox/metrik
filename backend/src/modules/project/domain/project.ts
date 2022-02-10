@@ -1,5 +1,5 @@
 import { AggregateRoot } from '~/ddd/aggregate-root';
-import { Branch, BranchName, createBranch, CreateBranchProps } from '~/modules/branch';
+import { Branch, createBranch, CreateBranchProps } from '~/modules/branch';
 import { Metric } from '~/modules/metric';
 
 import { MetricNotFoundError } from './errors/metric-not-found.error';
