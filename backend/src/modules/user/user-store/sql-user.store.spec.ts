@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
 import expect from 'expect';
 
+import { ConfigPort } from '~/common/config';
+import { TestConfigAdapter } from '~/common/config/test-config.adapter';
 import { DatabaseService } from '~/common/database';
-import { DevNullLogger, Logger } from '~/common/logger';
 
 import { createUser, User } from '../domain/user';
 import { UserModule } from '../user.module';
@@ -17,14 +18,12 @@ describe('SqlUserStore', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [UserModule],
     })
-      .overrideProvider(Logger)
-      .useClass(DevNullLogger)
+      .overrideProvider(ConfigPort)
+      .useValue(new TestConfigAdapter({ STORE: 'sql' }))
       .compile();
 
     database = moduleRef.get(DatabaseService);
     store = moduleRef.get(UserStoreToken);
-
-    await moduleRef.get(DatabaseService).runMigrations();
   });
 
   after(async () => {

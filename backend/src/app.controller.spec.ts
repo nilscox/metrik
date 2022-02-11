@@ -1,11 +1,10 @@
-import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import expect from 'expect';
 
 import { AppController } from './app.controller';
-import { ConfigPort, StubConfigAdapter } from './common/config';
+import { ConfigPort } from './common/config';
+import { TestConfigAdapter } from './common/config/test-config.adapter';
 import { DatabaseModule } from './common/database';
-import { DevNullLogger } from './common/logger';
 
 describe('AppController', () => {
   let app: TestingModule;
@@ -16,10 +15,8 @@ describe('AppController', () => {
       imports: [DatabaseModule],
       controllers: [AppController],
     })
-      .overrideProvider(Logger)
-      .useClass(DevNullLogger)
       .overrideProvider(ConfigPort)
-      .useValue(new StubConfigAdapter({ STORE: 'sql', DATABASE_FILENAME: ':memory:' }))
+      .useValue(new TestConfigAdapter({ STORE: 'sql' }))
       .compile();
 
     appController = app.get(AppController);

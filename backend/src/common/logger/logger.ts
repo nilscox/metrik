@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ConsoleLogger, Injectable, Scope } from '@nestjs/common';
+import { ConsoleLogger, Injectable, LogLevel, Scope } from '@nestjs/common';
 
 const colors = {
   reset: (text: string) => `\x1b[0m${text}\x1b[0m`,
@@ -32,6 +32,15 @@ const colors = {
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class Logger extends ConsoleLogger {
+  constructor() {
+    super();
+
+    const levels = ['error', 'warn', 'info', 'log', 'debug'];
+    const index = levels.indexOf(process.env.LOG_LEVEL || 'log');
+
+    this.setLogLevels(levels.slice(0, index + 1) as LogLevel[]);
+  }
+
   error(message: any, ...optionalParams: any[]) {
     this._log('error', message, ...optionalParams);
   }
@@ -48,15 +57,15 @@ export class Logger extends ConsoleLogger {
     this._log('log', message, ...optionalParams);
   }
 
-  verbose(message: any, ...optionalParams: any[]) {
-    this._log('verbose', message, ...optionalParams);
-  }
-
   debug(message: any, ...optionalParams: any[]) {
     this._log('debug', message, ...optionalParams);
   }
 
   protected _log(level: string, message: any, ...optionalParams: any[]) {
+    if (!this.isLevelEnabled(level as LogLevel)) {
+      return;
+    }
+
     const context = optionalParams[0] ?? this.context;
     // const params = optionalParams.map(String).join(' ');
 
@@ -69,16 +78,15 @@ export class Logger extends ConsoleLogger {
     const levelColor: Record<string, keyof typeof colors> = {
       error: 'fgRed',
       warn: 'fgYellow',
-      info: 'fgBlue',
-      log: 'fgCyan',
-      verbose: 'fgMagenta',
+      info: 'fgGreen',
+      log: 'fgBlue',
       debug: 'fgYellow',
     };
 
     console.log(
       [
-        brackets(colors.dim(this.date)),
-        brackets(colors.bright(colors[levelColor[level]](level))),
+        brackets(this.date),
+        brackets(colors.bright(colors[levelColor[level]](level)))?.padEnd(40, ' '),
         context && brackets(colors.bright(context)),
         message,
         // params,

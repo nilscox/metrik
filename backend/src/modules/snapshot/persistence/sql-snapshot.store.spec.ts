@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import expect from 'expect';
-import { Connection } from 'typeorm';
 
+import { ConfigPort } from '~/common/config';
+import { TestConfigAdapter } from '~/common/config/test-config.adapter';
 import { DatabaseService } from '~/common/database';
-import { DevNullLogger, Logger } from '~/common/logger';
 import { DateVO } from '~/ddd/date.value-object';
 import { createBranch } from '~/modules/branch';
 import { createMetric } from '~/modules/metric/domain/metric';
@@ -19,30 +19,29 @@ import { SnapshotModule } from '../snapshot.module';
 import { SqlSnapshotStore } from './sql-snapshot.store';
 
 describe('SqlSnapshotStore', () => {
+  let database: DatabaseService;
   let projectStore: SqlProjectStore;
   let store: SqlSnapshotStore;
-  let app: TestingModule;
 
   before(async () => {
-    app = await Test.createTestingModule({
+    const app = await Test.createTestingModule({
       imports: [SnapshotModule],
     })
-      .overrideProvider(Logger)
-      .useClass(DevNullLogger)
+      .overrideProvider(ConfigPort)
+      .useValue(new TestConfigAdapter({ STORE: 'sql' }))
       .compile();
 
-    projectStore = app.get(ProjectStoreToken);
+    database = app.get(DatabaseService);
     store = app.get(SnapshotStoreToken);
-
-    await app.get(DatabaseService).runMigrations();
+    projectStore = app.get(ProjectStoreToken);
   });
 
   after(async () => {
-    await app?.get(Connection).close();
+    await database?.closeConnection();
   });
 
   beforeEach(async () => {
-    await app.get(DatabaseService).clear();
+    await database.clear();
   });
 
   const project = createProject({

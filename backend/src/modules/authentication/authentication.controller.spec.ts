@@ -4,9 +4,9 @@ import expect from 'expect';
 import { fn } from 'jest-mock';
 import request, { SuperAgentTest } from 'supertest';
 
-import { ConfigPort, StubConfigAdapter } from '~/common/config';
+import { ConfigPort } from '~/common/config';
+import { TestConfigAdapter } from '~/common/config/test-config.adapter';
 import { DatabaseService } from '~/common/database';
-import { DevNullLogger, Logger } from '~/common/logger';
 import { AuthorizationModule } from '~/modules/authorization';
 import { createUser, InMemoryUserStore, UserStoreToken } from '~/modules/user';
 import { as } from '~/utils/as-user';
@@ -35,18 +35,14 @@ describe('AuthenticationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AuthorizationModule, AuthenticationModule],
     })
-      .overrideProvider(Logger)
-      .useClass(DevNullLogger)
       .overrideProvider(ConfigPort)
-      .useValue(new StubConfigAdapter())
+      .useValue(new TestConfigAdapter())
       .overrideProvider(AuthenticationService)
       .useClass(MockAuthenticationService)
       .compile();
 
     app = module.createNestApplication();
     await app.init();
-
-    await app.get(DatabaseService).runMigrations();
   });
 
   afterEach(async () => {
@@ -57,6 +53,10 @@ describe('AuthenticationController', () => {
     userStore = app.get(UserStoreToken);
     authenticationService = app.get(AuthenticationService);
     agent = request.agent(app.getHttpServer());
+  });
+
+  beforeEach(async () => {
+    await app.get(DatabaseService).clear();
   });
 
   const credentials: Credentials = {

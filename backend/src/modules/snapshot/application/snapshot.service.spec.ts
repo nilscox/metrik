@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import expect from 'expect';
 
-import { ConfigPort, StubConfigAdapter } from '~/common/config';
+import { ConfigPort } from '~/common/config';
+import { TestConfigAdapter } from '~/common/config/test-config.adapter';
 import { BranchName, BranchStore, BranchStoreToken, createBranch } from '~/modules/branch';
 import { createMetric } from '~/modules/metric/domain/metric';
 import { ProjectStore, ProjectStoreToken } from '~/modules/project';
@@ -25,7 +26,7 @@ describe('SnapshotService', () => {
       imports: [SnapshotModule],
     })
       .overrideProvider(ConfigPort)
-      .useValue(new StubConfigAdapter())
+      .useValue(new TestConfigAdapter())
       .compile();
 
     projectStore = app.get(ProjectStoreToken);

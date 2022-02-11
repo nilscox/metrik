@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import dotenv from 'dotenv-safe';
 import expect from 'expect';
 import { Plugin as SuperAgentPlugin } from 'superagent';
 import request, { SuperAgentTest } from 'supertest';
@@ -8,9 +7,11 @@ import request, { SuperAgentTest } from 'supertest';
 import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
 
 import { AppModule } from './app.module';
+import { ConfigPort } from './common/config';
+import { TestConfigAdapter } from './common/config/test-config.adapter';
 import { DatabaseService } from './common/database';
 import { DatePort, StubDateAdapter } from './common/date';
-import { DevNullLogger, Logger, LoggerModule } from './common/logger';
+import { LoggerModule } from './common/logger';
 import { Credentials } from './modules/authentication';
 import { Metric } from './modules/metric';
 import { Project, ProjectStore, ProjectStoreToken } from './modules/project';
@@ -20,8 +21,6 @@ import { createUser, UserStore, UserStoreToken } from './modules/user';
 import { logResponse } from './utils/log-request';
 
 logResponse;
-
-dotenv.config({ path: '.env.test' });
 
 describe('e2e', () => {
   let db: DatabaseService;
@@ -34,8 +33,8 @@ describe('e2e', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, LoggerModule],
     })
-      .overrideProvider(Logger)
-      .useClass(DevNullLogger)
+      .overrideProvider(ConfigPort)
+      .useValue(new TestConfigAdapter({ STORE: 'sql' }))
       .overrideProvider(DatePort)
       .useClass(StubDateAdapter)
       .compile();
@@ -45,8 +44,6 @@ describe('e2e', () => {
 
     db = app.get(DatabaseService);
     userStore = app.get(UserStoreToken);
-
-    await db.runMigrations();
 
     agent = request.agent(app.getHttpServer());
   });

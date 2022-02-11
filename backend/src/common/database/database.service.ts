@@ -14,9 +14,9 @@ export class DatabaseService implements OnApplicationShutdown {
   }
 
   async onApplicationShutdown() {
-    if (this.isConnected) {
-      await this.closeConnection();
-    }
+    // if (this.isConnected) {
+    //   await this.closeConnection();
+    // }
   }
 
   async clear() {

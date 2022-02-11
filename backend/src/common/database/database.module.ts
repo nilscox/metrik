@@ -5,7 +5,7 @@ import { ConfigModule } from '~/common/config';
 import { LoggerModule } from '~/common/logger';
 import entities from '~/sql/entities';
 
-import { databaseServiceProvider } from './database-service.provider';
+import { DatabaseService } from './database.service';
 import { TypeOrmConfigService } from './typeorm-config.service';
 
 @Module({
@@ -18,7 +18,7 @@ import { TypeOrmConfigService } from './typeorm-config.service';
     }),
     TypeOrmModule.forFeature(entities),
   ],
-  providers: [databaseServiceProvider],
-  exports: [TypeOrmModule, databaseServiceProvider],
+  providers: [DatabaseService],
+  exports: [TypeOrmModule, DatabaseService],
 })
 export class DatabaseModule {}
