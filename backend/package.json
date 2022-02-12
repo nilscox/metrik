@@ -5,7 +5,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "nest build",
-    "start": "nodemon -w yarn.lock -w tsconfig.json -w src -e json,ts -x 'yarn ts-node src/main.ts'",
+    "start": "nodemon -w yarn.lock -w tsconfig.json -w .env -w src -e env,json,ts -x 'yarn ts-node src/main.ts'",
     "lint": "eslint src",
     "test": "mocha",
     "test:coverage": "nyc yarn test",
