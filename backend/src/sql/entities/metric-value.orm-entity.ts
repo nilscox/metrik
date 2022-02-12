@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryColumn, Unique } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  Unique,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { MetricOrmEntity } from './metric.orm-entity';
 import { SnapshotOrmEntity } from './snapshot.orm-entity';
@@ -24,4 +32,10 @@ export class MetricValueOrmEntity {
 
   @Column()
   value!: number;
+
+  @CreateDateColumn()
+  createdAt!: string;
+
+  @UpdateDateColumn()
+  updatedAt!: string;
 }

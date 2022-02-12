@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { BranchOrmEntity } from './branch.orm-entity';
 import { MetricValueOrmEntity } from './metric-value.orm-entity';
@@ -26,4 +34,10 @@ export class SnapshotOrmEntity {
     cascade: true,
   })
   metrics!: MetricValueOrmEntity[];
+
+  @CreateDateColumn()
+  createdAt!: string;
+
+  @UpdateDateColumn()
+  updatedAt!: string;
 }

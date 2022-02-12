@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { ProjectOrmEntity } from './project.orm-entity';
 
@@ -19,4 +26,10 @@ export class BranchOrmEntity {
 
   @Column()
   projectId!: string;
+
+  @CreateDateColumn()
+  createdAt!: string;
+
+  @UpdateDateColumn()
+  updatedAt!: string;
 }

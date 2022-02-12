@@ -64,6 +64,11 @@ export class Logger implements LoggerService {
   }
 
   setLevel(level: string) {
+    if (level === '') {
+      this.level = undefined;
+      return;
+    }
+
     if (!isLogLevel(level)) {
       throw new Error(`invalid log level "${level}"`);
     }

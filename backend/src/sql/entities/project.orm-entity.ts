@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { BranchOrmEntity } from './branch.orm-entity';
 import { MetricOrmEntity } from './metric.orm-entity';
@@ -21,4 +30,10 @@ export class ProjectOrmEntity {
 
   @OneToMany(() => MetricOrmEntity, (metric) => metric.project, { eager: true, cascade: true })
   metrics!: MetricOrmEntity[];
+
+  @CreateDateColumn()
+  createdAt!: string;
+
+  @UpdateDateColumn()
+  updatedAt!: string;
 }

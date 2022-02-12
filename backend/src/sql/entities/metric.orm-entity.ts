@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { MetricTypeEnum } from '@shared/enums/MetricTypeEnum';
 
@@ -24,4 +31,10 @@ export class MetricOrmEntity {
 
   @Column({ type: 'text' })
   type!: MetricTypeEnum;
+
+  @CreateDateColumn()
+  createdAt!: string;
+
+  @UpdateDateColumn()
+  updatedAt!: string;
 }

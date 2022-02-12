@@ -34,7 +34,7 @@ describe('e2e', () => {
       imports: [AppModule, LoggerModule],
     })
       .overrideProvider(ConfigPort)
-      .useValue(new TestConfigAdapter({ STORE: 'sql' }))
+      .useValue(new TestConfigAdapter({ STORE: 'sql', LOG_LEVEL: '' }))
       .overrideProvider(DatePort)
       .useClass(StubDateAdapter)
       .compile();

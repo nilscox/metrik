@@ -4,7 +4,7 @@ import { Connection } from 'typeorm';
 import { DateVO } from '~/ddd/date.value-object';
 import { BranchMapper } from '~/modules/branch';
 import { BaseStore } from '~/sql/base-store';
-import { MetricValueOrmEntity, SnapshotOrmEntity } from '~/sql/entities';
+import { MetricOrmEntity, MetricValueOrmEntity, SnapshotOrmEntity } from '~/sql/entities';
 import { EntityMapper } from '~/sql/entity-mapper';
 
 import { SnapshotStore } from '../application/snapshot.store';
@@ -59,18 +59,41 @@ export class SqlSnapshotStore
   extends BaseStore<Snapshot, SnapshotOrmEntity>
   implements SnapshotStore
 {
-  constructor(connection: Connection) {
+  constructor(private connection: Connection) {
     super('snapshot', connection.getRepository(SnapshotOrmEntity), new SnapshotMapper());
   }
 
+  private get metricRepository() {
+    return this.connection.getRepository(MetricOrmEntity);
+  }
+
   async findAllForProjectId(projectId: string): Promise<Snapshot[]> {
-    return this.toDomain(
-      await this.repository
-        .createQueryBuilder('snapshot')
-        .leftJoinAndSelect('snapshot.branch', 'branch')
-        .leftJoinAndSelect('snapshot.metrics', 'metrics')
-        .where('branch.projectId = :projectId', { projectId })
-        .getMany(),
-    );
+    const snapshots = await this.repository
+      .createQueryBuilder('snapshot')
+      .leftJoinAndSelect('snapshot.branch', 'branch')
+      .leftJoinAndSelect('snapshot.metrics', 'metric_value')
+      .leftJoin('metric_value.metric', 'metric')
+      .where('branch.projectId = :projectId', { projectId })
+      .orderBy('snapshot.date', 'ASC')
+      .getMany();
+
+    const projectMetrics = await this.metricRepository.find({
+      select: ['id'],
+      where: { projectId },
+      order: { createdAt: 'ASC' },
+    });
+
+    const metricsIds = projectMetrics.map(({ id }) => id);
+
+    // https://github.com/typeorm/typeorm/issues/2620
+    const compareMetricValues = (a: MetricValueOrmEntity, b: MetricValueOrmEntity) => {
+      return metricsIds.indexOf(a.metricId) - metricsIds.indexOf(b.metricId);
+    };
+
+    for (const snapshot of snapshots) {
+      snapshot.metrics.sort(compareMetricValues);
+    }
+
+    return this.toDomain(snapshots);
   }
 }
