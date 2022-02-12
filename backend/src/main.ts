@@ -11,14 +11,14 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 async function bootstrap() {
-  const logger = new Logger();
-
   const app = await NestFactory.create(AppModule, {
-    logger,
+    bufferLogs: true,
   });
 
   const config = app.get(ConfigPort);
+  const logger = new Logger(config);
 
+  app.useLogger(logger);
   app.use(cors({ origin: true }));
 
   const port = Number(config.get('LISTEN_PORT'));

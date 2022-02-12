@@ -5,8 +5,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "nest build",
-    "start": "nest start --watch",
-    "start:debug": "yarn start --debug",
+    "start": "nodemon -w yarn.lock -w tsconfig.json -w src -e json,ts -x 'yarn ts-node src/main.ts'",
     "lint": "eslint src",
     "test": "mocha",
     "test:coverage": "nyc yarn test",
@@ -14,7 +13,6 @@
     "typeorm": "yarn ts-node node_modules/.bin/typeorm",
     "db:reset": "rm -f db.sqlite && yarn db:migrate",
     "db:migrate": "yarn ts-node src/sql/run-migrations.ts",
-    "db:generate-migration": "yarn typeorm migration:generate -n",
     "db:diagram": "yarn ts-node node_modules/.bin/typeorm-uml ormconfig.js"
   },
   "dependencies": {
@@ -60,6 +58,7 @@
     "expect": "^27.5.1",
     "jest-mock": "^27.5.1",
     "mocha": "^9.2.0",
+    "nodemon": "^2.0.15",
     "nyc": "^15.1.0",
     "prettier": "^2.3.2",
     "supertest": "^6.2.2",

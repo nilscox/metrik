@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ConsoleLogger, Injectable, LogLevel, Scope } from '@nestjs/common';
+import { Injectable, LoggerService, Scope } from '@nestjs/common';
+
+import { ConfigPort } from '../config';
 
 const colors = {
   reset: (text: string) => `\x1b[0m${text}\x1b[0m`,
@@ -30,50 +32,89 @@ const colors = {
   bgWhite: (text: string) => `\x1b[47m${text}\x1b[0m`,
 };
 
+type LogLevel = typeof Logger.logLevels[number];
+
+function isLogLevel(str: string): str is LogLevel {
+  return Logger.logLevels.includes(str as LogLevel);
+}
+
 @Injectable({ scope: Scope.TRANSIENT })
-export class Logger extends ConsoleLogger {
-  constructor() {
-    super();
+export class Logger implements LoggerService {
+  public static readonly logLevels = ['error', 'warn', 'info', 'log', 'debug'] as const;
 
-    const levels = ['error', 'warn', 'info', 'log', 'debug'];
-    const index = levels.indexOf(process.env.LOG_LEVEL || 'log');
+  private level?: LogLevel;
+  private context?: string;
 
-    this.setLogLevels(levels.slice(0, index + 1) as LogLevel[]);
+  constructor(config: ConfigPort) {
+    this.setLevel(config.get('LOG_LEVEL'));
   }
 
-  error(message: any, ...optionalParams: any[]) {
-    this._log('error', message, ...optionalParams);
-  }
-
-  warn(message: any, ...optionalParams: any[]) {
-    this._log('warn', message, ...optionalParams);
-  }
-
-  info(message: any, ...optionalParams: any[]) {
-    this._log('info', message, ...optionalParams);
-  }
-
-  log(message: any, ...optionalParams: any[]) {
-    this._log('log', message, ...optionalParams);
-  }
-
-  debug(message: any, ...optionalParams: any[]) {
-    this._log('debug', message, ...optionalParams);
-  }
-
-  protected _log(level: string, message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled(level as LogLevel)) {
-      return;
+  private isLogLevelEnabled(level: LogLevel) {
+    if (!this.level) {
+      return false;
     }
 
-    const context = optionalParams[0] ?? this.context;
-    // const params = optionalParams.map(String).join(' ');
+    const index = Logger.logLevels.indexOf(this.level);
+
+    return Logger.logLevels.slice(0, index + 1).includes(level);
+  }
+
+  disable() {
+    this.level = undefined;
+  }
+
+  setLevel(level: string) {
+    if (!isLogLevel(level)) {
+      throw new Error(`invalid log level "${level}"`);
+    }
+
+    this.level = level;
+  }
+
+  setContext(context: string) {
+    this.context = context;
+  }
+
+  error(message: string, ...extra: any[]) {
+    this._log('error', message, ...extra);
+  }
+
+  warn(message: string, ...extra: any[]) {
+    this._log('warn', message, ...extra);
+  }
+
+  info(message: string, ...extra: any[]) {
+    this._log('info', message, ...extra);
+  }
+
+  log(message: string, ...extra: any[]) {
+    this._log('log', message, ...extra);
+  }
+
+  debug(message: string, ...extra: any[]) {
+    this._log('debug', message, ...extra);
+  }
+
+  protected _log(level: LogLevel, message: string, ...extra: any[]) {
+    if (!this.isLogLevelEnabled(level)) {
+      return;
+    }
 
     const brackets = (text?: string) => {
       if (text) {
         return [colors.dim('[') + text + colors.dim(']')].join('');
       }
     };
+
+    let context = this.context;
+
+    if (!context) {
+      const idx = extra.reverse().findIndex((arg) => typeof arg === 'string');
+
+      if (idx >= 0) {
+        context = extra.splice(extra.length - idx - 1, 1)[0];
+      }
+    }
 
     const levelColor: Record<string, keyof typeof colors> = {
       error: 'fgRed',
@@ -89,12 +130,15 @@ export class Logger extends ConsoleLogger {
         brackets(colors.bright(colors[levelColor[level]](level)))?.padEnd(40, ' '),
         context && brackets(colors.bright(context)),
         message,
-        // params,
       ]
         .filter((str) => str)
         .map(String)
         .join(' '),
     );
+
+    for (const arg of extra) {
+      console.log(arg);
+    }
   }
 
   private get date() {

@@ -31,7 +31,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     return {
       type: 'better-sqlite3',
       database: this.config.get('DATABASE_FILENAME'),
-      migrations: ['dist/backend/src/sql/migrations/*.js'],
+      migrations: ['src/sql/migrations/*.ts'],
       entities,
       logging,
       logger: new DatabaseLogger(this.logger, logging),

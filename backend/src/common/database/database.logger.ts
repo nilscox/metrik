@@ -7,7 +7,7 @@ export class DatabaseLogger implements TypeOrmLogger {
     this.logger.setContext('Database');
 
     if (!log) {
-      this.logger.setLogLevels([]);
+      this.logger.disable();
     }
   }
 
@@ -15,20 +15,24 @@ export class DatabaseLogger implements TypeOrmLogger {
     this.logger.log(this.formatQuery(query, parameters));
   }
 
-  logQueryError(error: string, query: string, parameters?: unknown[]) {
-    this.logger.error(`${error}\n${this.formatQuery(query, parameters)}`);
+  logQueryError(error: string | Error, query: string, parameters?: unknown[]) {
+    this.logger.error(
+      typeof error === 'string' ? error : 'query error',
+      this.formatQuery(query, parameters),
+      error,
+    );
   }
 
   logQuerySlow(time: number, query: string, parameters?: unknown[]) {
-    this.logger.warn(`slow query: ${time}\n${this.formatQuery(query, parameters)}`);
+    this.logger.warn(`slow query: ${time}ms\n${this.formatQuery(query, parameters)}`);
   }
 
   logMigration(message: string) {
-    this.logger.log(`migration: ${message}`);
+    this.logger.info(message);
   }
 
   logSchemaBuild(message: string) {
-    this.logger.log(`schema build: ${message}`);
+    this.logger.info(message);
   }
 
   log(level: 'log' | 'info' | 'warn', message: string) {
